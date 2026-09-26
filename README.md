@@ -1,10 +1,10 @@
 # Project Name
 
-Developer Names:
+Developer Names: Shivya Mehta, Harmanpreet Singh Sagar, Vanessa Lai, Anindita Bornomala
 
-Date of project start:
+Date of project start: September 21, 2026
 
-This project is ...
+This project is CAS Midterm and Assignment Optimization.
 
 The folders and files for this project are as follows:
 
