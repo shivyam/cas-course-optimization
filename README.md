@@ -1,4 +1,4 @@
-# Project Name
+# CAS Midterm and Assignment Optimization 
 
 Developer Names: Shivya Mehta, Harmanpreet Singh Sagar, Vanessa Lai, Anindita Bornomala
 
@@ -14,4 +14,4 @@ src - Source code
 test - Test cases
 etc.
 
-The documentation for this project is updated on the project's [GitHub page](https://smiths.github.io/capTemplate/). <!-- update for your project!  -->
+The documentation for this project is updated on the project's [GitHub page](https://shivyam.github.io/cas-course-optimization/).
