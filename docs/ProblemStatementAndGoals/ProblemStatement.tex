@@ -81,6 +81,29 @@ is summarized as part of the developer plan.}
 
 \section{Goals}
 
+The project goals include:
+\begin{enumerate}
+    \item \textbf{Centralized Assessment Calendar}
+
+    Develop a shared calendar that allows professors and CAS administrators to view midterm and assignment deadlines across all supported CAS courses, with filters for course, year, and program. Success will be measured by successfully displaying at least 95\% of assessment dates from the course outlines in the test dataset and correctly filtering assessments by course, year, and program.
+
+    \item \textbf{Automated Course Outline Data Extraction}
+
+    Automatically extract assessment dates, weights, and learning outcomes from course outlines and store them in a centralized CAS database for administrators to review, correct, and export. The system will flag missing, unclear, or incomplete information for human verification. Success will be measured by achieving at least 90\% extraction accuracy for assessment dates and weights and correctly flagging at least 90\% of predefined missing or incomplete fields in the test dataset.
+
+    \item \textbf{Assessment Workload and Conflict Detection}
+
+    Identify weeks with high concentrations of assessments for students in the same year and program, as well as potential conflicts with exam periods and relevant scheduling policies. Success will be measured by correctly identifying at least 90\% of predefined scheduling conflicts in a test dataset and ensuring that all identified conflicts are associated with the correct student cohort.
+
+    \item \textbf{Scheduling Recommendations}
+
+    Provide professors with alternative assessment dates that aim to reduce workload clustering and scheduling conflicts. Each recommendation will include an explanation of its reasoning and expected impact, while professors retain full control over whether to accept the suggested changes. Success will be measured by generating at least two feasible alternative dates for 90\% of test cases with scheduling conflicts, with at least one alternative reducing the number of identified conflicts in each applicable case.
+
+    \item \textbf{Automated Accreditation and Policy Compliance Checking}
+
+    Evaluate course outlines against McMaster's course outline policies and applicable CEAB accreditation requirements, identifying missing information and potential compliance gaps. Notify professors and administrators of issues requiring attention. Success will be measured by correctly identifying at least 90\% of predefined compliance issues in a test dataset and providing an actionable notification for each detected issue.
+\end{enumerate}
+
 \section{Stretch Goals}
 
 \wss{Goals you hope to get to, but not necessary.  They are also helpful if the
