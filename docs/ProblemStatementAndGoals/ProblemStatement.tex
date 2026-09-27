@@ -3,6 +3,8 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 
+\setlength{\emergencystretch}{1em}
+
 \title{Problem Statement and Goals\\\progname}
 
 \author{\authname}
@@ -48,8 +50,43 @@ understandable to a non-technical audience.}
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+\textbf{Inputs:} 
+\begin{enumerate}
+    \item \textbf{Course Outlines:} The system will take detailed course outlines from the current
+    academic year as input, including assignment deadlines, midterm dates, and
+    course learning objectives. These outlines will be used to identify scheduling
+    conflicts, evaluate workload distribution across courses, and assess compliance
+    with CEAB accreditation requirements. For testing, the system will also take
+    past or mock course outlines as input. 
+    \item \textbf{Academic Calendar:} The system will take the current and future academic calendar year as input to 
+    take into consideration holidays, test and examination restrictions, and final examination periods, to ensure 
+    midterms, assignments and exams are scheduled correctly according to school policy. 
+\end{enumerate}
+
+\textbf{Outputs:}
+\begin{enumerate}
+    % cspell:ignore CEAB
+    \item \textbf{Shared Academic Calendar:} The system will provide a
+    centralized, calendar-like interface displaying midterm dates and
+    assignment deadlines across all CAS courses and years. Professors and administrators
+    will be able to filter the calendar with specific
+    courses and years to view relevant deadlines and identify potential scheduling
+    conflicts.
+
+    \item \textbf{CEAB Compliance Notifications:} The system will analyze
+    course outlines against CEAB accreditation requirements and notify
+    professors when their outlines do not meet the required criteria. These
+    notifications will identify potential compliance issues and help professors
+    address missing or incomplete information.
+
+    \item \textbf{Scheduling Recommendation Feature:} The system will provide
+    professors with suggestions for adjusting midterm and assignment dates to
+    reduce scheduling conflicts and student workload during particularly busy
+    weeks. Each recommendation will include an explanation of the reasoning
+    behind the suggested changes, allowing professors to make informed
+    scheduling decisions. Recommendations will be made instead of automated schedule 
+    changes, to ensure human verification.
+\end{enumerate}
 
 \subsection{Stakeholders}
 
