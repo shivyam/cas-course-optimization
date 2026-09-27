@@ -91,19 +91,29 @@ likely change throughout the year.}
 
 \section{Workflow Plan}
 
-\begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classification, etc.?
-  \item Use of CI/CD
-\end{itemize}
+The team will use GitHub for version control, issue tracking, project planning,
+and code review. The \texttt{main} branch will contain stable,
+production-ready code, while new features and fixes will be developed on
+separate feature branches. Each branch will address a specific GitHub Issue
+and will be merged into \texttt{main} through a pull request (PR). The PR will
+describe the changes, identify the linked issue, and summarize the testing that
+was performed. Before the PR is merged, at least one team member other than the
+author must review and approve it.
+\\\\
+\noindent \textbf{GitHub Issues} will be used to track features, bugs, questions, and technical tasks. Issue templates will be created for common tasks such as feature requests and bug reports. Issues will be assigned to team members and linked to relevant milestones.
+\\\\
+\noindent \textbf{GitHub Labels} such as \texttt{feature}, \texttt{bug}, \texttt{documentation}, \texttt{frontend}, \texttt{backend}, and \texttt{AI/ML} will be used to categorize and organize issues. Priority labels such as \texttt{high}, \texttt{medium}, and \texttt{low} will be used to indicate the urgency of each issue.
+\\\\
+\noindent\textbf{GitHub Projects} will be used as a project board to track issues through \texttt{Backlog}, \texttt{Ready}, \texttt{In Progress}, \texttt{In Review}, and \texttt{Done} statuses. The board will be reviewed during team meetings to identify blocked or overdue work, manage dependencies, and adjust priorities.
+\\\\
+\noindent\textbf{Milestones} will be used to group issues according to major project phases and deliverables, allowing the team to track progress and identify outstanding work.
+\\\\
+\noindent\textbf{Continuous Integration/Deployment:} GitHub Actions will be used for CI to automatically run tests, linting, and formatting checks on pull requests. Changes merged into \texttt{main} will be deployed automatically where practical.
+\\ \\
+\noindent\textbf{Development Workflow:}
+\texttt{Issue $\rightarrow$ Feature Branch $\rightarrow$ Implementation $\rightarrow$ Pull Request $\rightarrow$ CI Checks $\rightarrow$ Code Review $\rightarrow$ Merge $\rightarrow$ Deployment}.
 
 \section{Project Decomposition and Scheduling}
-
-\begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project
-\end{itemize}
 
 \wss{How will the project be scheduled?  This is the big picture schedule, not
 details. You will need to reproduce information that is in the course outline
