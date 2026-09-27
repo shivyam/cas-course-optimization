@@ -190,7 +190,21 @@ What tools will you be using?  How will you verify the output of your LLMs?}
 
 \section{Coding Standard}
 
-\wss{What coding standard will you adopt?}
+The project will follow the following established coding standards to maintain consistency, readability, and maintainability across the codebase:
+
+\begin{itemize}
+\item \textbf{Frontend:} TypeScript and React code will follow ESLint and Prettier formatting rules.\texttt{camelCase} will be used for variables and functions, while \texttt{PascalCase} will be used for React components and types.
+
+\item \textbf{Backend:} Python code will follow PEP 8. \texttt{snake\_case} will be used for variables and functions, and \texttt{PascalCase} will be used for classes.
+
+\item \textbf{Database:} MongoDB documents will use consistent field naming and structure. Indexes will be used for frequently queried fields, and database operations will be separated from application logic.
+
+\item \textbf{General:} Code will use descriptive names and consistent formatting. Comments will be used where necessary to explain non-obvious logic. Unused code and debugging statements will be removed before merging.
+
+\item \textbf{Testing:} Backend code will be tested using Pytest and frontend code using Vitest or Jest testing library. Core functionality, API endpoints, and important application components will have corresponding tests where appropriate.
+
+
+\end{itemize}
 
 \newpage{}
 
