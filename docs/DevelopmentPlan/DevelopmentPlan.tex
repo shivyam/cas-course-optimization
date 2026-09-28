@@ -80,10 +80,39 @@ There should be an agenda for all meetings.}
 
 \section{Team Member Roles}
 
-\wss{You should identify the types of roles you anticipate, like notetaker,
-leader, meeting chair, reviewer.  Assigning specific people to those roles is
-not necessary at this stage.  In a student team the role of the individuals will
-likely change throughout the year.}
+The team will rotate roles at each milestone to ensure that all members remain engaged across different aspects of the development process and gain a breadth of experience. All team members will contribute to documentation and meeting notes, actively participate in GitHub reviews, and decision-making. Role assignments will be revisited at each milestone to accommodate changing priorities, and ensure that all team members gain experience across different areas of the project.
+
+
+The roles we anticipate during our project include:
+\begin{itemize}
+  \item \textbf{Communication Lead}: Leads communication with stakeholders, prepares meeting agendas and notes for TA and supervisor meetings, records decisions during meetings, and creates action items for team members. This role requires strong communication, organization, and collaboration skills to ensure that stakeholder feedback is accurately communicated to the team.
+  \item \textbf{Research \& Requirements Lead}: Reviews relevant peer-reviewed research, analyzes project requirements, and establishes the team's weekly priorities. This role requires requires skills in research, requirements analysis, and technical writing, as well as an understanding of the academic policies and accreditation requirements relevant to the CAS department.
+  \item \textbf{Technical Lead}: Supports architectural and implementation decisions and helps the team debug significant technical issues and communicates with TAs when additional assistance is needed. This role requires software engineering expertise in areas such as system design, database management, software architecture, and development workflows. The Technical Lead also helps ensure that technical decisions align with project requirements and maintainability goals.
+  \item \textbf{UI/UX \& Product Lead}: Tests weekly product iterations, collects feedback, and focuses on human-computer interaction (HCI) and user experience. This role requires knowledge of user centered design, interface design, usability testing and understanding the needs of the users. This role is related to the course SFWRENG 4HC3, which all team members are taking currently.
+\end{itemize}
+
+The team brings a diverse range of technical and domain expertise to the project, including software architecture, databases, full-stack development, machine learning, software testing, and human-computer interaction. This overlap allows team members to support one another and take on responsibilities beyond their assigned roles when needed.
+
+Summary of the team's existing domain expertise:
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|p{0.27\textwidth}|X|}
+\hline
+\textbf{Team Members} & \textbf{Domain Expertise} \\
+\hline
+Shivya Mehta & Databases, System Design, APIs, Fullstack, Software Requirements, Git, Documentation, HCI \\
+\hline
+Harmanpreet Singh Sagar & Software Testing, Backend, Git, Databases, Software Requirements, Hardware, Documentation, HCI \\
+\hline
+Vanessa Lai & Software Architecture, Machine Learning/NLP, Fullstack, DevOps, UIUX, Software Requirements, API, Documentation, HCI \\
+\hline
+Anindita Bornomala & Machine Learning, AI, Git, APIs, Fullstack, Software Requirements, Documentation, Software Testing, HCI \\
+\hline
+\end{tabularx}
+\caption{Team Members and Domain Expertise}\label{tab:team_expertise}
+\end{table}
+
+
 
 \section{Workflow Plan}
 
@@ -243,10 +272,24 @@ Topics to discuss include the following:
 
 \section{Use of AI and LLMs}
 
-\wss{This section is a continuation of the previous section.  The role of LLMs
-in your project as important enough to warrant their own section.  
-How will your team be using LLMs for code and documentation development?  
-What tools will you be using?  How will you verify the output of your LLMs?}
+The team plans to use Claude Code (version 2.1.283) and Cursor (Grok 4.5 Fast), as AI-assisted development tools.
+These tools will support planning, development, documentation, and
+collaboration throughout the project.  Specifically, we will use AI to review
+project documentation against the checklists in the capstone project GitHub
+repository (\url{https://github.com/smiths/capTemplate/tree/main/pdfs/Checklists}),
+suggest codebase folder structures and configuration setups, and assist with
+debugging issues such as missing dependencies and LaTeX compilation errors.  AI will
+also be used to organize and refine meeting minutes, summarize discussions,
+and extract key decisions and action items.  All final decisions and
+implementations will remain under the team's control.
+
+The team will independently verify all AI-generated suggestions for accuracy,
+completeness, consistency, and appropriateness before incorporating them into
+the project. AI-generated code will undergo human code review before being 
+committed or pushed to the repository.  Code
+will be validated through CI/CD pipelines using automated builds, linting, and
+unit, integration, and regression testing.  Dependencies, configuration
+changes, and potential security issues will be reviewed carefully.
 
 \section{Coding Standard}
 
@@ -278,7 +321,11 @@ sections in the body of this report.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+The team used the following AI tools and how they were used:
+\begin{itemize}
+  \item Cursor (Grok 4.5 Fast) for formatting and debugging LaTeX errors 
+\end{itemize}
+
 
 \subsection{How and Where Used}
 
