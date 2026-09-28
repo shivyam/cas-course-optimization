@@ -189,10 +189,24 @@ Topics to discuss include the following:
 
 \section{Use of AI and LLMs}
 
-\wss{This section is a continuation of the previous section.  The role of LLMs
-in your project as important enough to warrant their own section.  
-How will your team be using LLMs for code and documentation development?  
-What tools will you be using?  How will you verify the output of your LLMs?}
+The team plans to use Claude Code (version 2.1.283) and Cursor (Grok 4.5 Fast), as AI-assisted development tools.
+These tools will support planning, development, documentation, and
+collaboration throughout the project.  Specifically, we will use AI to review
+project documentation against the checklists in the capstone project GitHub
+repository (\url{https://github.com/smiths/capTemplate/tree/main/pdfs/Checklists}),
+suggest codebase folder structures and configuration setups, and assist with
+debugging issues such as missing dependencies and LaTeX compilation errors.  AI will
+also be used to organize and refine meeting minutes, summarize discussions,
+and extract key decisions and action items.  All final decisions and
+implementations will remain under the team's control.
+
+The team will independently verify all AI-generated suggestions for accuracy,
+completeness, consistency, and appropriateness before incorporating them into
+the project. AI-generated code will undergo human code review before being 
+committed or pushed to the repository.  Code
+will be validated through CI/CD pipelines using automated builds, linting, and
+unit, integration, and regression testing.  Dependencies, configuration
+changes, and potential security issues will be reviewed carefully.
 
 \section{Coding Standard}
 
@@ -224,7 +238,11 @@ sections in the body of this report.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+The team used the following AI tools and how they were used:
+\begin{itemize}
+  \item Cursor (Grok 4.5 Fast) for formatting and debugging LaTeX errors 
+\end{itemize}
+
 
 \subsection{How and Where Used}
 
