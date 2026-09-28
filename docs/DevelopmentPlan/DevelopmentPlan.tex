@@ -132,14 +132,78 @@ covering course-outline data extraction and policy checking, and \texttt{Final R
 
 \section{Project Decomposition and Scheduling}
 
+The team will use \textbf{GitHub Projects} as the primary tool for scheduling and tracking project progress. A Kanban board has been created and will be used to organize tasks into \textit{Backlog}, \textit{Ready}, \textit{In Progress}, \textit{In Review}, and \textit{Done}. Tasks will be created as GitHub Issues and assigned to individual team members. The board will be reviewed regularly during team meetings to identify blocked tasks, adjust priorities, and ensure progress toward upcoming deliverables.
+\\\\
+Large features will be decomposed into smaller, specific tasks that can be completed and validated within a few hours. 
+\\\\
+Work will be divided based on team members' skills, interests, and current workload. Team members will aim to spend approximately 10 hours per week on the project, including scheduled class time. Tasks will be distributed to balance the workload and avoid assigning too many dependent tasks to one team member. Team members will also collaborate on tasks that require multiple areas of expertise, such as integrating the frontend, backend, database, and LLM components.
+\\
+
+\noindent The project schedule will be organized around the major course deliverables and project milestones. 
+Only the first 9 weeks of the project are shown in detail, as the remaining weeks will be planned based on the progress made during the first half of the project. The schedule is as follows:
+
 \begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project
+\item \textbf{Week 4:} Problem Statement, POC Plan, and Development Plan.
+  \begin{itemize}
+    \item Problem Statement, POC Plan, and Development Plan
+    \item Research text extraction and LLM approaches
+    \item GitHub repository and GitHub Projects setup
+  \end{itemize}
+
+\item \textbf{Week 5:}
+  \begin{itemize}
+    \item Define initial system requirements
+    \item Collect sample course outlines for development and testing
+    \item Evaluate PDF text extraction libraries
+    \item Define CEAB requirements to be checked by the system
+  \end{itemize}
+
+\item \textbf{Week 6:} Requirements Document Revision 0 and Hazard Analysis.
+\begin{itemize}
+  \item Finalize requirements for course outline processing and CEAB verification
+  \item Identify risks related to incorrect text extraction and LLM-generated results
+  \item Implement initial PDF text extraction prototype
 \end{itemize}
 
-\wss{How will the project be scheduled?  This is the big picture schedule, not
-details. You will need to reproduce information that is in the course outline
-for deadlines.}
+\item \textbf{Week 7:}
+  \begin{itemize}
+    \item Implement initial LLM-based course information extraction
+    \item Define structured format for extracted course information
+    \item Design CEAB verification logic
+  \end{itemize}
+
+\item \textbf{Week 8:} V\&V Plan Revision 0.
+  \begin{itemize}
+    \item Develop tests for text extraction and CEAB verification
+    \item Define metrics for evaluating extraction accuracy
+    \item Create initial backend API for course outline processing
+  \end{itemize}
+
+\item \textbf{Week 9:}
+  \begin{itemize}
+    \item Integrate text extraction with the LLM pipeline
+    \item Implement CEAB requirement verification
+    \item Store extracted course information in database
+  \end{itemize}
+
+\item \textbf{Week 10:} Design Document Revision -1 and CD-Fall Revision 0.
+\item \textbf{Weeks 11--12:} Proof of Concept demonstration and interviews.
+\item \textbf{Week 14:} MVP should be completed and ready for demonstration.
+\begin{itemize}
+  \item Demo MVP results and address remaining issues
+  \item Plan next-stage features based on stakeholder feedback
+\end{itemize}
+
+\item \textbf{Week 16:} Design Document Revision 0.
+\item \textbf{Weeks 18--19:} Revision 0 demonstration and interviews.
+\item \textbf{Week 22:} V\&V Report Revision 0 and CD-Winter Revision 0.
+\item \textbf{Week 24:} Final Demonstration (Revision 1).
+\item \textbf{Week 26:} EXPO Demonstration.
+\item \textbf{Final Submission:} Final documentation, including the source code and revised project documents.
+\end{itemize}
+
+The GitHub Project is available at:
+\href{https://github.com/shivyam/cas-course-optimization}{GitHub Project Link}.
 
 \section{Proof of Concept Demonstration Plan}
 
