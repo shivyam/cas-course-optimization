@@ -3,6 +3,8 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 
+\setlength{\emergencystretch}{1em}
+
 \title{Problem Statement and Goals\\\progname}
 
 \author{\authname}
@@ -22,8 +24,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
+September 26, 2026 & Shivya, Anindita, Harmanpreet, Vanessa& Initial version\\
+% Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -48,10 +50,66 @@ understandable to a non-technical audience.}
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+\textbf{Inputs:} 
+\begin{enumerate}
+    \item \textbf{Course Outlines:} The system will take detailed course outlines from the current
+    academic year as input, including assignment deadlines, midterm dates, and
+    course learning objectives. These outlines will be used to identify scheduling
+    conflicts, evaluate workload distribution across courses, and assess compliance
+    with CEAB accreditation requirements. For testing, the system will also take
+    past or mock course outlines as input. 
+    \item \textbf{Academic Calendar:} The system will take the current and future academic calendar year as input to 
+    take into consideration holidays, test and examination restrictions, and final examination periods, to ensure 
+    midterms, assignments and exams are scheduled correctly according to school policy. 
+\end{enumerate}
+
+\textbf{Outputs:}
+\begin{enumerate}
+    % cspell:ignore CEAB
+    \item \textbf{Shared Academic Calendar:} The system will provide a
+    centralized, calendar-like interface displaying midterm dates and
+    assignment deadlines across all CAS courses and years. Professors and administrators
+    will be able to filter the calendar with specific
+    courses and years to view relevant deadlines and identify potential scheduling
+    conflicts.
+
+    \item \textbf{CEAB Compliance Notifications:} The system will analyze
+    course outlines against CEAB accreditation requirements and notify
+    professors when their outlines do not meet the required criteria. These
+    notifications will identify potential compliance issues and help professors
+    address missing or incomplete information.
+
+    \item \textbf{Scheduling Recommendation Feature:} The system will provide
+    professors with suggestions for adjusting midterm and assignment dates to
+    reduce scheduling conflicts and student workload during particularly busy
+    weeks. Each recommendation will include an explanation of the reasoning
+    behind the suggested changes, allowing professors to make informed
+    scheduling decisions. Recommendations will be made instead of automated schedule 
+    changes, to ensure human verification.
+\end{enumerate}
 
 \subsection{Stakeholders}
+
+The key stakeholders for this project include:
+\begin{itemize}
+    \item \textbf{CAS Administration:} The primary stakeholders and end-users of
+    the system. They will use it to manage and maintain course information, monitor
+    assessment schedules across CAS courses, and streamline the review of course
+    outlines for CEAB accreditation requirements. The CAS Administration staff (Matt Vonk \& Connie Carrabs) 
+    will also be responsible for overseeing the system's development and ensuring that it meets
+    administrative needs.
+
+    \item \textbf{Faculty Professors and Course Instructors:} End-users who would use the system to 
+    review assessment schedules across CAS courses and identify potential conflicts with other midterms and 
+    assignments. They will also be able to receive scheduling suggestions that propose alternative 
+    assessment dates and provide reasoning for how these changes could help reduce student workload 
+    and assessment conflicts.
+
+    \item \textbf{Academic Advising Staff:} End-users who would use the centralized assessment schedule 
+    to better understand periods of high student workload and identify potential scheduling conflicts that 
+    could affect students. This information can support academic advising and help staff provide students 
+    with more informed guidance regarding their course schedules and academic workload.
+\end{itemize}
 
 \subsection{Environment}
 
@@ -59,6 +117,29 @@ Use abstraction so that you can avoid details.}
 is summarized as part of the developer plan.}
 
 \section{Goals}
+
+The project goals include:
+\begin{enumerate}
+    \item \textbf{Centralized Assessment Calendar}
+
+    Develop a shared calendar that allows professors and CAS administrators to view midterm and assignment deadlines across all supported CAS courses, with filters for course, year, and program. Success will be measured by successfully displaying at least 95\% of assessment dates from the course outlines in the test dataset and correctly filtering assessments by course, year, and program.
+
+    \item \textbf{Automated Course Outline Data Extraction}
+
+    Automatically extract assessment dates, weights, and learning outcomes from course outlines and store them in a centralized CAS database for administrators to review, correct, and export. The system will flag missing, unclear, or incomplete information for human verification. Success will be measured by achieving at least 90\% extraction accuracy for assessment dates and weights and correctly flagging at least 90\% of predefined missing or incomplete fields in the test dataset.
+
+    \item \textbf{Assessment Workload and Conflict Detection}
+
+    Identify weeks with high concentrations of assessments for students in the same year and program, as well as potential conflicts with exam periods and relevant scheduling policies. Success will be measured by correctly identifying at least 90\% of predefined scheduling conflicts in a test dataset and ensuring that all identified conflicts are associated with the correct student cohort.
+
+    \item \textbf{Scheduling Recommendations}
+
+    Provide professors with alternative assessment dates that aim to reduce workload clustering and scheduling conflicts. Each recommendation will include an explanation of its reasoning and expected impact, while professors retain full control over whether to accept the suggested changes. Success will be measured by generating at least two feasible alternative dates for 90\% of test cases with scheduling conflicts, with at least one alternative reducing the number of identified conflicts in each applicable case.
+
+    \item \textbf{Automated Accreditation and Policy Compliance Checking}
+
+    Evaluate course outlines against McMaster's course outline policies and applicable CEAB accreditation requirements, identifying missing information and potential compliance gaps. Notify professors and administrators of issues requiring attention. Success will be measured by correctly identifying at least 90\% of predefined compliance issues in a test dataset and providing an actionable notification for each detected issue.
+\end{enumerate}
 
 \section{Stretch Goals}
 
