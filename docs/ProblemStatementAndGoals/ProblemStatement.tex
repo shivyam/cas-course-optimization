@@ -151,8 +151,32 @@ The key stakeholders for this project include:
 
 \subsection{Environment}
 
-\wss{Hardware and Software Environment for the users.  The developer environment
-is summarized as part of the developer plan.}
+% \wss{Hardware and Software Environment for the users.  The developer environment
+% is summarized as part of the developer plan.}
+
+The proposed system will be a web application, so users will be able to access
+it through a standard web browser without needing any additional hardware or
+software. The application will be hosted on the CAS servers, or through a cloud
+platform. The final hosting option will depend on CAS requirements, particularly
+around data privacy, security, and long-term maintenance.
+
+The system is intended to replace the shared calendar that CAS currently
+maintains manually, while also adding features that help with scheduling and
+course planning. The main source of information will be CAS course outlines,
+which are typically available as PDF or Word documents. Other information, such
+as Mosaic timetables and important academic calendar dates like exam periods,
+will also be used. Once the information is extracted, it will be stored in a
+central database that CAS administrators can review, correct, and export.
+
+The scheduling component will use the CP-SAT solver from Google OR-Tools to
+generate possible assessment dates based on the system's constraints. An LLM
+will be used to provide short explanations for these scheduling suggestions.
+During development, the team plans to use a hosted LLM API and will only send
+publicly available course outline information to it. Since the system may
+eventually handle confidential information, the team will also explore hosting
+the LLM directly on CAS servers. The LLM will be kept as a separate part of the
+system so that the hosted model can later be replaced with a locally hosted one
+without requiring major changes to the rest of the application.
 
 \section{Goals}
 
@@ -181,8 +205,18 @@ The project goals include:
 
 \section{Stretch Goals}
 
-\wss{Goals you hope to get to, but not necessary.  They are also helpful if the
-scope of the original project needs to be expanded.}
+% \wss{Goals you hope to get to, but not necessary.  They are also helpful if the
+% scope of the original project needs to be expanded.}
+
+\begin{itemize}
+\item \textbf{Automatic Mosaic integration.} Instead of entering timetable and enrollment data manually, the system could retrieve this information directly from Mosaic. This would help identify student cohorts more accurately based on the courses they are actually taking together.
+
+\item \textbf{MSAF trend analysis.} If historical MSAF data is made available by the department, the system could use it to identify weeks where students have experienced higher levels of assessment pressure in the past. This information could then be used to improve scheduling suggestions.
+
+\item \textbf{Compliance checking during outline creation.} Professors could check draft course outlines against McMaster's course outline policy and CEAB requirements before submitting them. This would help identify missing or incorrect information earlier in the process.
+
+\item \textbf{Student-facing view.} A read-only calendar could be provided for students and academic advisors to view assessment deadlines across multiple courses in one place.
+\end{itemize}
 
 \section{Custom Documents (CDs)}
 
