@@ -24,8 +24,14 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
+28 September 2026 & Shivya Mehta & Workflow Plan, Project Decomposition and
+Scheduling, Expected Technology, Coding Standard\\
+28 September 2026 & Anindita Bornomala & IP to protect, Copyright License, Team
+Meeting Plan, Team Communication Plan \\
+28 September 2026 & Harmanpreet Singh Sagar & POC demonstration plan, Reflection
+and Team Charter Appendices\\
+28 September 2026 & Vanessa Lai & Confidential Information, Team Member
+Roles,Workflow plan - use of CI/CD, Use of AI/LLMs\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -33,12 +39,29 @@ Date2 & Name(s) & Description of changes\\
 
 \newpage{}
 
-\wss{Put your introductory blurb here.  Often the blurb is a brief roadmap of
-what is contained in the report.}
+% \wss{Put your introductory blurb here.  Often the blurb is a brief roadmap of
+% what is contained in the report.}
 
-\wss{Additional information on the development plan can be found in the
-\href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
-{lecture slides}.}
+% \wss{Additional information on the development plan can be found in the
+% \href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
+% {lecture slides}.}
+
+This document describes the team's development plan for the CAS Midterm and
+Assignment Optimization system. The system is designed to collect assessment
+information from CAS course outlines, identify periods where students may have a
+high assessment workload, suggest alternative assessment dates to professors,
+and check course outlines against McMaster's course outline policy and CEAB
+accreditation requirements.
+
+The document first covers topics related to confidential information,
+intellectual property, and the copyright license for the project. It then
+explains how the team plans to work together, including meeting expectations,
+communication methods, team member roles, and the Git and GitHub workflow that
+will be used throughout development. The document also outlines the project
+schedule and task breakdown, the proof of concept plan, the technologies
+expected to be used, the team's approach to AI and LLMs, and the coding
+standards that will be followed. The appendices include the team's generative AI
+use disclosure, a reflection on the deliverable, and the team charter.
 
 \section{Confidential Information?}
 
@@ -372,6 +395,17 @@ suggest better dates, check basic policy requirements, and explain the
 suggestions, it will show that the main technical risks can be handled before
 moving on to the full system.
 
+If the proof of concept does not address the main risks as expected, the team
+will use the results to identify what needs to be changed before moving forward.
+We will review which parts were unsuccessful, determine the reasons, and discuss
+possible next steps with our supervisors. Depending on the results, we may need
+to reduce the project scope, such as supporting fewer course outline formats,
+adding more manual confirmation for extracted data, or moving features like
+compliance checking and LLM-generated explanations to the stretch goals. The
+project plan and schedule would then be adjusted so that the team can focus on
+building a smaller, reliable system rather than trying to complete too many
+features that may not work well.
+
 \section{Expected Technology}
 
 \wss{What programming language or languages do you expect to use?  What external
@@ -449,134 +483,327 @@ The project will follow the following established coding standards to maintain c
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
+% \wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
 
-\wss{This section is about the use of AI to write this document, not your
-planned use of AI for your project.  You discuss that topic in one of the
-sections in the body of this report.}
+% \wss{This section is about the use of AI to write this document, not your
+% planned use of AI for your project.  You discuss that topic in one of the
+% sections in the body of this report.}
 
 \subsection{AI Tools Used}
 
 The team used the following AI tools and how they were used:
 \begin{itemize}
   \item Cursor (Grok 4.5 Fast) for formatting and debugging LaTeX errors 
+  \item Claude Code (Opus 5) for reviewing and refining the document, suggesting improvements to structure and clarity, and assisting with grammar and style.
 \end{itemize}
-
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
+% \wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
+% explaining a technical concept, reviewing the document, generating or modifying
+% text, generating or modifying diagrams, identifying errors or omissions or
+% inconsistencies.}
 
-\wss{For each of the uses, identify which parts of the document were affected.}
+% \wss{For each of the uses, identify which parts of the document were affected.}
 
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+% \wss{You do not need to report every interaction, but you should disclose the 
+% uses that materially contributed to your work}
+
+\begin{itemize}
+\item Claude Code (Opus 5) was used to review and refine the document,
+suggesting improvements to structure and clarity, and assisting with grammar and
+style. It was used to primarily refine the Proof of Concept Demonstration Plan,
+and the Appendix - Team Charter sections.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+% \wss{\begin{itemize}
+%     \item Describe how the team checked AI-generated or AI-assisted material
+%     before including it in the document.
+%     \item In particular, verify factual claims, technical assertions,
+%     requirements, calculations, references, and other information for which an
+%     AI system may produce incorrect or fabricated results.
+%     \item \textbf{The team is responsible for the accuracy, completeness,
+% consistency, and appropriateness of the submitted document, regardless of
+% whether material was generated by a human or an AI system.}
+% \end{itemize}}
+
+\begin{itemize}
+\item Any output by Claude Code (Opus 5) was reviewed thoroughly and modifed
+before its suggestions were added to the document.
+\end{itemize}
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
+% \wss{Not required for CAS 741}
 
-\input{../Reflection.text}
+% \input{../Reflection.text}
 
-\begin{enumerate}
-    \item Why is it important to create a development plan prior to starting the
-    project?
-    \item In your opinion, what are the advantages and disadvantages of using
-    CI/CD?
-    \item What disagreements did your group have in this deliverable, if any,
-    and how did you resolve them?
-\end{enumerate}
+% \begin{enumerate}
+%     \item Why is it important to create a development plan prior to starting the
+%     project?
+%     \item In your opinion, what are the advantages and disadvantages of using
+%     CI/CD?
+%     \item What disagreements did your group have in this deliverable, if any,
+%     and how did you resolve them?
+% \end{enumerate}
+
+
+\subsection*{Why is it important to create a development plan prior to starting the project?}
+
+Our system has several components that depend on each other, including data
+extraction, the database, conflict detection, scheduling suggestions, and
+compliance checking. Creating a development plan helps make sure everyone on the
+team has the same understanding of how these components will work together and
+what tools and formats will be used. It also helps us divide responsibilities
+and agree on how we will use Git, track issues, and communicate throughout the
+project. Having these decisions made early reduces confusion later and allows us
+to focus the proof of concept on the areas that have the most technical risk.
+
+\subsection*{In your opinion, what are the advantages and disadvantages of using CI/CD?}
+
+One of the main advantages of CI/CD is that it can catch problems early by
+automatically running tests whenever changes are made. This is useful for our
+project because many parts of the system are connected. For example, a change to
+the format of the extracted course data could affect the calendar, conflict
+detection, or scheduling solver. CI/CD can help identify these issues before
+they are merged into the main branch. It can also help keep the main branch
+stable and make it easier to maintain a working version of the system throughout
+development.
+
+The main disadvantage is the additional time required to set up and maintain the
+CI/CD pipeline. It is also only as useful as the tests included in it. If the
+test coverage is limited, some problems may still go unnoticed. Certain parts of
+our project, such as evaluating the quality and accuracy of LLM-generated
+explanations, may also require manual testing rather than relying only on
+automated tests.
+
+\subsection*{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
+
+Our group did not have any major disagreements while completing this
+deliverable. Most decisions were made through discussion and agreement between
+the team members. One topic that required more discussion was how the LLM should
+be used in the system. We considered using an external API, hosting an existing
+model on CAS servers, or potentially using our own locally hosted solution.
+
+Since we have not yet had an official meeting with our supervisors, we do not
+currently know the exact privacy and hosting requirements for the project. For
+now, we agreed to use a hosted API for the proof of concept and only send
+publicly available course outline information to it. We will also design the LLM
+component so that it can be replaced with a locally hosted model later if
+required. We plan to discuss the final hosting approach with our supervisors
+during our first project meeting.
 
 \newpage{}
 
 \section*{Appendix --- Team Charter}
 
-\wss{borrows from
-\href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
-{University of Portland Team Charter}}
+% \wss{borrows from
+% \href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
+% {University of Portland Team Charter}}
 
 \subsection*{External Goals}
 
-\wss{What are your team's external goals for this project? These are not the
-goals related to the functionality or quality fo the project.  These are the
-goals on what the team wishes to achieve with the project.  Potential goals are
-to win a prize at the Capstone EXPO, or to have something to talk about in
-interviews, or to get an A+, etc.}
+% \wss{What are your team's external goals for this project? These are not the
+% goals related to the functionality or quality fo the project.  These are the
+% goals on what the team wishes to achieve with the project.  Potential goals are
+% to win a prize at the Capstone EXPO, or to have something to talk about in
+% interviews, or to get an A+, etc.}
+
+Our team has four main goals for this project. First, we want to achieve a
+strong grade that reflects the amount of effort we put into the project
+throughout the year. Second, we want to create a complete software system that
+we can confidently discuss in future job interviews, applications, or graduate
+school opportunities. Third, we want to build something that is genuinely useful
+for the CAS department and could continue to be used after the course is
+finished. Ideally, the system would reduce some of the manual work currently
+done by administrators and professors while also helping students avoid weeks
+with too many assessments. Finally, we want to use the project as an opportunity
+to gain hands-on experience with technologies that are new to most of the team,
+including LLM integration, constraint optimization using OR-Tools, and
+full-stack web development.
 
 \subsection*{Attendance}
 
 \subsubsection*{Expectations}
 
-\wss{What are your team's expectations regarding meeting attendance (being on
-time, leaving early, missing meetings, etc.)?}
+% \wss{What are your team's expectations regarding meeting attendance (being on
+% time, leaving early, missing meetings, etc.)?}
+
+
+All team members are expected to attend the weekly meetings that occur during
+lecture and tutorial times, and any additional meetings scheduled. Everyone
+should also attend meetings with our supervisors and teaching assistant whenever
+possible. Team members should come to meetings prepared to give a short update
+on their progress and discuss any problems they are facing.
+
+If someone knows that they will be late, need to leave early, or cannot attend a
+meeting, they should let the rest of the team know on Discord as early as
+possible. Anyone who misses a meeting is responsible for reviewing the meeting
+notes and catching up on any decisions or tasks that were discussed.
 
 \subsubsection*{Acceptable Excuse}
 
-\wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
-What types of excuses will not be considered acceptable?}
+% \wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
+% What types of excuses will not be considered acceptable?}
+
+Acceptable reasons for missing a meeting or deadline include illness, family
+emergencies, religious observances, or unavoidable academic conflicts such as a
+test or exam. Planned commitments, such as job interviews or travel, are also
+understandable as long as the team is informed ahead of time and any affected
+work is handled beforehand.
+
+Reasons such as forgetting a meeting, oversleeping, or choosing a non-urgent
+commitment without informing the team would generally not be considered
+acceptable. Since everyone on the team has other courses and responsibilities,
+our main expectation is that members communicate early and honestly when
+something may affect their availability.
 
 \subsubsection*{In Case of Emergency}
 
-\wss{What process will team members follow if they have an emergency and cannot
-attend a team meeting or complete their individual work promised for a team
-deliverable?}
+% \wss{What process will team members follow if they have an emergency and cannot
+% attend a team meeting or complete their individual work promised for a team
+% deliverable?}
+If a team member experiences an emergency that prevents them from attending a
+meeting or completing a task, they should inform the team on Discord as soon as
+they are reasonably able to. They will not be expected to provide personal
+details about the situation.
+
+If possible, the member should push any work they have already completed to
+GitHub and leave a short update explaining what has been done and what is still
+remaining. This will make it easier for another team member to continue the work
+if necessary. The team can then redistribute tasks depending on the situation
+and how close the next deadline is. If the emergency affects a major course
+deliverable, the team will contact the teaching assistant or instructor to
+discuss the situation and determine the next steps.
 
 \subsection*{Accountability and Teamwork}
 
 \subsubsection*{Quality} 
 
-\wss{What are your team's expectations regarding the quality
-of team members' preparation for team meetings and the quality of the
-deliverables that members bring to the team?}
+% \wss{What are your team's expectations regarding the quality
+% of team members' preparation for team meetings and the quality of the
+% deliverables that members bring to the team?}
+
+    Each team member is expected to make reasonable progress on their assigned tasks
+    and communicate any blockers before they become a larger problem. For written
+    deliverables, we will aim to have individual sections completed at least two
+    days before the final deadline. This will give the team enough time to review
+    the full document, fix inconsistencies, and make sure everything follows the
+    required format.
+
+    For development work, code changes will be submitted through pull requests and
+    reviewed by at least one other team member before being merged. Automated checks
+    should also pass before a change is added to the main branch. If someone is
+    unsure about the quality of their work or is having difficulty completing a
+    task, we would rather they raise the issue early so that the team has time to
+    help.
+
+    Tasks will be tracked using GitHub issues with an assigned team member and
+    target date so that everyone can see what is currently being worked on. If
+    someone repeatedly misses a commitment, the first step will be to check in with
+    them privately and understand whether there is a problem or whether they need
+    help. If the issue continues, the team will discuss it together and agree on how
+    to get the work back on track. If the situation still cannot be resolved within
+    the team, we will involve our teaching assistant.
 
 \subsubsection*{Attitude}
 
-\wss{What are your team's expectations regarding team members' ideas,
-interactions with the team, cooperation, attitudes, and anything else regarding
-team member contributions?  Do you want to introduce a code of conduct?  Do you
-want a conflict resolution plan?  Can adopt existing codes of conduct.}
+% \wss{What are your team's expectations regarding team members' ideas,
+% interactions with the team, cooperation, attitudes, and anything else regarding
+% team member contributions?  Do you want to introduce a code of conduct?  Do you
+% want a conflict resolution plan?  Can adopt existing codes of conduct.}
+
+We expect everyone on the team to feel comfortable sharing ideas, asking
+questions, and speaking up when they are unsure about something. Different
+opinions and approaches are expected, and everyone should treat each other's
+ideas with respect. When reviewing documents or pull requests, feedback should
+focus on the work itself and clearly explain what could be improved and why.
+
+Team members are also expected to be reliable and supportive. This means
+following through on assigned tasks, communicating when something is going
+wrong, and helping teammates when they need support. We also expect everyone to
+communicate professionally with our supervisors, teaching assistant, and each
+other.
+
+Disagreements are a normal part of working as a team. If a disagreement occurs,
+the people involved should first try to resolve it through a respectful
+discussion where everyone has a chance to explain their perspective. If the
+issue affects the project or cannot be resolved directly, the team will discuss
+it together and follow the decision-making process outlined below. If a conflict
+continues or becomes personal, we will involve our teaching assistant for
+additional support.
 
 \subsubsection*{Stay on Track}
 
-\wss{What methods will be used to keep the team on track? How will your team
-ensure that members contribute as expected to the team and that the team
-performs as expected? How will your team reward members who do well and manage
-members whose performance is below expectations?  What are the consequences for
-someone not contributing their fair share?}
+% \wss{What methods will be used to keep the team on track? How will your team
+% ensure that members contribute as expected to the team and that the team
+% performs as expected? How will your team reward members who do well and manage
+% members whose performance is below expectations?  What are the consequences for
+% someone not contributing their fair share?}
 
-\wss{You may wish to use the project management metrics collected for the TA and
-instructor for this.}
+% \wss{You may wish to use the project management metrics collected for the TA and
+% instructor for this.}
 
-\wss{You can set target metrics for attendance, commits, etc.  What are the
-consequences if someone doesn't hit their targets?  Do they need to bring the
-coffee to the next team meeting?  Does the team need to make an appointment with
-their TA, or the instructor?  Are there incentives for reaching targets early?}
+% \wss{You can set target metrics for attendance, commits, etc.  What are the
+% consequences if someone doesn't hit their targets?  Do they need to bring the
+% coffee to the next team meeting?  Does the team need to make an appointment with
+% their TA, or the instructor?  Are there incentives for reaching targets early?}
+
+To keep the project on schedule, tasks will be tracked through GitHub issues with an assigned team member and target date. This will make it easier for everyone to see what is being worked on, what still needs to be completed, and whether anything is falling behind. During our weekly meetings, we will review our current tasks, discuss any blockers, and adjust responsibilities if someone has too much work.
+
+Larger deliverables will be broken down into smaller tasks with internal deadlines so that problems can be identified before the final submission date. We will also keep track of things such as meeting attendance, completed issues, pull requests, and contributions to deliverables. The purpose of this is not to compare team members, but to make sure the workload remains reasonably balanced throughout the project.
+
+If a team member starts falling behind or is not contributing consistently, another member will first check in with them privately to understand the situation and see if they need help. If the problem continues, the team will discuss it together and create a clear plan to get back on track, which may include changing responsibilities or setting a new deadline. If the issue still cannot be resolved, we will involve our teaching assistant and the situation may also be reflected in peer evaluations.
+
+We also want to recognize members who put in additional effort or help the team beyond their assigned responsibilities. This can be as simple as acknowledging their contribution during meetings and making sure their work is recognized by the rest of the team.
 
 \subsubsection*{Team Building}
 
-\wss{How will you build team cohesion (fun time, group rituals, etc.)? }
+% \wss{How will you build team cohesion (fun time, group rituals, etc.)? }
+
+Since all the team members already know each other, we have a good starting
+point as a team. However, working together on a year-long capstone project will
+require more communication and coordination than a typical course assignment. We
+plan to keep communication open and informal through Discord and make sure
+everyone feels comfortable asking questions or raising concerns.
+
+We will also take time to acknowledge major milestones and completed
+deliverables, and may occasionally meet outside of project work, such as going
+for a meal after a major deadline. At the beginning of meetings, members can
+briefly mention if they have a particularly busy week or other major
+commitments. This will help us adjust workloads when possible instead of waiting
+until someone falls behind.
+
+Where possible, we also want team members to work on different areas of the
+project throughout the year. This will allow everyone to learn more than one
+part of the system and avoid having one person become responsible for the same
+type of task for the entire project.
 
 \subsubsection*{Decision Making} 
 
-\wss{How will you make decisions in your group? Consensus?  Vote? How will you
-handle disagreements? }
+% \wss{How will you make decisions in your group? Consensus?  Vote? How will you
+% handle disagreements? }
+
+Our team will try to make important decisions through discussion and consensus.
+When a decision needs to be made, each team member will have the opportunity to
+share their opinion and explain their reasoning. The goal will be to choose an
+option that everyone is comfortable moving forward with, even if it is not
+everyone's first choice.
+
+If we cannot reach an agreement within a reasonable amount of time, we will use
+a majority vote. Since the team has four members, there is also the possibility
+of a tie. In this case, we will give more weight to the team member who is
+working most closely with that part of the system. For larger decisions that
+could affect the overall direction of the project, we may instead ask our
+supervisors or teaching assistant for input.
+
+Decisions that depend on CAS requirements, such as where the LLM should be
+hosted or how certain department data can be used, will be discussed with our
+supervisors before being finalized. Important decisions will also be recorded in
+the meeting notes so that the team can refer back to them later.
 
 \end{document}
