@@ -1,4 +1,6 @@
 \documentclass{article}
+
+\usepackage{comment}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{float}
@@ -40,29 +42,44 @@ what is contained in the report.}
 
 \section{Confidential Information?}
 
-\wss{State whether your project has confidential information from industry, or
-not.  If there is confidential information, point to the agreement you have in
-place.}
+Yes, the project may involve confidential information related to sensitive CAS department data that will be determined later during future supervisor meetings. This information will be kept confidential and will not be shared publicly or uploaded to third-party websites without authorization. 
 
-\wss{For most teams this section will just state that there is no confidential
-information to protect.}
 \section{IP to Protect}
 
+\begin{comment}
 \wss{State whether there is IP to protect.  If there is, point to the agreement.
 All students who are working on a project that requires an IP agreement are also
 required to sign the ``Intellectual Property Guide Acknowledgement.''}
+\end{comment}
+
+Intellectual Property (IP) transfer for this project is marked as "Maybe", and is still subject 
+to further discussion with the CAS administrative supervisors (Matt Vonk, Connie Carrabs). 
+The team will ensure that any IP-related concerns are addressed appropriately, and in the event 
+that there is IP to protect (ex. due to potential internal administrative workflows), all team members 
+will sign the "Intellectual Property Guide Acknowledgement" and abide by any formal IP agreements 
+established with the CAS supervisors.
 
 \section{Copyright License}
 
+\begin{comment}
 \wss{What copyright license is your team adopting.  Point to the license in your
 repo.}
+\end{comment}
+
+
+The team is adopting the MIT License for the open-source base components of the codebase, located 
+in the root directory of our repository in the LICENSE file. The MIT License provides high 
+flexibility for software reuse while granting the CAS Administration team full rights to modify, 
+deploy, and maintain the software indefinitely without restriction.
+
 
 \section{Team Meeting Plan}
 
+\begin{comment}
 \wss{This section is for meetings between the team members, and meetings between 
 the team and their supervisor/advisor (as appropriate).}
 
-\wss{How often will the team meet? where? when?}
+\wss{How often will the team meet? Where? When?}
 
 \wss{If the meeting is a physical location (not virtual), out of an abundance of
 caution for safety reasons you shouldn't put the location online}
@@ -70,24 +87,101 @@ caution for safety reasons you shouldn't put the location online}
 \wss{To help schedule meetings, you can use the lecture/tutorial time when we do 
 not have anything else scheduled.}
 
-\wss{How often will you meet with your supervisor/advisor?  when?  where?}
+\wss{How often will you meet with your supervisor/advisor? When? Where?}
 
 \wss{Will meetings be virtual?  At least some meetings should likely be
 in-person.}
 
 \wss{How will the meetings be structured?  There should be a chair for all meetings.  
 There should be an agenda for all meetings.}
+\end{comment}
+
+\subsection{Team Internal Meetings}
+
+\begin{itemize}
+    \item \textbf{Frequency \& Time:} The team will meet weekly on Mondays, Wednesdays, and 
+    Thursdays at 5:30 PM (during lecture hours), as well as Wednesdays from 2:30 PM to 4:30 PM (tutorial hours). 
+    All other meetings will be scheduled as needed, with a minimum 24-hour notice to all team members.
+    \item \textbf{Location:} All in-person meetings will take place either in lecture or at a nearby 
+    campus library study room. Virtual meetings will be conducted via Microsoft Teams.
+    \item \textbf{Structure:} Each meeting will have a designated Meeting Chair (will rotate weekly) to enforce the agenda 
+    and a Notetaker to keep track of meeting minutes and action items. Meetings will follow a 
+    structured agenda consisting of status updates, GitHub Kanban board review, roadblock discussions, 
+    and assigning action items post-meeting.
+\end{itemize}
+
+\subsection{Supervisor/TA Advisor Meetings}
+\begin{itemize}
+    \item \textbf{Frequency \& Time:} The team will meet bi-weekly for about 30 to 60 minutes with CAS supervisors (Matt Vonk, Connie Carrabs), 
+    with each meeting being scheduled within 24 hours of the previous meeting. Additional meetings may be scheduled as needed, but this is 
+    the current plan to ensure consistent communication and feedback with the supervisors, while considering their availability. 
+    The team will also engage in bi-weekly meetings with the TA advisor (Lucas Dutton) on Wednesdays from 2:30 PM to 4:30 PM (tutorial hours) 
+    to discuss project progress, roadblocks, and ask questions related to the project. 
+    \item \textbf{Location:} In-person meetings with the CAS supervisors will take place at a location convenient to the supervisors (likely a meeting room booked in advance). 
+    Meetings with the TA advisor will be held in-person at ITB 120. If a team member or advisor cannot attend in-person, 
+    a hybrid meeting option can be arranged (case-by-case basis). All virtual meetings will be conducted via Microsoft Teams.
+    \item \textbf{Structure:} The team will distribute a meeting agenda prior to each supervisor meeting. The Chair will 
+    lead the presentation and discuss recent project milestones and progress, while the Notetaker documents meeting minutes and feedback from the supervisors/advisor.
+\end{itemize}
 
 \section{Team Communication Plan}
 
+\begin{comment}
 \wss{Issues on GitHub should be part of your communication plan.}
+\end{comment}
+
+\begin{itemize}
+    \item \textbf{Asynchronous Communication:} The team will use Discord as their primary day-to-day 
+    communication channel for quick questions, adjustments and review requests, and general project discussions. 
+    Asynchronous communication with supervisors and the TA advisor will be conducted via email, with a response time of 24 hours during weekdays.
+    
+    \item \textbf{GitHub Issues \& Kanban Project Board:} All project tasks, bugs, and feature additions will be tracked using GitHub Issues. 
+    Team members will create issues on the \href{https://github.com/users/shivyam/projects/5}{CAS Course Optimization Project Kanban Board} for unassigned tasks 
+    prior to working on them. Issues will be tagged with labels (ex. \texttt{documentation}), and linked to the relevant pull requests.
+    
+    \item \textbf{Code Reviews \& Pull Requests:} Formal communication regarding code changes will occur within GitHub Pull Requests. 
+    As each pull requires passing CI checks and at least one review approval from another team member, this will provide the opportunity to provide feedback and 
+    ensure code quality before merging the changes into the main branch.
+    
+    \item \textbf{Documentation \& File Sharing:} Draft deliverables and meeting notes will be maintained using Google Docs, 
+    while official source code and documentation will be kept within the primary GitHub repository.
+\end{itemize}
 
 \section{Team Member Roles}
 
-\wss{You should identify the types of roles you anticipate, like notetaker,
-leader, meeting chair, reviewer.  Assigning specific people to those roles is
-not necessary at this stage.  In a student team the role of the individuals will
-likely change throughout the year.}
+The team will rotate roles at each milestone to ensure that all members remain engaged across different aspects of the development process and gain a breadth of experience. All team members will contribute to documentation and meeting notes, actively participate in GitHub reviews, and decision-making. Role assignments will be revisited at each milestone to accommodate changing priorities, and ensure that all team members gain experience across different areas of the project.
+
+
+The roles we anticipate during our project include:
+\begin{itemize}
+  \item \textbf{Communication Lead}: Leads communication with stakeholders, prepares meeting agendas and notes for TA and supervisor meetings, records decisions during meetings, and creates action items for team members. This role requires strong communication, organization, and collaboration skills to ensure that stakeholder feedback is accurately communicated to the team.
+  \item \textbf{Research \& Requirements Lead}: Reviews relevant peer-reviewed research, analyzes project requirements, and establishes the team's weekly priorities. This role requires requires skills in research, requirements analysis, and technical writing, as well as an understanding of the academic policies and accreditation requirements relevant to the CAS department.
+  \item \textbf{Technical Lead}: Supports architectural and implementation decisions and helps the team debug significant technical issues and communicates with TAs when additional assistance is needed. This role requires software engineering expertise in areas such as system design, database management, software architecture, and development workflows. The Technical Lead also helps ensure that technical decisions align with project requirements and maintainability goals.
+  \item \textbf{UI/UX \& Product Lead}: Tests weekly product iterations, collects feedback, and focuses on human-computer interaction (HCI) and user experience. This role requires knowledge of user centered design, interface design, usability testing and understanding the needs of the users. This role is related to the course SFWRENG 4HC3, which all team members are taking currently.
+\end{itemize}
+
+The team brings a diverse range of technical and domain expertise to the project, including software architecture, databases, full-stack development, machine learning, software testing, and human-computer interaction. This overlap allows team members to support one another and take on responsibilities beyond their assigned roles when needed.
+
+Summary of the team's existing domain expertise:
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|p{0.27\textwidth}|X|}
+\hline
+\textbf{Team Members} & \textbf{Domain Expertise} \\
+\hline
+Shivya Mehta & Databases, System Design, APIs, Fullstack, Software Requirements, Git, Documentation, HCI \\
+\hline
+Harmanpreet Singh Sagar & Software Testing, Backend, Git, Databases, Software Requirements, Hardware, Documentation, HCI \\
+\hline
+Vanessa Lai & Software Architecture, Machine Learning/NLP, Fullstack, DevOps, UIUX, Software Requirements, API, Documentation, HCI \\
+\hline
+Anindita Bornomala & Machine Learning, AI, Git, APIs, Fullstack, Software Requirements, Documentation, Software Testing, HCI \\
+\hline
+\end{tabularx}
+\caption{Team Members and Domain Expertise}\label{tab:team_expertise}
+\end{table}
+
+
 
 \section{Workflow Plan}
 
@@ -125,21 +219,85 @@ and deliverables, allowing the team to track progress and identify outstanding w
 For example, for this project milestones will likely include \texttt{MVP}, 
 covering course-outline data extraction and policy checking, and \texttt{Final Release}, covering assessment conflict identification, scheduling suggestions, database exports, testing, and documentation.
 \\\\
-\noindent\textbf{Continuous Integration/Deployment:} GitHub Actions will be used for CI to automatically run tests, linting, and formatting checks on pull requests. Changes merged into \texttt{main} will be deployed automatically where practical.
+\noindent\textbf{Continuous Integration/Deployment:} GitHub Actions will be used for CI to automatically run tests (unit, integration, acceptance and regression), linting, and formatting checks on pull requests. Changes merged into \texttt{main} will be deployed automatically where practical. We will also monitor deployment results, address any failures, and use stakeholder feedback and testing results to guide future development iterations.
 \\ \\
 \noindent\textbf{Development Workflow:}
 \texttt{Issue $\rightarrow$ Feature Branch $\rightarrow$ Implementation $\rightarrow$ Pull Request $\rightarrow$ CI Checks $\rightarrow$ Code Review $\rightarrow$ Merge $\rightarrow$ Deployment}.
 
 \section{Project Decomposition and Scheduling}
 
+The team will use \textbf{GitHub Projects} as the primary tool for scheduling and tracking project progress. A Kanban board has been created and will be used to organize tasks into \textit{Backlog}, \textit{Ready}, \textit{In Progress}, \textit{In Review}, and \textit{Done}. Tasks will be created as GitHub Issues and assigned to individual team members. The board will be reviewed regularly during team meetings to identify blocked tasks, adjust priorities, and ensure progress toward upcoming deliverables.
+\\\\
+Large features will be decomposed into smaller, specific tasks that can be completed and validated within a few hours. 
+\\\\
+Work will be divided based on team members' skills, interests, and current workload. Team members will aim to spend approximately 10 hours per week on the project, including scheduled class time. Tasks will be distributed to balance the workload and avoid assigning too many dependent tasks to one team member. Team members will also collaborate on tasks that require multiple areas of expertise, such as integrating the frontend, backend, database, and LLM components.
+\\
+
+\noindent The project schedule will be organized around the major course deliverables and project milestones. 
+Only the first 9 weeks of the project are shown in detail, as the remaining weeks will be planned based on the progress made during the first half of the project. The schedule is as follows:
+
 \begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project
+\item \textbf{Week 4:} Problem Statement, POC Plan, and Development Plan.
+  \begin{itemize}
+    \item Problem Statement, POC Plan, and Development Plan
+    \item Research text extraction and LLM approaches
+    \item GitHub repository and GitHub Projects setup
+  \end{itemize}
+
+\item \textbf{Week 5:}
+  \begin{itemize}
+    \item Define initial system requirements
+    \item Collect sample course outlines for development and testing
+    \item Evaluate PDF text extraction libraries
+    \item Define CEAB requirements to be checked by the system
+  \end{itemize}
+
+\item \textbf{Week 6:} Requirements Document Revision 0 and Hazard Analysis.
+\begin{itemize}
+  \item Finalize requirements for course outline processing and CEAB verification
+  \item Identify risks related to incorrect text extraction and LLM-generated results
+  \item Implement initial PDF text extraction prototype
 \end{itemize}
 
-\wss{How will the project be scheduled?  This is the big picture schedule, not
-details. You will need to reproduce information that is in the course outline
-for deadlines.}
+\item \textbf{Week 7:}
+  \begin{itemize}
+    \item Implement initial LLM-based course information extraction
+    \item Define structured format for extracted course information
+    \item Design CEAB verification logic
+  \end{itemize}
+
+\item \textbf{Week 8:} V\&V Plan Revision 0.
+  \begin{itemize}
+    \item Develop tests for text extraction and CEAB verification
+    \item Define metrics for evaluating extraction accuracy
+    \item Create initial backend API for course outline processing
+  \end{itemize}
+
+\item \textbf{Week 9:}
+  \begin{itemize}
+    \item Integrate text extraction with the LLM pipeline
+    \item Implement CEAB requirement verification
+    \item Store extracted course information in database
+  \end{itemize}
+
+\item \textbf{Week 10:} Design Document Revision -1 and CD-Fall Revision 0.
+\item \textbf{Weeks 11--12:} Proof of Concept demonstration and interviews.
+\item \textbf{Week 14:} MVP should be completed and ready for demonstration.
+\begin{itemize}
+  \item Demo MVP results and address remaining issues
+  \item Plan next-stage features based on stakeholder feedback
+\end{itemize}
+
+\item \textbf{Week 16:} Design Document Revision 0.
+\item \textbf{Weeks 18--19:} Revision 0 demonstration and interviews.
+\item \textbf{Week 22:} V\&V Report Revision 0 and CD-Winter Revision 0.
+\item \textbf{Week 24:} Final Demonstration (Revision 1).
+\item \textbf{Week 26:} EXPO Demonstration.
+\item \textbf{Final Submission:} Final documentation, including the source code and revised project documents.
+\end{itemize}
+
+The GitHub Project is available at:
+\href{https://github.com/shivyam/cas-course-optimization}{GitHub Project Link}.
 
 \section{Proof of Concept Demonstration Plan}
 
@@ -250,10 +408,24 @@ Topics to discuss include the following:
 
 \section{Use of AI and LLMs}
 
-\wss{This section is a continuation of the previous section.  The role of LLMs
-in your project as important enough to warrant their own section.  
-How will your team be using LLMs for code and documentation development?  
-What tools will you be using?  How will you verify the output of your LLMs?}
+The team plans to use Claude Code (version 2.1.283) and Cursor (Grok 4.5 Fast), as AI-assisted development tools.
+These tools will support planning, development, documentation, and
+collaboration throughout the project.  Specifically, we will use AI to review
+project documentation against the checklists in the capstone project GitHub
+repository (\url{https://github.com/smiths/capTemplate/tree/main/pdfs/Checklists}),
+suggest codebase folder structures and configuration setups, and assist with
+debugging issues such as missing dependencies and LaTeX compilation errors.  AI will
+also be used to organize and refine meeting minutes, summarize discussions,
+and extract key decisions and action items.  All final decisions and
+implementations will remain under the team's control.
+
+The team will independently verify all AI-generated suggestions for accuracy,
+completeness, consistency, and appropriateness before incorporating them into
+the project. AI-generated code will undergo human code review before being 
+committed or pushed to the repository.  Code
+will be validated through CI/CD pipelines using automated builds, linting, and
+unit, integration, and regression testing.  Dependencies, configuration
+changes, and potential security issues will be reviewed carefully.
 
 \section{Coding Standard}
 
@@ -285,7 +457,11 @@ sections in the body of this report.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+The team used the following AI tools and how they were used:
+\begin{itemize}
+  \item Cursor (Grok 4.5 Fast) for formatting and debugging LaTeX errors 
+\end{itemize}
+
 
 \subsection{How and Where Used}
 
