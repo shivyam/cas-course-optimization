@@ -1,0 +1,29 @@
+// TypeScript settings for the app code in src/ (runs in the browser).
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    // vite/client types `import.meta.env`. Test matcher types (toBeInTheDocument)
+    // come from the jest-dom import in src/setupTests.ts.
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode: Vite does the bundling, tsc only type-checks */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
