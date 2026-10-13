@@ -1,0 +1,85 @@
+# CI for the application code: lints and tests the backend and frontend.
+# Runs on every pull request and on every push to main. The two jobs run in
+# parallel and must both pass. (LaTeX docs are handled by latex-pages.yml.)
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Read-only token: this workflow only checks code, it never writes to the repo.
+permissions:
+  contents: read
+
+# If new commits are pushed to the same branch/PR, cancel the older run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/backend
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      # 3.12 is the minimum supported version (requires-python in pyproject.toml).
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: src/backend/pyproject.toml
+
+      # Installs the app plus the dev tools (pytest, httpx, ruff).
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint (ruff check)
+        run: ruff check .
+
+      - name: Check formatting (ruff format)
+        run: ruff format --check .
+
+      - name: Test (pytest)
+        run: pytest
+
+  frontend:
+    name: Frontend (React)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/frontend
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      # Latest Node 22 LTS; package.json requires ^22.22.2.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+
+      # npm ci installs the exact versions in package-lock.json.
+      - name: Install dependencies
+        run: npm ci
+
+      # Runs ESLint and the Prettier format check.
+      - name: Lint
+        run: npm run lint
+
+      - name: Test (vitest)
+        run: npm run test
+
+      # Type-checks with tsc and makes sure the production build succeeds.
+      - name: Build
+        run: npm run build
