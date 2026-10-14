@@ -3,11 +3,14 @@ app/__init__.py
 app/main.py
 app/api/__init__.py
 app/api/health.py
+app/api/llm.py
 app/api/outlines.py
+app/services/llm_client.py
 cas_course_optimization_backend.egg-info/PKG-INFO
 cas_course_optimization_backend.egg-info/SOURCES.txt
 cas_course_optimization_backend.egg-info/dependency_links.txt
 cas_course_optimization_backend.egg-info/requires.txt
 cas_course_optimization_backend.egg-info/top_level.txt
 tests/test_health.py
+tests/test_llm.py
 tests/test_outlines.py

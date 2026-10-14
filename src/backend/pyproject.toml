@@ -11,6 +11,8 @@ dependencies = [
     "uvicorn[standard]>=0.30",
     # Needed by FastAPI to accept file uploads (multipart/form-data).
     "python-multipart>=0.0.9",
+    # Python client for a locally running Ollama server.
+    "ollama>=0.4",
 ]
 
 # Tools only needed for development and CI, not for running the app.

@@ -9,7 +9,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import health, outlines
+from app.api import health, llm, outlines
 
 
 def get_cors_origins() -> list[str]:
@@ -34,4 +34,5 @@ app.add_middleware(
 # Register every router under /api so all backend routes share one prefix,
 # which is what the frontend dev proxy forwards to.
 app.include_router(health.router, prefix="/api")
+app.include_router(llm.router, prefix="/api")
 app.include_router(outlines.router, prefix="/api")

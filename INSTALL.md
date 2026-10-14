@@ -75,7 +75,7 @@ Your prompt should now start with `(.venv)`. Then install:
 pip install -e ".[dev]"
 ```
 
-This installs the app's dependencies (FastAPI, uvicorn, python-multipart) plus the dev tools (pytest, httpx, Ruff). The `-e` flag makes it an editable install, so code changes take effect without reinstalling.
+This installs the app's dependencies (including the Ollama Python client) plus the dev tools (pytest, httpx, and Ruff). The `-e` flag makes it an editable install, so code changes take effect without reinstalling.
 
 To install only what is needed to run the app, without the dev tools, use `pip install -e .` instead.
 

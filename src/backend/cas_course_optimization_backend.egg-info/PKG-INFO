@@ -6,6 +6,7 @@ Requires-Python: >=3.12
 Requires-Dist: fastapi>=0.115
 Requires-Dist: uvicorn[standard]>=0.30
 Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: ollama>=0.4
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 Requires-Dist: httpx>=0.27; extra == "dev"

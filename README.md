@@ -88,6 +88,27 @@ The API runs at <http://127.0.0.1:8000>.
 
 Opening <http://127.0.0.1:8000>. on its own shows `404 Not Found`. That is expected, since every route lives under `/api`.
 
+### Testing a local LLM
+
+The backend can call an Ollama model running locally. Install Ollama, then
+download a model once:
+
+```bash
+ollama pull qwen3:4b
+```
+
+Start Ollama, start the backend, and send a test prompt:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/llm/test \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Summarize the purpose of this project in one sentence."}'
+```
+
+The default Ollama URL is `http://localhost:11434`, the default model is
+`qwen3:4b`, and the request timeout is 480 seconds (8 minutes). Override them
+with `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, and `OLLAMA_TIMEOUT_SECONDS` in `.env`.
+
 ## Running the Frontend
 
 In a second terminal, from `src/frontend`:
