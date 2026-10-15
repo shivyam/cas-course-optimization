@@ -1,0 +1,51 @@
+# Project metadata and runtime dependencies.
+# Install for development with: pip install -e ".[dev]"
+[project]
+name = "cas-course-optimization-backend"
+version = "0.1.0"
+description = "Backend API for CAS Midterm and Assignment Optimization"
+requires-python = ">=3.12"
+dependencies = [
+    # Web framework and ASGI server.
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    # Needed by FastAPI to accept file uploads (multipart/form-data).
+    "python-multipart>=0.0.9",
+]
+
+# Tools only needed for development and CI, not for running the app.
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    # Required by FastAPI's TestClient used in the tests.
+    "httpx>=0.27",
+    "ruff>=0.6",
+]
+
+# Lets pip install this folder as a package (needed for `pip install -e .`).
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+# Only package the app code, not tests.
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+# Pytest: look in tests/ and make `import app` work from this folder.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+# Ruff linter and formatter settings. Run: ruff check . && ruff format .
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# E/W: pycodestyle (PEP 8), F: pyflakes, I: import sorting,
+# N: PEP 8 naming, UP: pyupgrade, B: bugbear
+select = ["E", "W", "F", "I", "N", "UP", "B"]
+
+# Formatter style (Black-compatible).
+[tool.ruff.format]
+quote-style = "double"

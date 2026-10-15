@@ -1,0 +1,6 @@
+// Root TypeScript config. It only points at the two real configs:
+// tsconfig.app.json (browser code in src/) and tsconfig.node.json (vite.config.ts).
+{
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}

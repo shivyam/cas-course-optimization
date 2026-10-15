@@ -1,0 +1,6 @@
+# Prettier formatting rules shared by the whole frontend (YAML, so comments are allowed).
+# Run `npm run format` to fix formatting, `npm run lint` to check it.
+semi: false # no semicolons, matching the Vite React template
+singleQuote: true # 'single' quotes in TS/JS ("double" stays in JSX attributes)
+trailingComma: all # trailing commas give cleaner git diffs
+printWidth: 90

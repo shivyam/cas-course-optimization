@@ -1,0 +1,20 @@
+/* Global styles and design tokens. Imported once in main.tsx. */
+@import 'tailwindcss';
+
+/*
+ * McMaster brand colours (heritage palette).
+ * Confirm exact values against the McMaster brand guidelines before release.
+ *
+ * Each --color-* token becomes a Tailwind utility, e.g.
+ *   --color-mcmaster-maroon -> bg-mcmaster-maroon, text-mcmaster-maroon, border-...
+ */
+@theme {
+  --color-mcmaster-maroon: #7a003c;
+  --color-mcmaster-gold: #fdbf57;
+  --color-mcmaster-grey: #5e6a71;
+}
+
+/* Base page styles shared by every route. */
+body {
+  @apply bg-white text-gray-900 antialiased;
+}

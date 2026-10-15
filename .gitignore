@@ -283,3 +283,20 @@ TSWLatexianTemp*
 ## Python bytecode from the build scripts
 __pycache__/
 *.pyc
+
+## Environment files (keep .env.example committed)
+.env
+.env.*
+!.env.example
+
+## Python
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+## Node
+node_modules/
+dist/
+
+## Local course outline data (never commit real outlines)
+data/

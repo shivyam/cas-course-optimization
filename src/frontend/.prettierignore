@@ -1,0 +1,4 @@
+# Generated files that Prettier should not check or rewrite.
+dist
+coverage
+package-lock.json
