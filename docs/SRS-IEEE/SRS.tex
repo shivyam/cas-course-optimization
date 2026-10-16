@@ -361,26 +361,62 @@ restrictions.}
 % ============================================================== 
 \section{Stakeholder Requirements}
 
-\plt{Technology-independent requirements.  These come from statements made by
-the stakeholders.  You will find these through interviews and surveys.  They are
-often expressed in natural language.  They are not necessarily testable, but
-they should be verifiable.}
+%\plt{Technology-independent requirements.  These come from statements made by
+%the stakeholders.  You will find these through interviews and surveys.  They are
+%often expressed in natural language.  They are not necessarily testable, but
+%they should be verifiable.}
 
-\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
+%\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
 
 \noindent \begin{itemize}
+  
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
+The system shall allow the CAS Admin team to collect and review course outlines in one centralized location.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label1}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
+The system shall identify relevant information in submitted course outlines, including course details, 
+assignments and projects, marking schemes, and midterm dates where available.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label2}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
+The system shall support the CAS Admin team in reviewing course outlines for potential failures to comply 
+with McMaster University/CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label3}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Criteria Review: 
+The system shall support the review of course outlines against CEAB accreditation requirements.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-05}] Verification of Extracted Information: 
+The system shall allow authorized users to review and correct extracted course information before 
+relying on it for compliance reviews and scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
+The system shall analyze submitted assessment dates across relevant CAS department courses to 
+identify periods with high amounts of deadlines for assessments and midterms.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
+The system shall recommend (but not automatically decide) optimal dates for midterms and assessments 
+to reduce deadline bottlenecks for students.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
+The system shall allow instructors to review scheduling recommendations and keep their authority 
+over whether to accept or reject proposed changes.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Schedule Reassessment: 
+The system shall allow schedules to be analyzed again when assessment/midterm dates are updated.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Handling Incomplete Information: 
+The system shall identify missing or unreadable information from course outlines that may affect 
+the reliability or accuracy of scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Authorized Access: 
+The system shall restrict access to CAS administrators, professors/instructors, and other users authorized 
+to access sensitive administrative information within the system (ex. lecture hall locations).
 
 \end{itemize}
 
-\plt{You should give your SRs meaningful labels, so that you can refer to them
-in other parts of the SRS.  The label names should be meaningful mnemonics, not
-numbers.}
+
+%\plt{You should give your SRs meaningful labels, so that you can refer to them
+%in other parts of the SRS.  The label names should be meaningful mnemonics, not
+%numbers.}
 
 % ============================================================== 
 \section{User Personas}
