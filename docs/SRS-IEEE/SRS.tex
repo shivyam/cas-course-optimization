@@ -354,26 +354,62 @@ restrictions.}
 % ============================================================== 
 \section{Stakeholder Requirements}
 
-\plt{Technology-independent requirements.  These come from statements made by
-the stakeholders.  You will find these through interviews and surveys.  They are
-often expressed in natural language.  They are not necessarily testable, but
-they should be verifiable.}
+%\plt{Technology-independent requirements.  These come from statements made by
+%the stakeholders.  You will find these through interviews and surveys.  They are
+%often expressed in natural language.  They are not necessarily testable, but
+%they should be verifiable.}
 
-\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
+%\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
 
 \noindent \begin{itemize}
+  
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
+The system shall allow the CAS Admin team to collect and review course outlines in one centralized location.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label1}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
+The system shall identify relevant information in submitted course outlines, including course details, 
+assignments and projects, marking schemes, and midterm dates where available.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label2}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
+The system shall support the CAS Admin team in reviewing course outlines for potential failures to comply 
+with McMaster University/CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label3}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Criteria Review: 
+The system shall support the review of course outlines against CEAB accreditation requirements.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-05}] Verification of Extracted Information: 
+The system shall allow authorized users to review and correct extracted course information before 
+relying on it for compliance reviews and scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
+The system shall analyze submitted assessment dates across relevant CAS department courses to 
+identify periods with high amounts of deadlines for assessments and midterms.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
+The system shall recommend (but not automatically decide) optimal dates for midterms and assessments 
+to reduce deadline bottlenecks for students.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
+The system shall allow instructors to review scheduling recommendations and keep their authority 
+over whether to accept or reject proposed changes.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Schedule Reassessment: 
+The system shall allow schedules to be analyzed again when assessment/midterm dates are updated.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Handling Incomplete Information: 
+The system shall identify missing or unreadable information from course outlines that may affect 
+the reliability or accuracy of scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Authorized Access: 
+The system shall restrict access to CAS administrators, professors/instructors, and other users authorized 
+to access sensitive administrative information within the system (ex. lecture hall locations).
 
 \end{itemize}
 
-\plt{You should give your SRs meaningful labels, so that you can refer to them
-in other parts of the SRS.  The label names should be meaningful mnemonics, not
-numbers.}
+
+%\plt{You should give your SRs meaningful labels, so that you can refer to them
+%in other parts of the SRS.  The label names should be meaningful mnemonics, not
+%numbers.}
 
 % ============================================================== 
 \section{User Personas}
@@ -401,41 +437,356 @@ numbers.}
 \item Technical Ability:
 \end{itemize}
 
+\subsection{Persona 3}
+\begin{itemize}
+\item Name:
+\item Description:
+\item Goals:
+\item Frustrations:
+\item Technical Ability:
+\end{itemize}
+
 % ============================================================== 
 \section{Use Cases}
-\plt{Use cases are a way to describe the interactions between users and the system.
-  They are typically written in natural language and describe the steps that a
-  user takes to achieve a specific goal.  Use cases can be used to identify
-  functional requirements and to create test cases.}  
-\plt{Typically 8-15 substantial use cases.}
+%\plt{Use cases are a way to describe the interactions between users and the system.
+%  They are typically written in natural language and describe the steps that a
+%  user takes to achieve a specific goal.  Use cases can be used to identify
+%  functional requirements and to create test cases.}  
+%\plt{Typically 8-15 substantial use cases.}
 
-\refstepcounter{ucnum} \label{UC_Label1}
-\subsection{\ucref{UC_Label1}: Example Use Case}
+\refstepcounter{ucnum} \label{UC_CAS_01}
+\subsection{\ucref{UC_CAS_01}: Submit Course Outline}
 
-\textbf{Primary Actor}
+\noindent \textbf{Primary Actor:} CAS Administrator
 
-TODO
-
-\textbf{Preconditions}
+\noindent \textbf{Preconditions}
 \begin{itemize}
-\item TODO
+  \item The administrator has access to the system.
+  \item A CAS course outline is available for submission.
 \end{itemize}
 
-\textbf{Main Success Scenario}
+\noindent \textbf{Main Success Scenario}
 \begin{enumerate}
-\item TODO
-\item TODO
-\item TODO
+  \item The administrator logs into the system.
+  \item The administrator selects the option to submit a course outline.
+  \item The administrator selects and submits the course outline.
+  \item The system receives the document and attempts to extract relevant course information.
+  \item The system confirms that the course outline has been submitted successfully.
+  \item The system makes the submitted outline available for information extraction and review.
 \end{enumerate}
 
-\textbf{Alternative Flows}
+\noindent \textbf{Alternative Flows}
 \begin{itemize}
-\item TODO
+  \item If the submitted document cannot be read, the system informs the administrator that a readable document is required.
+  \item If the submission fails, the system informs the administrator and allows them to try again.
+  \item If relevant course information is missing, the system proceeds with the information that is available and identifies the missing information.
 \end{itemize}
 
-\textbf{Postconditions}
+\noindent \textbf{Postconditions}
 \begin{itemize}
-\item TODO
+  \item The course outline is available in the system for review, or the administrator is informed that submission was unsuccessful.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_02}
+\subsection{\ucref{UC_CAS_02}: Review Extracted Course Information}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted successfully.
+  \item The system has attempted to extract relevant course information.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a submitted course outline.
+  \item The system presents the extracted course details and information, including assignments, marking schemes, and midterm dates where available.
+  \item The administrator reviews the extracted information against the original course outline.
+  \item The administrator fills in any missing information or confirms that the information is correct.
+  \item The system saves the verified course information for later steps and scheduling analysis.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If the system cannot extract certain information, it identifies the missing information for the administrator to review.
+  \item If the administrator identifies incorrect information, they correct it before proceeding.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The extracted course information has been reviewed and corrected where necessary.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_03}
+\subsection{\ucref{UC_CAS_03}: Review Course Outline Against McMaster and CAS Policies}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item Relevant course information is available for review.
+  \item McMaster University and CAS department policy criteria are available to the system.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a course outline for policy review.
+  \item The system evaluates the available course information against policy criteria.
+  \item The system identifies potential policy inconsistencies or missing required information.
+  \item The system presents the findings and supporting information to the administrator.
+  \item The administrator reviews the findings and determines which issues require further investigation or correction.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If relevant information is missing, the system identifies the limitation and presents any findings that can still be supported.
+  \item If a potential policy issue cannot be determined conclusively, the system flags it for manual review.
+  \item If the necessary policy criteria are unavailable, the system informs the administrator that the review cannot be completed reliably.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has access to policy review findings and can identify issues requiring further attention.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_CAS_04}
+\subsection{\ucref{UC_CAS_04}: Review Course Outline Against CEAB Criteria}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item Relevant course information is available for review.
+  \item Applicable CEAB accreditation criteria are available to the system.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a course outline for CEAB-related review.
+  \item The system evaluates the available course information against CEAB criteria.
+  \item The system identifies potential information gaps that may require further examination.
+  \item The system presents the findings and supporting information to the administrator.
+  \item The administrator reviews the findings and determines which issues require further investigation or correction.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If relevant information is missing, the system identifies the limitation and presents any findings that can still be supported.
+  \item If a potential gap requires professional judgment, the system flags it for manual review.
+  \item If the necessary CEAB criteria are unavailable, the system informs the administrator that the review cannot be completed reliably.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has access to CEAB-related review findings and can identify issues requiring further attention.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_05}
+\subsection{\ucref{UC_CAS_05}: Review Course Outline Findings}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item At least one policy or CEAB-related review has been performed.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator opens the review findings for a course outline.
+  \item The system displays identified potential issues, missing information, and relevant supporting details.
+  \item The administrator examines the findings and determines required follow-up.
+  \item The administrator uses the findings to support the course outline review process.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If no potential issues are identified, the system indicates that no issues were detected by the review.
+  \item If the findings depend on incomplete or uncertain information, the system identifies those limitations.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has reviewed the available findings and identified any issues requiring follow-up.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_01}
+\subsection{\ucref{UC_PROF_01}: Submit Tentative Assessment Dates}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item The professor or instructor has access to the system.
+  \item The instructor has tentative assessment dates for a relevant course.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor selects the relevant course.
+  \item The instructor enters or submits tentative dates for assessments and midterms.
+  \item The system checks the submitted information for completeness.
+  \item The system presents any identified missing or invalid information to the instructor.
+  \item The instructor corrects any identified issues and submits the information.
+  \item The system saves the tentative assessment dates for scheduling analysis.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If required assessment information is missing, the system identifies the missing details and asks the instructor to complete them.
+  \item If a date is invalid or cannot be interpreted, the system asks the instructor to correct it.
+  \item If the instructor needs to revise the submitted dates, they can update the information and submit it again.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor's tentative assessment dates are stored and available for scheduling analysis.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_02}
+\subsection{\ucref{UC_PROF_02}: Analyze Assessment Schedule}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item Tentative assessment dates have been submitted for relevant courses.
+  \item Sufficient assessment information is available to perform the analysis.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor requests an analysis of the assessment schedule.
+  \item The system gathers the available assessment dates for relevant courses.
+  \item The system analyzes the distribution of assessments and midterms across the relevant period.
+  \item The system identifies periods with high concentrations of assessments or potential student workload bottlenecks.
+  \item The system presents the analysis results to the instructor.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If assessment information is incomplete, the system identifies the missing information and explains how it limits the analysis.
+  \item If insufficient assessment dates are available, the system informs the instructor that a reliable analysis cannot be completed.
+  \item If no significant bottlenecks are identified, the system presents the analysis without recommending unnecessary changes.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor can review the assessment schedule analysis and any identified workload bottlenecks.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_03}
+\subsection{\ucref{UC_PROF_03}: Generate Scheduling Recommendations}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item An assessment schedule analysis has been completed.
+  \item Sufficient information is available to identify potential alternative dates.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor requests scheduling recommendations based on the available assessment schedule.
+  \item The system identifies assessments that contribute to periods with high concentrations of deadlines.
+  \item The system evaluates potential alternative dates for affected assessments.
+  \item The system generates recommendations intended to reduce assessment bottlenecks while considering the available scheduling information.
+  \item The system presents the suggested dates and the reasoning behind the recommendations.
+  \item The instructor reviews the recommendations.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If no suitable alternative dates can be identified, the system informs the instructor that it cannot provide a suitable recommendation.
+  \item If relevant scheduling information is missing, the system identifies the limitation.
+  \item If several alternatives are available, the system presents the alternatives for the instructor to evaluate.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item Scheduling recommendations (if applicable), are presented to the instructor for consideration. No assessment dates are changed automatically.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_04}
+\subsection{\ucref{UC_PROF_04}: Review and Decide on Scheduling Recommendations}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item Scheduling recommendations have been generated for the relevant assessment schedule.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor opens the scheduling recommendations.
+  \item The system displays the suggested assessment dates and the rationale for each recommendation.
+  \item The instructor evaluates the suggestions against course-specific constraints and other relevant considerations.
+  \item The instructor chooses to accept, reject, or modify a proposed date.
+  \item The system records the instructor's decision and updates the schedule if an accepted or modified date is submitted.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If the instructor rejects a recommendation, the existing assessment date remains unchanged.
+  \item If the instructor modifies a recommendation, the system allows the revised date to be submitted
+  \item If the instructor needs more information, they can review the schedule analysis before making a decision.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor's decision is reflected in the schedule where an update has been submitted. Rejected recommendations do not change the existing assessment dates.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_PROF_05}
+\subsection{\ucref{UC_PROF_05}: Update Assessment Dates and Re-analyze Schedule}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item Assessment dates for the relevant course have previously been submitted.
+  \item The instructor has identified a need to change one or more tentative assessment dates.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor selects the relevant course and assessment schedule.
+  \item The instructor updates one or more tentative assessment dates.
+  \item The system checks the updated information for completeness and validity, then saves the updated dates.
+  \item The instructor requests a new assessment schedule analysis.
+  \item The system analyzes the updated schedule and identifies any remaining or newly introduced bottlenecks.
+  \item The system presents the updated analysis and any resulting recommendations.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If an updated date is invalid or incomplete, the system asks the instructor to correct it before proceeding.
+  \item If insufficient information is available for re-analysis, the system identifies the missing information.
+  \item If the updated schedule introduces new bottlenecks, the system identifies them in the new analysis.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The updated tentative assessment dates are available in the system, and a new analysis is available if sufficient information was provided.
 \end{itemize}
 
 % ============================================================== 
