@@ -316,20 +316,9 @@ compliance decisions.
   
 \subsection{System Context}
 
-\plt{Include users, external systems, APIs, databases, and third-party services.}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{../SRS/SystemContextFigure.pdf}
+ \includegraphics[width=0.6\textwidth]{../SRS-IEEE/SystemContext2.3.png}
 \caption{System Context}
 \label{Fig_SystemContext} 
 \end{center}
@@ -345,28 +334,51 @@ compliance decisions.
   For instance, saying ``material properties'' provides some information, but it
   stays away from the detail of listing every required properties.}
 
+The CAS Deadline Management System is a web-based application intended to support 
+course outline review, assessment scheduling, and policy compliance within the Department of 
+Computing and Software (CAS) at McMaster University. CAS administrators and course instructors 
+interact with the system to upload course outlines, review extracted information, view assessment 
+schedules, and evaluate potential scheduling conflicts and compliance issues.
+\\ \\
+The system processes course outlines and relevant academic scheduling information to extract 
+assessment details, identify missing or potentially non-compliant information, and recommend 
+alternative assessment dates. Results are presented to users for review, while instructors and 
+authorized administrators retain responsibility for final scheduling and compliance decisions.
+\\ \\
+The system is intended for academic administration and planning rather than mission-critical or 
+safety-critical applications. Since extracted information and automated recommendations may be 
+incomplete or inaccurate, users must review flagged issues and verify important results before 
+making decisions.
+
 \begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+    \item \textbf{User Responsibilities:}
+    \begin{itemize}
+        \item Provide course outlines and relevant academic scheduling information.
+        \item Ensure submitted documents are appropriate for review and that the information provided is sufficiently complete and accurate.
+        \item Review extracted course and assessment information and correct errors where supported.
+        \item Evaluate flagged scheduling conflicts, missing information, and potential policy compliance issues.
+        \item Decide whether to accept or reject suggested assessment dates and determine any final changes to course schedules.
+    \end{itemize}
+
+    \item \textbf{\progname{} Responsibilities:}
+    \begin{itemize}
+        \item Accept and process supported course outline documents and scheduling information.
+        \item Extract and organize relevant course and assessment details for review.
+        \item Validate extracted data for missing, inconsistent, or incorrectly formatted values where possible.
+        \item Present assessment schedules and identify potential workload conflicts.
+        \item Flag potential gaps in course outline requirements and applicable accreditation criteria.
+        \item Generate alternative assessment date recommendations with supporting explanations.
+        \item Present results and warnings to users without automatically changing course outlines or assessment schedules.
+    \end{itemize}
+
+    \item \textbf{External System Responsibilities:}
+    \begin{itemize}
+        \item \textbf{LLM:} Process course outline content to support information extraction and, where applicable, the generation of explanations and scheduling recommendations.
+        \item \textbf{Database:} Store and retrieve course information, extracted assessment details, review results, and scheduling information.
+    \end{itemize}
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} 
 
-\plt{This additional context information is needed to determine how much effort
-should be devoted to the rationale section.  If the application is
-safety-critical, the bar is higher.  This is currently less structured, but
-analogous to, the idea to the Automotive Safety Integrity Levels (ASILs) that
-McSCert uses in their automotive hazard analyses.}
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
