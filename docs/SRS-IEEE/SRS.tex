@@ -447,24 +447,43 @@ TODO
 
 % ============================================================== 
 \section{Functional Requirements}
-\plt{Functional requirements describe what the system should do.  They are typically
-expressed as a set of conditions or capabilities that the system must have.  These
-requirements are usually derived from the stakeholder requirements and use cases.}
 
-\plt{Use SHALL statements. Requirements must be atomic, testable, and traceable.}
+\noindent The system shall support the following capabilities, grouped by feature area.
+Requirement numbering continues across groups.
 
-\noindent \begin{itemize}
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label1}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label2}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label3}:] The system shall ...
-
+\subsection*{Outline Intake and Extraction}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake}:] The system shall accept course outlines in PDF, Word and HTML format submitted by a CAS administrator or professor.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assess}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, ambiguous, or marked TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
 \end{itemize}
 
-\plt{The requirements are given labels so that they can be referenced in other
-parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
+\subsection*{Calendar and Conflict Detection}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Cal}:] The system shall display confirmed assessment dates in a shared calendar that can be filtered by course, year, and program.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
+\end{itemize}
+
+\subsection*{Scheduling Suggestions}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Sugg_Gen}:] The system shall suggest alternative dates, each with an explanation, for assessments involved in a detected conflict or listed as TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Sugg_NoAuto}:] The system shall not change any assessment date without the explicit approval of the responsible instructor or an administrator.
+\end{itemize}
+
+\subsection*{Compliance Checking}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_GA}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Program}:] The system shall report which graduate attributes are covered across the program as a whole and which are not.
+\end{itemize}
+
+\subsection*{Notifications}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Notify_Email}:] The system shall send scheduling suggestions and compliance results to instructors by email, and display on the website.
+\end{itemize}
 
 % ============================================================== 
 \section{Data Requirements}
