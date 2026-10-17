@@ -178,8 +178,18 @@ practice.}
 
 \subsection{Purpose}
 
-The CAS (Computing and Software) Department currently manages course outlines and assessment schedules on a course-by-course basis. Course instructors set their deadlines independently, so students in the same program and year can face busy weeks of midterms and deadlines with no department-level visibility into them. CAS administrative staff must also manually check each outline against McMaster course outline policy and the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when information is missing.
-The CAS Deadline Management System is intended to make assessment dates visible across courses and to identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, and never changes a course outline or assessment date on its own.
+The CAS (Computing and Software) Department currently manages course outlines and assessment schedules on a 
+course-by-course basis. Course instructors set their deadlines independently, so students in the same program 
+and year can face busy weeks of midterms and deadlines with no department-level visibility into them. 
+CAS administrative staff must also manually check each outline against McMaster course outline policy and 
+the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when 
+information is missing.
+\\ \\
+The CAS Deadline Management System is intended to make assessment dates visible across courses and to 
+identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against 
+these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators 
+remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, 
+and never changes a course outline or assessment date on its own.
 
 \subsection{Scope}
 The CAS Deadline Management System aims to improve course outline review and assessment scheduling within 
@@ -254,14 +264,13 @@ SRS & Software Requirements Specification, a document that describes a software 
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
-The intended readers of this Software Requirements Specification (SRS) include 
+The intended readers of this Software Requirements Specification include 
 project supervisors, CAS administrators, software developers, testers, and future 
 maintainers. Technical readers should have a foundational understanding of software 
 development, web applications, databases, and software testing. Familiarity with PDF 
 processing and large language models (LLMs) is beneficial but not required. 
 CAS administrators and project supervisors should be familiar with academic scheduling, 
-course outlines, and relevant university policies, including Canadian Engineering 
-Accreditation Board (CEAB) requirements. This document is intended to communicate 
+course outlines, and relevant university policies, including CEAB requirements. This document is intended to communicate 
 system requirements clearly to both technical and non-technical readers.
 
 % ============================================================== 
@@ -272,112 +281,137 @@ problem, the vision, and the interfaces between the system and its environment.
 This section also describes user characteristics and lists the system
 constraints.
 
-\plt{The purpose of this section is to provide general information about the
-  system so that the specific requirements in the later sections will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
-
 \subsection{Problem Statement}
 
-\plt{Current situation, problem, impact, desired improvement.  You will likely borrow some text from your problem description document.}
+The CAS Department at McMaster University currently manages 
+course outlines and assessment schedules independently across courses. Without a centralized 
+view of assessment dates, students in the same program and academic year may face multiple
+midterms and assignment deadlines within short periods. CAS administrative staff must also 
+manually review course outlines for compliance with university policies and CEAB requirements. 
+Missing or incomplete information, such as midterm dates listed as ``TBD,'' 
+creates additional work and requires repeated communication with instructors.
+\\\\
+These challenges contribute to uneven student workloads, increased academic stress, and 
+significant administrative overhead. Furthermore, instructors retain authority over their 
+course schedules, limiting administrators' ability to directly resolve scheduling conflicts.
+\\\\
+The CAS Deadline Management System aims to improve this process by centralizing assessment 
+information, identifying potential scheduling conflicts and policy compliance gaps, and 
+suggesting alternative assessment dates. This will help administrators coordinate schedules 
+more efficiently, reduce manual review efforts, and support more balanced student workloads 
+while preserving instructors' authority over their courses.
 
-TODO
 
 \subsection{Product Vision}
 
-\plt{A clear and concise statement of the product's purpose and goals.}
-
-\plt{The goal statements are functional and nonfunctional objectives that system
-  under consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements pertinence.
-  Goals will be refined by requirements.  The goals are written abstractly, with
-  a minimal amount of technical language.  They should be understandable by
-  non-domain experts.}
-
-\plt{You will likely borrow from your goal statements in your problem
-description document.}
-
-TODO
+The CAS Deadline Management System will provide the CAS Department with a trusted,
+department-wide foundation for collaborative assessment planning. It will turn
+course-outline information into a consistent, reviewable source of scheduling
+knowledge that helps instructors and administrators make informed decisions
+together. The system is intended to improve coordination and transparency over
+time, while keeping final responsibility for course schedules and policy
+interpretation with the appropriate human decision-makers.
   
 \subsection{System Context}
 
-\plt{Include users, external systems, APIs, databases, and third-party services.}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{../SRS/SystemContextFigure.pdf}
+ \includegraphics[width=0.6\textwidth]{../SRS-IEEE/SystemContext2.3.png}
 \caption{System Context}
 \label{Fig_SystemContext} 
 \end{center}
 \end{figure}
 
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
+The CAS Deadline Management System is a web-based application intended to support 
+course outline review, assessment scheduling, and policy compliance within the CAS Department at 
+McMaster University. CAS administrators and course instructors 
+interact with the system to upload course outlines, review extracted information, view assessment 
+schedules, and evaluate potential scheduling conflicts and compliance issues.
+Figure~\ref{Fig_SystemContext} summarizes these interactions by showing the system boundary
+and its relationships with instructors, CAS administrators, the LLM, and the database.
+\\ \\
+The system processes course outlines and relevant academic scheduling information to extract 
+assessment details, identify missing or potentially non-compliant information, and recommend 
+alternative assessment dates. Results are presented to users for review, while instructors and 
+authorized administrators retain responsibility for final scheduling and compliance decisions.
+\\ \\
+The system is intended for academic administration and planning rather than mission-critical or 
+safety-critical applications. Since extracted information and automated recommendations may be 
+incomplete or inaccurate, users must review flagged issues and verify important results before 
+making decisions.
 
 \begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+    \item \textbf{User Responsibilities:}
+    \begin{itemize}
+        \item Provide course outlines and relevant academic scheduling information.
+        \item Ensure submitted documents are appropriate for review and that the information provided is sufficiently complete and accurate.
+        \item Review extracted course and assessment information and correct errors where supported.
+        \item Evaluate flagged scheduling conflicts, missing information, and potential policy compliance issues.
+        \item Decide whether to accept or reject suggested assessment dates and determine any final changes to course schedules.
+    \end{itemize}
+
+    \item \textbf{\progname{} Responsibilities:}
+    \begin{itemize}
+        \item Accept and process supported course outline documents and scheduling information.
+        \item Extract and organize relevant course and assessment details for review.
+        \item Validate extracted data for missing, inconsistent, or incorrectly formatted values where possible.
+        \item Present assessment schedules and identify potential workload conflicts.
+        \item Flag potential gaps in course outline requirements and applicable accreditation criteria.
+        \item Generate alternative assessment date recommendations with supporting explanations.
+        \item Present results and warnings to users without automatically changing course outlines or assessment schedules.
+    \end{itemize}
+
+    \item \textbf{External System Responsibilities:}
+    \begin{itemize}
+        \item \textbf{LLM:} Process course outline content to support information extraction and, where applicable, the generation of explanations for scheduling recommendations.
+        \item \textbf{Database:} Store and retrieve course information, extracted assessment details, review results, and scheduling information.
+    \end{itemize}
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} 
 
-\plt{This additional context information is needed to determine how much effort
-should be devoted to the rationale section.  If the application is
-safety-critical, the bar is higher.  This is currently less structured, but
-analogous to, the idea to the Automotive Safety Integrity Levels (ASILs) that
-McSCert uses in their automotive hazard analyses.}
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
+The primary users of the CAS Deadline Management System are CAS administrators 
+and course instructors at McMaster University. Users are expected to have basic 
+computer skills, including navigating web applications and viewing course information. 
+CAS administrators should be familiar with course outline reviews, academic scheduling, 
+and applicable university policies. Course instructors should have knowledge of their own 
+course outlines and assessment schedules. No programming or machine learning knowledge is 
+required. Users should be able to review extracted information, interpret flagged issues 
+and scheduling recommendations, and make informed decisions regarding their courses or 
+administrative responsibilities.
 
 \subsection{System Constraints}
 
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
+The CAS Deadline Management System must operate within the technical and institutional 
+constraints of McMaster University. The following constraints apply to the system:
 
-\plt{This is where you would mention platform constrains, and licensing
-restrictions.}
+\begin{itemize}
+    \item \textbf{Deployment Environment:} The system must be deployable within 
+    the computing resources made available by McMaster University. The availability and 
+    capacity of these resources may limit the models and processing workloads the system can support.
+
+    \item \textbf{Data Sources:} The system must process course outlines provided in PDF format. 
+    Variations in document structure, formatting, and scan quality may affect the accuracy of 
+    information extraction.
+
+    \item \textbf{Language Model Cost and Hosting:} The system must use an LLM that is
+    available at no cost to the project. GitHub Copilot should be preferred where it
+    satisfies the system's technical and institutional requirements. Otherwise, the
+    system should prioritize locally hosted, open-weight language models to minimize
+    reliance on external services. Model selection must account for available computing
+    resources and applicable licensing restrictions.
+
+    \item \textbf{Human Decision-Making:} The system must not automatically modify course outlines or 
+    assessment dates. All scheduling changes and final compliance decisions remain the responsibility 
+    of instructors and authorized administrators.
+
+    \item \textbf{Policy and Accreditation Requirements:} Compliance checks must be based on documented 
+    McMaster University policies and applicable CEAB requirements. The system must support human review 
+    of flagged issues rather than treating automated results as definitive determinations.
+\end{itemize}
+
 
 % ============================================================== 
 \section{Stakeholder Requirements}
