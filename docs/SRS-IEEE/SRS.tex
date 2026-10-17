@@ -178,15 +178,8 @@ practice.}
 
 \subsection{Purpose}
 
-\plt{State the purpose of the system.}
-
-\plt{The purpose should be in the context of the project itself, not in the
-  context of this course. Although the ``purpose'' of the document is to get a
-  grade, you should not mention this.  Instead, ``fake it'' as if this is a real
-  project.}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
+The Department of Computing and Software (CAS) currently manages course outlines and assessment schedules on a course-by-course basis. Course instructors set their deadlines independently, so students in the same program and year can face busy weeks of midterms and deadlines with no department-level visibility into them. CAS administrative staff must also manually check each outline against McMaster course outline policy and the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when information is missing.
+The CAS Deadline Management System is intended to make assessment dates visible across courses and to identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, and never changes a course outline or assessment date on its own.
 
 \subsection{Scope}
 \plt{Briefly describe:
@@ -203,14 +196,42 @@ The description here should be in the problem space, not the solution space.}
 
 TODO
 
-\subsection{Stakeholders}
+\subsection{Stakeholders \textcolor{red}{- ITS STAKEHOLDER TIME BOI}}
+
+% \begin{itemize}
+% \item Customer
+% \item End Users
+% \item Project Sponsor
+% \item Development Team
+% \item Administrators
+% \end{itemize}
+
+The CAS Midterm and Assignment Optimization System is intended to support the Computing and Software (CAS) 
+department at McMaster University in reviewing course outlines provided by instructors and coordinating 
+assessment schedules. The stakeholders include individuals who directly use the system, individuals 
+affected by its recommendations, and organizations responsible for ensuring policy requirements and accreditation.
+
+
+\bigskip
+Primary Stakeholders:
 \begin{itemize}
-\item Customer
-\item End Users
-\item Project Sponsor
-\item Development Team
-\item Administrators
+  \item CAS Administration Team (Customer)
+  \item CAS Department Professors and Instructors (End Users)
+  \item Capstone Project Team 19 (Development Team)
 \end{itemize}
+\bigskip
+Secondary Stakeholders:
+\begin{itemize}
+  \item Software Engineering Students (Indirectly affected by assessment scheduling recommendations)
+  \item McMaster University (Affected by the system's support for course coordination and policy compliance)
+\end{itemize}
+\bigskip
+Tertiary Stakeholders:
+\begin{itemize}
+  \item Canadian Engineering Accreditation Board (CEAB)
+  \item Future CAS Administrators and Instructors
+\end{itemize}
+
 
 \subsection{Definitions and Acronyms}
 
@@ -453,8 +474,8 @@ Requirement numbering continues across groups.
 
 \subsection*{Outline Intake and Extraction}
 \begin{itemize}
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake}:] The system shall accept course outlines in PDF, Word and HTML format submitted by a CAS administrator or professor.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assess}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake_Data}:] The system shall accept course outlines in PDF, Word and HTML format submitted by a CAS administrator or professor.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assessment}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, ambiguous, or marked TBD.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
@@ -462,21 +483,21 @@ Requirement numbering continues across groups.
 
 \subsection*{Calendar and Conflict Detection}
 \begin{itemize}
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Cal}:] The system shall display confirmed assessment dates in a shared calendar that can be filtered by course, year, and program.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed assessment dates in a shared calendar that can be filtered by course, year, and program.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
 \end{itemize}
 
 \subsection*{Scheduling Suggestions}
 \begin{itemize}
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Sugg_Gen}:] The system shall suggest alternative dates, each with an explanation, for assessments involved in a detected conflict or listed as TBD.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Sugg_NoAuto}:] The system shall not change any assessment date without the explicit approval of the responsible instructor or an administrator.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_Generation}:] The system shall suggest alternative dates, each with an explanation, for assessments involved in a detected conflict or listed as TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_NoAuto}:] The system shall not change any assessment date without the explicit approval of the responsible instructor or an administrator.
 \end{itemize}
 
 \subsection*{Compliance Checking}
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_GA}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Grad}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Program}:] The system shall report which graduate attributes are covered across the program as a whole and which are not.
 \end{itemize}
 
@@ -487,6 +508,7 @@ Requirement numbering continues across groups.
 
 % ============================================================== 
 \section{Data Requirements}
+vanessa
 
 \plt{The Data Requirements section describes what information the system must manage.
   It includes the major data entities, their attributes, and the relationships
@@ -589,6 +611,7 @@ be covered in the Verification and Validation document.}
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
+vanessa
 
 \plt{Refer to
 \href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/Lxx_DrMosserGuestLecture/2026_09_Capstone.pdf?ref_type=heads}{Dr.
