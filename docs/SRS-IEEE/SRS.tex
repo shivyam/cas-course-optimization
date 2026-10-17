@@ -1029,37 +1029,58 @@ be covered in the Verification and Validation document.}
 \noindent \begin{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  If you do this provide a link to the VnV plan.}
+\textbf{Accuracy:} The system shall extract course and assessment information with sufficient 
+accuracy to support administrative review and scheduling. On a representative test dataset of 
+course outlines, the system shall achieve at least 90\% accuracy for extracted assessment dates 
+and weights and at least 90\% recall for predefined missing or incomplete information. 
+The system shall identify potential policy and CEAB compliance issues against a predefined test set, 
+with results evaluated and documented in the Verification and Validation Plan.
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  Include a link to the VnV plan.}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
+\textbf{Usability:} The system shall provide an interface that allows CAS administrators and 
+course instructors, as described in Section~\ref{SecUserCharacteristics}, to upload course outlines, 
+review extracted information, view assessment schedules, and interpret flagged issues without 
+requiring programming or machine learning knowledge. Usability shall be evaluated through representative 
+user tasks, with at least 80\% of participants completing each designated core task without assistance.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+\textbf{Maintainability:} The system shall be organized into modular components to support 
+changes to document processing, information extraction, scheduling analysis, and compliance 
+rules without requiring unrelated components to be rewritten. For representative maintenance 
+tasks defined in the Verification and Validation Plan, the effort required to implement a 
+change shall be documented and assessed against the original implementation effort for the affected component.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
+\textbf{Portability:} The system shall be deployable in the designated McMaster University 
+hosting environment and usable through the supported versions of major web browsers, including 
+Google Chrome and Mozilla Firefox. The deployment and core workflow tests defined in the 
+Verification and Validation Plan shall be executed in each supported environment.
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability, reusability, performance, reliability and availability, security, and accessibility.  You may have to add other NFRs.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Performance}:]
+\textbf{Performance:} Under the test environment and workload defined in the 
+Verification and Validation Plan, the system shall display previously processed assessment 
+calendar data within 3 seconds for at least 95\% of requests. For a supported course outline 
+of up to 30 pages, the system shall complete document processing and information extraction 
+within 60 seconds for at least 90\% of test runs, excluding failures or delays caused by unavailable 
+external dependencies. The test environment, document characteristics, and workload shall be recorded 
+with the results.
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Reliability}:]
+\textbf{Reliability:} The system shall handle invalid, incomplete, or unsupported input documents 
+without crashing or corrupting previously stored information. In testing, all predefined invalid-input 
+cases shall produce an appropriate error message, and previously stored records shall remain accessible 
+after a failed upload or processing attempt.
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Security}:]
+\textbf{Security:} The system shall restrict access to course information and administrative 
+functions according to the roles and permissions defined for its users. Data shall be transmitted 
+over encrypted connections, and access to protected information shall be limited to authorized users. 
+Security verification shall include tests for unauthorized access, role-based permissions, 
+and the protection of sensitive configuration values and credentials.
 
 \end{itemize}
+
+
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
