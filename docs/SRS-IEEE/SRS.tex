@@ -304,15 +304,13 @@ while preserving instructors' authority over their courses.
 
 \subsection{Product Vision}
 
-The CAS Deadline Management System aims to centralize course assessment information 
-and support more balanced assessment scheduling across the CAS Department at McMaster University. 
-The system will extract and organize information from 
-course outlines, provide a shared assessment calendar, identify potential scheduling 
-conflicts and policy compliance gaps, and recommend alternative assessment dates. 
-By improving visibility into assessment schedules and reducing manual administrative work, 
-the system will support more efficient course coordination and balanced student workloads 
-while ensuring that instructors and administrators retain control over all scheduling and 
-compliance decisions.
+The CAS Deadline Management System will provide the CAS Department with a trusted,
+department-wide foundation for collaborative assessment planning. It will turn
+course-outline information into a consistent, reviewable source of scheduling
+knowledge that helps instructors and administrators make informed decisions
+together. The system is intended to improve coordination and transparency over
+time, while keeping final responsibility for course schedules and policy
+interpretation with the appropriate human decision-makers.
   
 \subsection{System Context}
 
@@ -329,6 +327,8 @@ course outline review, assessment scheduling, and policy compliance within the C
 McMaster University. CAS administrators and course instructors 
 interact with the system to upload course outlines, review extracted information, view assessment 
 schedules, and evaluate potential scheduling conflicts and compliance issues.
+Figure~\ref{Fig_SystemContext} summarizes these interactions by showing the system boundary
+and its relationships with instructors, CAS administrators, the LLM, and the database.
 \\ \\
 The system processes course outlines and relevant academic scheduling information to extract 
 assessment details, identify missing or potentially non-compliant information, and recommend 
@@ -363,7 +363,7 @@ making decisions.
 
     \item \textbf{External System Responsibilities:}
     \begin{itemize}
-        \item \textbf{LLM:} Process course outline content to support information extraction and, where applicable, the generation of explanations and scheduling recommendations.
+        \item \textbf{LLM:} Process course outline content to support information extraction and, where applicable, the generation of explanations for scheduling recommendations.
         \item \textbf{Database:} Store and retrieve course information, extracted assessment details, review results, and scheduling information.
     \end{itemize}
 \end{itemize}
@@ -396,9 +396,12 @@ constraints of McMaster University. The following constraints apply to the syste
     Variations in document structure, formatting, and scan quality may affect the accuracy of 
     information extraction.
 
-    \item \textbf{Language Model Hosting:} To minimize reliance on external services and associated 
-    usage costs, the system should prioritize locally hosted, open-weight language models where feasible. 
-    Model selection must account for available computing resources and applicable licensing restrictions.
+    \item \textbf{Language Model Cost and Hosting:} The system must use an LLM that is
+    available at no cost to the project. GitHub Copilot should be preferred where it
+    satisfies the system's technical and institutional requirements. Otherwise, the
+    system should prioritize locally hosted, open-weight language models to minimize
+    reliance on external services. Model selection must account for available computing
+    resources and applicable licensing restrictions.
 
     \item \textbf{Human Decision-Making:} The system must not automatically modify course outlines or 
     assessment dates. All scheduling changes and final compliance decisions remain the responsibility 
