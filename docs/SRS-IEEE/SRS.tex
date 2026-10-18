@@ -687,26 +687,23 @@ be covered in the Verification and Validation document.}
 \subsection{Model Inputs}
 
 \begin{itemize}
-\item[\textbf{AIR\_Input\_Text:}] The model shall receive the text of one course outline at a time, together with the section or page each passage came from.
-\item[\textbf{AIR\_Input\_Explain:}] The explanation model shall receive only structured solver output (the original week, the suggested week, and the number of assessments in each), and no other course data.
-\item[\textbf{AIR\_Input\_Public:}] Only publicly available outline content shall be sent to an externally hosted model. Confidential department data, including the master course sheet, shall only be processed on infrastructure approved by CAS.
-\item[\textbf{AIR\_Input\_Untrusted:}] Outline text shall be treated as data and never as instructions. Text inside an outline that addresses the model shall not change the model's behaviour.
-\item[\textbf{AIR\_Input\_NoStudent:}] The system shall not use student personal information as model input.
+\item \textbf{AIR\_Input\_Text:} The model shall receive the text of course outline PDFs and related excel files of course outline requirements.
+\item \textbf{AIR\_Input\_StudentPrivacy:} The system shall not use student personal information as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
 
 \begin{itemize}
-\item[\textbf{AIR\_Output\_Struct:}] The extraction model shall return structured data containing, for each assessment, its name, type, date, date status, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (see Section~\ref{sec:data-req}; \ref{FR_Extract_Assess}, \ref{FR_Extract_LO}).
-\item[\textbf{AIR\_Output\_Source:}] Every extracted value shall include the outline text it was taken from, so a reviewer can check it without opening the original document.
-\item[\textbf{AIR\_Output\_Flag:}] The model shall return a missing, TBD, or ambiguous status instead of inventing a value when the outline does not state one (\ref{FR_Extract_Flag}).
-\item[\textbf{AIR\_Output\_Explain:}] Each explanation shall be a short plain-language statement that uses only figures present in the solver output.
-\item[\textbf{AIR\_Output\_Review:}] No model output shall be used for the calendar, conflict detection, compliance results, or notifications until a user has confirmed it (\ref{FR_Extract_Review}, \ref{FR_Sugg_NoAuto}).
+\item \textbf{AIR\_Output\_Struct:} The extraction model shall return structured data containing, for each assessment, its name, type, date, date status, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (FR\_Extract\_Assessment, FR\_Extract\_LO).
+\item \textbf{AIR\_Output\_Source:} Every extracted value shall include the outline text it was taken from, so a reviewer can check it without opening the original document.
+\item \textbf{AIR\_Output\_Missing:} The model shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (FR\_Extract\_Flag).
+\item \textbf{AIR\_Output\_Explain:} Each explanation shall be a short plain-language statement that uses only figures present in the solver output, and shall be produced only for a suggestion an instructor has requested (FR\_Suggest\_Generation).
+\item \textbf{AIR\_Output\_Review:} No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it, and no assessment date shall change without the instructor's approval (FR\_Extract\_Review, FR\_Suggest\_NoAuto).
 \end{itemize}
 
 \subsection{Evaluation Metrics}
 
-\noindent Accuracy alone is not enough, because the errors do not cost the same. A wrong date that gets confirmed produces false conflicts and bad suggestions. A compliance problem reported as compliant leaves an administrator unaware of a gap that CEAB or McMaster policy would catch. A false alarm only costs the reviewer a few seconds. The metrics below therefore report recall for missing information separately, and break results down by outline format and by program. The targets for extraction, flagging, and compliance come from the project goals.
+\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference.
 
 {\footnotesize
 \setlength{\LTleft}{0pt}
@@ -723,21 +720,16 @@ be covered in the Verification and Validation document.}
 \textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
 \endhead
 
-Extraction accuracy & Share of assessment dates and weights that match a manually prepared answer key & At least 90\% \\ \hline
-Missing-field recall & Share of predefined missing, TBD, or incomplete fields that are flagged & At least 90\% \\ \hline
-Missing-field precision & Share of flagged fields that are actually missing or unclear, to keep false alarms low & Reported, not a pass/fail target \\ \hline
-Graduate attribute number accuracy & Precision, recall, and F1 for reading the attribute numbers an outline lists, measured against the answer key & At least 90\% recall \\ \hline
-Compliance issue recall & Share of predefined compliance issues found (\ref{FR_Comp_Policy}, \ref{FR_Comp_GA}) & At least 90\% \\ \hline
-Performance across groups & The metrics above, reported separately by outline format (PDF or Word, layout style) and by program (Software Engineering, Computer Science, TRON) & No group more than 10 points below the overall figure \\ \hline
-Explanation faithfulness & Share of explanations in which every number matches the solver output, checked automatically, plus a manual review of a sample for clarity & 100\% on the automatic check \\ \hline
-Injection resistance & Number of test outlines containing instructions to the model that change its output & 0 successful cases \\ \hline
-Reviewer correction rate & Share of extracted values that a reviewer changes before confirming & Reported, to guide improvement \\ \hline
+Extraction accuracy & Share of assessment dates and weights extracted correctly (FR\_Extract\_Assessment) & At least 90\% \\ \hline
+Missing-field detection & Share of missing or TBD fields that are flagged (FR\_Extract\_Flag) & At least 90\% \\ \hline
+Compliance issue detection & Share of known compliance issues that are found (FR\_Comp\_Policy, FR\_Comp\_Grad) & At least 90\% \\ \hline
+Explanation accuracy & Share of explanations in which every number matches the solver output (FR\_Suggest\_Generation) & 100\% \\ \hline
 \end{longtable}
 }
 
 \subsection{Known Limitations}
 
-\noindent The table lists the expected failure modes and how the design contains each one. The main safeguard is the same for all of them: a person confirms every extracted value, and the source text is shown next to it.
+\noindent The table lists the expected failure modes and how the design contains each one. The main safeguard will be manual review for a sample size, a person will confirm every extracted value, and the source text is shown next to it.
 
 {\footnotesize
 \setlength{\LTleft}{0pt}
@@ -754,20 +746,16 @@ Reviewer correction rate & Share of extracted values that a reviewer changes bef
 \textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
 \endhead
 
-Unusual layouts or scanned outlines & Dates, weights, or sections are missed or misread & Flag the outline for manual entry; report accuracy by format \\ \hline
-Plausible but wrong values (hallucination) & A date or weight that appears nowhere in the outline & Show the source text; reject values with no source passage; require review \\ \hline
-Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Mark the date status as ambiguous or TBD and never guess \\ \hline
+Unusual layouts or scanned PDFs & Dates, weights, or sections are missed or misread & Flag the outline for manual entry; report accuracy by layout \\ \hline
+Hallucination & A date or weight that appears nowhere in the outline & Show the source text; reject values with no source passage; require review \\ \hline
+Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \hline
 Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \hline
 Explanation says more than the data supports & An instructor is misled about why a date was suggested & Restrict input to solver output; check numbers automatically \\ \hline
-Instructions hidden in an outline & The model follows text written to manipulate it & Treat outline text as data; test with injection cases \\ \hline
-Courses missing from the master sheet (technical electives, TRON) & Attribute comparison is not possible & Report the course as not checked, not as compliant \\ \hline
-Uneven accuracy across formats or programs & Some instructors see more errors than others & Report metrics by group; add examples from weak groups \\ \hline
+Courses missing from the master sheet (technical electives, TRON) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \hline
+Uneven accuracy across layouts or programs & Some instructors see more errors than others & Report metrics by group; add examples from weak groups \\ \hline
 CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \hline
-Hosted model not allowed for confidential data & The external model cannot be used with department data & Keep the model replaceable; send public content only \\ \hline
-A CAS-hosted model performs differently & Accuracy results no longer apply & Re-run the evaluation before switching \\ \hline
 \end{longtable}
 }
-
 % ============================================================== 
 \section{Requirements Traceability Matrices}
 
