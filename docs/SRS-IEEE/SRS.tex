@@ -496,8 +496,8 @@ parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
 \subsection{Major Data Entities}
 
 \begin{itemize}
-\item \textbf{User:} an administrator or instructor. Both can submit outlines and confirm extracted data, and instructors request and approve date suggestions for their own courses.
-\item \textbf{Course:} a CAS course offering in a given term, belonging to a program and year.
+\item \textbf{User:} an administrator or instructor. Both can submit outlines and confirm extracted data. Instructors also enter tentative dates, and request and approve date suggestions, for their own courses.
+\item \textbf{Course:} a CAS course offering in a given term, taught by one instructor and belonging to a program and year.
 \item \textbf{CourseOutline:} a submitted course outline PDF. Each outline belongs to one course.
 \item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date. The date is empty when it is missing or TBD, and an instructor can enter a tentative date.
 \item \textbf{LearningOutcome:} a learning outcome stated in an outline, with any graduate attribute numbers listed beside it.
@@ -507,7 +507,7 @@ parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
 \item \textbf{ComplianceFinding:} a problem found when checking an outline against McMaster policy or the master course sheet.
 \end{itemize}
 
-\noindent An instructor teaches one or more courses, and each course has an outline for each instructor who teaches it. Each outline contains many assessments and learning outcomes. Student cohorts are found by grouping courses with the same program and year, and workload conflicts are calculated from the stored assessments when needed.
+\noindent An instructor teaches one or more courses, and each course has one or more outlines. Each outline contains many assessments and learning outcomes. Student cohorts are found by grouping courses with the same program and year, and workload conflicts are calculated from the stored assessments when needed, so neither is stored separately.
 
 \subsection{Data Dictionary}
 
@@ -574,7 +574,7 @@ DateRecommendation &
 recommendation\_id (UUID): unique identifier. \newline
 assessment\_id (UUID): assessment the suggestion applies to. \newline
 suggested\_date (Date): proposed date. \newline
-explanation (String): reasoning shown to the instructor. \newline
+explanation (String): reason for the suggestion, shown to the instructor. \newline
 decision (Enum): pending, accepted, rejected. \\ \hline
 
 ComplianceFinding &
@@ -583,6 +583,15 @@ outline\_id (UUID): outline that was checked. \newline
 message (String): description of the problem found. \\ \hline
 \end{longtable}
 }
+
+\subsection{Privacy and Data Retention}
+
+\begin{itemize}
+\item Course outlines and the data extracted from them are generally public. The master course sheet and other department data may be confidential, and shall only be available to authorized CAS users.
+\item Only publicly available outline content shall be sent to an externally hosted model.
+\item Users shall only see and change the data their role allows.
+\item The retention period for outlines, extracted data, and findings is \textbf{TODO: confirm with CAS}.
+\end{itemize}
 
 % ============================================================== 
 \section{Non-Functional Requirements}
@@ -647,29 +656,27 @@ be covered in the Verification and Validation document.}
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
 
-\noindent The system uses a large language model (LLM) for three tasks: extracting information from course outlines, comparing the graduate attribute numbers in an outline with the master course sheet, and writing short explanations for suggested dates. The date suggestions themselves come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code. The LLM is kept behind a replaceable interface so that a model hosted on CAS servers can be substituted without changing the rest of the system.
+\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The LLM is kept behind a replaceable interface so that a model hosted on CAS servers can be substituted without changing the rest of the system.
 
 \subsection{Model Inputs}
 
 \begin{itemize}
-\item \textbf{AIR\_Input\_Text:} The model shall receive the text of course outline PDFs and the master course Excel sheet.
-\item \textbf{AIR\_Input\_Explain:} The explanation model shall receive only solver output, such as the original week, the suggested week, and the number of assessments in each.
+\item \textbf{AIR\_Input\_Text:} The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the contents of the master course Excel sheet.
 \item \textbf{AIR\_Input\_Privacy:} Only publicly available outline content shall be sent to an externally hosted model, and no student personal information shall be used as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
 
 \begin{itemize}
-\item \textbf{AIR\_Output\_Struct:} The extraction model shall return structured data containing, for each assessment, its name, type, date, date status, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (FR\_Extract\_Assessment, FR\_Extract\_LO).
-\item \textbf{AIR\_Output\_Source:} Every extracted value shall include the outline text it was taken from, so a reviewer can check it without opening the original document.
-\item \textbf{AIR\_Output\_Missing:} The model shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (FR\_Extract\_Flag).
-\item \textbf{AIR\_Output\_Explain:} Each explanation shall be a short plain-language statement that uses only figures present in the solver output, and shall be produced only for a suggestion an instructor has requested (FR\_Suggest\_Generation).
-\item \textbf{AIR\_Output\_Review:} No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it, and no assessment date shall change without the instructor's approval (FR\_Extract\_Review, FR\_Suggest\_NoAuto).
+\item \textbf{AIR\_Output\_Struct:} The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (FR\_Extract\_Assessment, FR\_Extract\_LO).
+\item \textbf{AIR\_Output\_Source:} Every structured value shall include the passage of extracted text it was taken from, so a reviewer can check it without opening the original document.
+\item \textbf{AIR\_Output\_Missing:} The model shall only use information present in the extracted text, and shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (FR\_Extract\_Flag).
+\item \textbf{AIR\_Output\_Review:} No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it (FR\_Extract\_Review).
 \end{itemize}
 
 \subsection{Evaluation Metrics}
 
-\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference.
+\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference. Extraction metrics are measured on the final structured output, so they cover the PDF library and the model together.
 
 {\footnotesize
 \setlength{\LTleft}{0pt}
@@ -686,10 +693,9 @@ be covered in the Verification and Validation document.}
 \textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
 \endhead
 
-Extraction accuracy & Share of assessment dates and weights extracted correctly (FR\_Extract\_Assessment) & At least 90\% \\ \hline
+Extraction accuracy & Share of assessment dates and weights that are correct in the final structured output (FR\_Extract\_Assessment) & At least 90\% \\ \hline
 Missing-field detection & Share of missing or TBD fields that are flagged (FR\_Extract\_Flag) & At least 90\% \\ \hline
 Compliance issue detection & Share of known compliance issues that are found (FR\_Comp\_Policy, FR\_Comp\_Grad) & At least 90\% \\ \hline
-Explanation accuracy & Share of explanations in which every number matches the solver output (FR\_Suggest\_Generation) & 100\% \\ \hline
 \end{longtable}
 }
 
@@ -712,16 +718,16 @@ Explanation accuracy & Share of explanations in which every number matches the s
 \textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
 \endhead
 
-Unusual layouts or scanned PDFs & Dates, weights, or sections are missed or misread & Flag the outline for manual entry; test on outlines with a range of layouts \\ \hline
-Hallucination & A date or weight that appears nowhere in the outline & Show the source text; reject values with no source passage; require review \\ \hline
+PDF library returns garbled or incomplete text (tables, multiple columns, scanned pages) & Dates, weights, or sections are missing or out of order before the model sees them & Flag outlines with little or no extracted text for manual entry; test on outlines with a range of layouts \\ \hline
+Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage; require review \\ \hline
 Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \hline
 Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \hline
-Explanation says more than the data supports & An instructor is misled about why a date was suggested & Restrict input to solver output; check numbers automatically \\ \hline
 Courses missing from the master sheet (technical electives, TRON) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \hline
 Uneven accuracy across layouts or programs & Some instructors see more errors than others & Test on outlines from each program; add examples from weak areas \\ \hline
 CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \hline
 \end{longtable}
 }
+
 % ============================================================== 
 \section{Requirements Traceability Matrices}
 
