@@ -64,11 +64,32 @@ hazards.}
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+%\wss{Dividing the system into components will help you brainstorm the hazards.
+%You shouldn't do a full design of the components, just get a feel for the major
+%ones. For projects that involve hardware, the components will typically include
+%each individual piece of hardware. If your software will have a database, or an
+%important library, these are also potential components.}
+
+
+The Course Deadline Management system is a software application that processes Software Engineering 
+course outlines to support accreditation compliance reviews and deadline optimization. The system 
+boundary includes the components responsible for receiving and processing course outlines, evaluating 
+policy/accreditation requirements, identifying scheduling conflicts, and generating recommendations for instructors.\\
+
+\noindent The major system components are:
+
+\begin{itemize}
+    \item User Interface: Allows CAS administrators to upload course outlines and review accreditation 
+    results and scheduling recommendations.
+    \item Course Outline Processing: Extracts relevant information from uploaded course outlines, 
+    including marking schemes, assignment deadlines, and midterm dates.
+    \item Course Information Database: Stores course outline information and extracted course schedules.
+    \item McMaster Policy/Accreditation Compliance Analysis: Evaluates course outline information against relevant McMaster policies and CEAB requirements.
+    \item Deadline Optimization and Conflict Detection: Analyzes assessment and midterm dates across various courses to identify deadline bottlenecks and provide scheduling recommendations.
+    \item Scheduling Recommendation Presentation: Presents compliance findings and proposed scheduling changes to CAS administrators and instructors for review and approval.
+    \item External Dependencies: Includes Copilot/LLM services and any external libraries used in course outline processing.
+\end{itemize}
+
 
 \section{Critical Assumptions}
 
