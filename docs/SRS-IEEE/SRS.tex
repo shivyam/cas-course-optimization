@@ -496,27 +496,18 @@ parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
 \subsection{Major Data Entities}
 
 \begin{itemize}
-\item \textbf{User:} an administrator or instructor. Administrators submit and confirm extracted data, and instructors receive suggestions and compliance results.
+\item \textbf{User:} an administrator or instructor. Both can submit outlines and confirm extracted data, and instructors request and approve date suggestions for their own courses.
 \item \textbf{Course:} a CAS course offering in a given term, belonging to a program and year.
-\item \textbf{CourseOutline:} a submitted outline document and its version. Each outline belongs to one course.
-\item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date, or a TBD status.
-\item \textbf{LearningOutcome:} an intended learning outcome stated in an outline, with any graduate attribute numbers listed beside it.
-\item \textbf{GraduateAttribute:} a CEAB graduate attribute, identified by number.
-\item \textbf{MasterCourseRecord:} a row of the master course sheet, listing the graduate attributes a course is expected to cover.
+\item \textbf{CourseOutline:} a submitted course outline PDF. Each outline belongs to one course.
+\item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date. The date is empty when it is missing or TBD.
+\item \textbf{LearningOutcome:} a learning outcome stated in an outline, with any graduate attribute numbers listed beside it.
+\item \textbf{MasterCourseRecord:} a row of the master course sheet, listing the graduate attribute numbers a course is expected to cover.
 \item \textbf{AcademicCalendarEntry:} a holiday, exam period, or other restricted date range.
-\item \textbf{Cohort:} a group of students in the same program and year, defined by the set of courses they take together.
-\item \textbf{WorkloadConflict:} a detected week or period in which a cohort has clustered assessments or an assessment falls in a restricted period.
-\item \textbf{DateRecommendation:} a suggested alternative date for an assessment, with its explanation and decision status.
-\item \textbf{ComplianceRule:} a machine-checkable rule derived from McMaster course outline policy.
-\item \textbf{ComplianceFinding:} the result of checking an outline against a rule or against the master course sheet.
+\item \textbf{DateRecommendation:} a suggested alternative date for an assessment, with its explanation and decision.
+\item \textbf{ComplianceFinding:} a problem found when checking an outline against McMaster policy or the master course sheet.
 \end{itemize}
 
-\noindent The main relationships are:
-a course has one or more outlines, and each outline contains many assessments and learning outcomes;
-a cohort is made up of many courses;
-a workload conflict involves several assessments of one cohort;
-a date recommendation applies to one assessment and may resolve one conflict;
-and a compliance finding refers to one outline and one rule or master course record.
+\noindent An instructor teaches one or more courses, and each course has an outline for each instructor who teaches it. Each outline contains many assessments and learning outcomes. Student cohorts are found by grouping courses with the same program and year, and workload conflicts are calculated from the stored assessments when needed.
 
 \subsection{Data Dictionary}
 
@@ -537,11 +528,12 @@ and a compliance finding refers to one outline and one rule or master course rec
 
 User &
 user\_id (UUID): unique identifier. \newline
-email (String): address used for notifications. \newline
+email (String): user's email address. \newline
 role (Enum): administrator or instructor. \\ \hline
 
 Course &
 course\_id (UUID): unique identifier. \newline
+instructor\_id (UUID): user who teaches the course. \newline
 course\_code (String): course code, e.g., SFWRENG 3A04. \newline
 term (String): academic term of the offering. \newline
 program (String): program the course belongs to. \newline
@@ -550,8 +542,6 @@ year (Integer): program year of the course. \\ \hline
 CourseOutline &
 outline\_id (UUID): unique identifier. \newline
 course\_id (UUID): course the outline belongs to. \newline
-file\_format (Enum): PDF, Word, HTML or other. \newline
-version (Integer): version number for the same course and term. \newline
 submitted\_at (Timestamp): when the outline was submitted. \\ \hline
 
 Assessment &
@@ -560,7 +550,6 @@ outline\_id (UUID): outline the assessment was extracted from. \newline
 name (String): name as written in the outline. \newline
 type (Enum): midterm, assignment, quiz, lab, project, final exam, other. \newline
 due\_date (Date or null): null when missing or TBD. \newline
-date\_status (Enum): confirmed, TBD, ambiguous. \newline
 weight\_percent (Decimal): percentage of the final grade. \newline
 review\_status (Enum): extracted or confirmed. \newline
 source\_text (String): outline text the values were extracted from. \\ \hline
@@ -571,32 +560,14 @@ outline\_id (UUID): outline the outcome appears in. \newline
 text (String): outcome as written. \newline
 ga\_numbers (List of Integer): graduate attribute numbers listed in the outline. \\ \hline
 
-GraduateAttribute &
-ga\_number (Integer): CEAB graduate attribute number. \newline
-name (String): attribute name. \\ \hline
-
 MasterCourseRecord &
 course\_code (String): course code. \newline
-expected\_ga\_numbers (List of Integer): attributes the master sheet lists for the course. \\ \hline
+expected\_ga\_numbers (List of Integer): attribute numbers the master sheet lists for the course. \\ \hline
 
 AcademicCalendarEntry &
-entry\_id (UUID): unique identifier. \newline
 start\_date (Date): start of the range. \newline
 end\_date (Date): end of the range. \newline
 restriction (Enum): holiday, exam period, no-assessment period. \\ \hline
-
-Cohort &
-cohort\_id (UUID): unique identifier. \newline
-program (String): program of the cohort. \newline
-year (Integer): program year of the cohort. \newline
-course\_ids (List of UUID): courses the cohort takes together. \\ \hline
-
-WorkloadConflict &
-conflict\_id (UUID): unique identifier. \newline
-cohort\_id (UUID): affected cohort. \newline
-week\_start (Date): start of the affected week. \newline
-assessment\_ids (List of UUID): assessments involved in the conflict. \newline
-conflict\_type (Enum): clustering or restricted period. \\ \hline
 
 DateRecommendation &
 recommendation\_id (UUID): unique identifier. \newline
@@ -605,17 +576,10 @@ suggested\_date (Date): proposed date. \newline
 explanation (String): reasoning shown to the instructor. \newline
 decision (Enum): pending, accepted, rejected. \\ \hline
 
-ComplianceRule &
-rule\_id (UUID): unique identifier. \newline
-description (String): plain-language statement of the rule. \newline
-source (String): policy section the rule comes from. \\ \hline
-
 ComplianceFinding &
 finding\_id (UUID): unique identifier. \newline
 outline\_id (UUID): outline that was checked. \newline
-rule\_id (UUID or null): rule that was checked, if applicable. \newline
-severity (Enum): missing, inconsistent, not checked. \newline
-message (String): actionable description of the issue. \\ \hline
+message (String): description of the problem found. \\ \hline
 \end{longtable}
 }
 
@@ -682,13 +646,14 @@ be covered in the Verification and Validation document.}
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
 
-\noindent The system uses a large language model (LLM) for three tasks: extracting information from course outlines, reading the graduate attribute numbers an outline lists, and writing short explanations for suggested dates. The date suggestions themselves come from a constraint solver (CP-SAT), and the comparison against the master course sheet and the weight check are ordinary deterministic code, not model output. The LLM is kept behind a replaceable interface so that a model hosted on CAS servers can be substituted without changing the rest of the system.
+\noindent The system uses a large language model (LLM) for three tasks: extracting information from course outlines, comparing the graduate attribute numbers in an outline with the master course sheet, and writing short explanations for suggested dates. The date suggestions themselves come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code. The LLM is kept behind a replaceable interface so that a model hosted on CAS servers can be substituted without changing the rest of the system.
 
 \subsection{Model Inputs}
 
 \begin{itemize}
-\item \textbf{AIR\_Input\_Text:} The model shall receive the text of course outline PDFs and related excel files of course outline requirements.
-\item \textbf{AIR\_Input\_StudentPrivacy:} The system shall not use student personal information as model input.
+\item \textbf{AIR\_Input\_Text:} The model shall receive the text of course outline PDFs and the master course Excel sheet.
+\item \textbf{AIR\_Input\_Explain:} The explanation model shall receive only solver output, such as the original week, the suggested week, and the number of assessments in each.
+\item \textbf{AIR\_Input\_Privacy:} Only publicly available outline content shall be sent to an externally hosted model, and no student personal information shall be used as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
@@ -729,7 +694,7 @@ Explanation accuracy & Share of explanations in which every number matches the s
 
 \subsection{Known Limitations}
 
-\noindent The table lists the expected failure modes and how the design contains each one. The main safeguard will be manual review for a sample size, a person will confirm every extracted value, and the source text is shown next to it.
+\noindent The table lists the expected failure modes and how the design contains each one. The main safeguard is that a person confirms every extracted value, with the source text shown beside it. During evaluation, the team also manually reviews a sample of the outputs.
 
 {\footnotesize
 \setlength{\LTleft}{0pt}
@@ -746,13 +711,13 @@ Explanation accuracy & Share of explanations in which every number matches the s
 \textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
 \endhead
 
-Unusual layouts or scanned PDFs & Dates, weights, or sections are missed or misread & Flag the outline for manual entry; report accuracy by layout \\ \hline
+Unusual layouts or scanned PDFs & Dates, weights, or sections are missed or misread & Flag the outline for manual entry; test on outlines with a range of layouts \\ \hline
 Hallucination & A date or weight that appears nowhere in the outline & Show the source text; reject values with no source passage; require review \\ \hline
 Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \hline
 Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \hline
 Explanation says more than the data supports & An instructor is misled about why a date was suggested & Restrict input to solver output; check numbers automatically \\ \hline
 Courses missing from the master sheet (technical electives, TRON) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \hline
-Uneven accuracy across layouts or programs & Some instructors see more errors than others & Report metrics by group; add examples from weak groups \\ \hline
+Uneven accuracy across layouts or programs & Some instructors see more errors than others & Test on outlines from each program; add examples from weak areas \\ \hline
 CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \hline
 \end{longtable}
 }
