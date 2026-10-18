@@ -479,13 +479,15 @@ Requirement numbering continues across groups.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Dates_Tentative}:] The system shall allow an instructor to enter and update tentative assessment dates for their own courses.
 \end{itemize}
 
 \subsection*{Calendar and Conflict Detection}
 \begin{itemize}
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed assessment dates in a shared calendar that can be filtered by course, year, and program.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed and tentative assessment dates in a shared calendar that can be filtered by course, year, and program, with tentative dates marked as such.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Reanalyze}:] The system shall re-run conflict detection for the affected courses and cohorts whenever an assessment date is added or changed.
 \end{itemize}
 
 \subsection*{Scheduling Suggestions}
@@ -498,6 +500,13 @@ Requirement numbering continues across groups.
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Grad}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
+\end{itemize}
+
+\subsection*{Access and Export}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Login}:] The system shall require users to log in before they can view or change any data.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Roles}:] The system shall allow administrators to manage data for all courses, and shall allow instructors to change data only for their own courses.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file.
 \end{itemize}
 
 % \subsection*{Notifications}
