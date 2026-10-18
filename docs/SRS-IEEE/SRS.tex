@@ -499,7 +499,7 @@ parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
 \item \textbf{User:} an administrator or instructor. Both can submit outlines and confirm extracted data, and instructors request and approve date suggestions for their own courses.
 \item \textbf{Course:} a CAS course offering in a given term, belonging to a program and year.
 \item \textbf{CourseOutline:} a submitted course outline PDF. Each outline belongs to one course.
-\item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date. The date is empty when it is missing or TBD.
+\item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date. The date is empty when it is missing or TBD, and an instructor can enter a tentative date.
 \item \textbf{LearningOutcome:} a learning outcome stated in an outline, with any graduate attribute numbers listed beside it.
 \item \textbf{MasterCourseRecord:} a row of the master course sheet, listing the graduate attribute numbers a course is expected to cover.
 \item \textbf{AcademicCalendarEntry:} a holiday, exam period, or other restricted date range.
@@ -550,6 +550,7 @@ outline\_id (UUID): outline the assessment was extracted from. \newline
 name (String): name as written in the outline. \newline
 type (Enum): midterm, assignment, quiz, lab, project, final exam, other. \newline
 due\_date (Date or null): null when missing or TBD. \newline
+is\_tentative (Boolean): true when the date was entered by an instructor and is not final. \newline
 weight\_percent (Decimal): percentage of the final grade. \newline
 review\_status (Enum): extracted or confirmed. \newline
 source\_text (String): outline text the values were extracted from. \\ \hline
