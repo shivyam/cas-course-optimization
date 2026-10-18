@@ -371,45 +371,47 @@ restrictions.}
 \noindent \begin{itemize}
   
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
-The system shall allow the CAS Admin team to collect and review course outlines in one centralized location.
+CAS administrators need a centralized location to collect and review course outlines.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
-The system shall identify relevant information in submitted course outlines, including course details, 
-assignments and projects, marking schemes, and midterm dates where available.
+CAS administrators need relevant information extracted from submitted course outlines, including course 
+details, assignments and projects, marking schemes, and midterm dates where available.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
-The system shall support the CAS Admin team in reviewing course outlines for potential failures to comply 
-with McMaster University/CAS department policies.
+CAS administrators need support in identifying potential failures of course outlines to comply 
+with McMaster University and CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Criteria Review: 
-The system shall support the review of course outlines against CEAB accreditation requirements.
-
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-05}] Verification of Extracted Information: 
-The system shall allow authorized users to review and correct extracted course information before 
-relying on it for compliance reviews and scheduling recommendations.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Accreditation Review: 
+CAS administrators need support in reviewing course outlines against CEAB accreditation 
+requirements, including evaluating how each course addresses relevant CEAB graduate attributes.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
-The system shall analyze submitted assessment dates across relevant CAS department courses to 
-identify periods with high amounts of deadlines for assessments and midterms.
+Professors/instructors and CAS administrators need to identify periods with high concentrations 
+of assessment and midterm deadlines across relevant CAS department courses and reassess 
+the schedule when dates are updated.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
-The system shall recommend (but not automatically decide) optimal dates for midterms and assessments 
-to reduce deadline bottlenecks for students.
+Professors/instructors need recommendations for alternative midterm and assessment dates 
+that may reduce deadline bottlenecks for students, while being able to make the final decision.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
-The system shall allow instructors to review scheduling recommendations and keep their authority 
-over whether to accept or reject proposed changes.
+Professors/instructors need to retain authority over whether to accept or reject scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Schedule Reassessment: 
-The system shall allow schedules to be analyzed again when assessment/midterm dates are updated.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Handling Incomplete Information: 
+Professors/instructors and CAS administrators need to be informed when missing or unreadable 
+course outline information may affect the reliability of compliance reviews or scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Handling Incomplete Information: 
-The system shall identify missing or unreadable information from course outlines that may affect 
-the reliability or accuracy of scheduling recommendations.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Authorized Access: 
+CAS administrators and professors/instructors need access to the information and functions relevant 
+to their roles, while assuring sensitive information is protected and restricted to authorized users.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Authorized Access: 
-The system shall restrict access to CAS administrators, professors/instructors, and other users authorized 
-to access sensitive administrative information within the system (ex. lecture hall locations).
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Shared Assessment Calendar: 
+Professors/instructors and CAS administrators need access to a shared calendar displaying 
+relevant course assessment dates.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-07}] Exam and Restricted-Period Conflicts: 
+Professors/instructors and CAS administrators need to identify potential conflicts between 
+assessments, exam dates, and applicable restricted periods.
 
 \end{itemize}
 
@@ -487,11 +489,13 @@ to access sensitive administrative information within the system (ex. lecture ha
   \item If the submitted document cannot be read, the system informs the administrator that a readable document is required.
   \item If the submission fails, the system informs the administrator and allows them to try again.
   \item If relevant course information is missing, the system proceeds with the information that is available and identifies the missing information.
+  \item If the Copilot or LLM service is unavailable, the system informs the administrator that automatic information extraction cannot be completed. The submitted course outline remains available, and the administrator can retry extraction when the service becomes available.
 \end{itemize}
 
 \noindent \textbf{Postconditions}
 \begin{itemize}
-  \item The course outline is available in the system for review, or the administrator is informed that submission was unsuccessful.
+  \item If submission succeeds, the course outline is stored and available for review, even if automatic information extraction could not be completed.
+  \item If submission fails, the administrator is informed that the course outline was not submitted successfully.
 \end{itemize}
 
 
@@ -510,7 +514,7 @@ to access sensitive administrative information within the system (ex. lecture ha
 \noindent \textbf{Main Success Scenario}
 \begin{enumerate}
   \item The administrator selects a submitted course outline.
-  \item The system presents the extracted course details and information, including assignments, marking schemes, and midterm dates where available.
+  \item The system presents the extracted course details and information, including assignments, marking schemes, and midterm dates where available, and flags any missing, uncertain, or ambiguous information for review.
   \item The administrator reviews the extracted information against the original course outline.
   \item The administrator fills in any missing information or confirms that the information is correct.
   \item The system saves the verified course information for later steps and scheduling analysis.
@@ -519,6 +523,7 @@ to access sensitive administrative information within the system (ex. lecture ha
 \noindent \textbf{Alternative Flows}
 \begin{itemize}
   \item If the system cannot extract certain information, it identifies the missing information for the administrator to review.
+  \item If the system extracts information that is uncertain or ambiguous, it flags the affected information for administrator review and indicates that verification is required.
   \item If the administrator identifies incorrect information, they correct it before proceeding.
 \end{itemize}
 
@@ -666,12 +671,12 @@ to access sensitive administrative information within the system (ex. lecture ha
 \refstepcounter{ucnum} \label{UC_PROF_02}
 \subsection{\ucref{UC_PROF_02}: Analyze Assessment Schedule}
 
-\noindent \textbf{Primary Actor:} Professor/Instructor
+\noindent \textbf{Primary Actor:} Professor/Instructor, CAS Administrator
 
 \noindent \textbf{Preconditions}
 \begin{itemize}
-  \item Tentative assessment dates have been submitted for relevant courses.
-  \item Sufficient assessment information is available to perform the analysis.
+  \item The user has access to the system.
+  \item Assessment dates are available for the relevant courses, if any have been submitted.
 \end{itemize}
 
 \noindent \textbf{Main Success Scenario}
@@ -688,11 +693,12 @@ to access sensitive administrative information within the system (ex. lecture ha
   \item If assessment information is incomplete, the system identifies the missing information and explains how it limits the analysis.
   \item If insufficient assessment dates are available, the system informs the instructor that a reliable analysis cannot be completed.
   \item If no significant bottlenecks are identified, the system presents the analysis without recommending unnecessary changes.
+  \item If the instructor or administrator wants to view the assessment calendar without performing an analysis, they can filter the calendar by academic year and program. The system displays the assessment dates matching the selected filters without generating workload analysis or recommendations.
 \end{itemize}
 
 \noindent \textbf{Postconditions}
 \begin{itemize}
-  \item The instructor can review the assessment schedule analysis and any identified workload bottlenecks.
+  \item The instructor or administrator can review the assessment schedule, either through the calendar view or through the results of a schedule analysis, depending on the requested operation.
 \end{itemize}
 
 
@@ -713,7 +719,7 @@ to access sensitive administrative information within the system (ex. lecture ha
   \item The system identifies assessments that contribute to periods with high concentrations of deadlines.
   \item The system evaluates potential alternative dates for affected assessments.
   \item The system generates recommendations intended to reduce assessment bottlenecks while considering the available scheduling information.
-  \item The system presents the suggested dates and the reasoning behind the recommendations.
+  \item The system presents the suggested dates and the available reasoning behind the recommendations.
   \item The instructor reviews the recommendations.
 \end{enumerate}
 
@@ -722,11 +728,12 @@ to access sensitive administrative information within the system (ex. lecture ha
   \item If no suitable alternative dates can be identified, the system informs the instructor that it cannot provide a suitable recommendation.
   \item If relevant scheduling information is missing, the system identifies the limitation.
   \item If several alternatives are available, the system presents the alternatives for the instructor to evaluate.
+  \item If the LLM/Copilot service goes down, the system notifies the instructor, prevents showing false explanations, and allows retrying once the service recovers.
 \end{itemize}
 
 \noindent \textbf{Postconditions}
 \begin{itemize}
-  \item Scheduling recommendations (if applicable), are presented to the instructor for consideration. No assessment dates are changed automatically.
+  \item Scheduling recommendations (if applicable) are presented to the instructor for consideration. No assessment dates are changed automatically.
 \end{itemize}
 
 
@@ -752,7 +759,7 @@ to access sensitive administrative information within the system (ex. lecture ha
 \noindent \textbf{Alternative Flows}
 \begin{itemize}
   \item If the instructor rejects a recommendation, the existing assessment date remains unchanged.
-  \item If the instructor modifies a recommendation, the system allows the revised date to be submitted
+  \item If the instructor modifies a recommendation, the system allows the revised date to be submitted.
   \item If the instructor needs more information, they can review the schedule analysis before making a decision.
 \end{itemize}
 
