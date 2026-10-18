@@ -221,6 +221,8 @@ TODO
 \toprule
 Term & Definition\\
 \midrule
+CAS & Computer \& Software (CAS Department)\\
+CEAB & Canadian Engineering Accreditation Board\\
 TODO & TODO\\
 \bottomrule
 \caption{Definitions and Acronyms} \label{tab:DefinitionsAndAcronyms}
@@ -361,9 +363,9 @@ restrictions.}
 % ============================================================== 
 \section{Stakeholder Requirements}
 
-%\plt{Technology-independent requirements.  These come from statements made by
+%\plt{Technology-independent requirements. These come from statements made by
 %the stakeholders.  You will find these through interviews and surveys.  They are
-%often expressed in natural language.  They are not necessarily testable, but
+%often expressed in natural language. They are not necessarily testable, but
 %they should be verifiable.}
 
 %\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
@@ -371,45 +373,47 @@ restrictions.}
 \noindent \begin{itemize}
   
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
-The system shall allow the CAS Admin team to collect and review course outlines in one centralized location.
+CAS administrators need a centralized location to collect and review course outlines.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
-The system shall identify relevant information in submitted course outlines, including course details, 
-assignments and projects, marking schemes, and midterm dates where available.
+CAS administrators need relevant information extracted from submitted course outlines, including course 
+details, assignments and projects, marking schemes, and midterm dates where available.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
-The system shall support the CAS Admin team in reviewing course outlines for potential failures to comply 
-with McMaster University/CAS department policies.
+CAS administrators need support in identifying potential failures of course outlines to comply 
+with McMaster University and CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Criteria Review: 
-The system shall support the review of course outlines against CEAB accreditation requirements.
-
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-05}] Verification of Extracted Information: 
-The system shall allow authorized users to review and correct extracted course information before 
-relying on it for compliance reviews and scheduling recommendations.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Accreditation Review: 
+CAS administrators need support in reviewing course outlines against CEAB accreditation 
+requirements, including evaluating how each course addresses relevant CEAB graduate attributes.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
-The system shall analyze submitted assessment dates across relevant CAS department courses to 
-identify periods with high amounts of deadlines for assessments and midterms.
+Professors/instructors and CAS administrators need to identify periods with high concentrations 
+of assessment and midterm deadlines across relevant CAS department courses and reassess 
+the schedule when dates are updated.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
-The system shall recommend (but not automatically decide) optimal dates for midterms and assessments 
-to reduce deadline bottlenecks for students.
+Professors/instructors need recommendations for alternative midterm and assessment dates 
+that may reduce deadline bottlenecks for students, while being able to make the final decision.
 
 \item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
-The system shall allow instructors to review scheduling recommendations and keep their authority 
-over whether to accept or reject proposed changes.
+Professors/instructors need to retain authority over whether to accept or reject scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Schedule Reassessment: 
-The system shall allow schedules to be analyzed again when assessment/midterm dates are updated.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Handling Incomplete Information: 
+Professors/instructors and CAS administrators need to be informed when missing or unreadable 
+course outline information may affect the reliability of compliance reviews or scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Handling Incomplete Information: 
-The system shall identify missing or unreadable information from course outlines that may affect 
-the reliability or accuracy of scheduling recommendations.
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Authorized Access: 
+CAS administrators and professors/instructors need access to the information and functions relevant 
+to their roles, while assuring sensitive information is protected and restricted to authorized users.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Authorized Access: 
-The system shall restrict access to CAS administrators, professors/instructors, and other users authorized 
-to access sensitive administrative information within the system (ex. lecture hall locations).
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Shared Assessment Calendar: 
+Professors/instructors and CAS administrators need access to a shared calendar displaying 
+relevant course assessment dates.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Exam and Restricted-Period Conflicts: 
+Professors/instructors and CAS administrators need to identify potential conflicts between 
+assessments, exam dates, and applicable restricted periods.
 
 \end{itemize}
 
