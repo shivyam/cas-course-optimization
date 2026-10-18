@@ -72,10 +72,39 @@ important library, these are also potential components.}
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+%\wss{These assumptions that are made about the software or system. You should
+%minimize the number of assumptions that remove potential hazards. For instance,
+%you could assume a part will never fail, but it is generally better to include
+%this potential failure mode.}
+
+\begin{itemize}
+    \item \textbf{Course Outline Quality:} Uploaded course outlines may contain incomplete, 
+    inconsistent, or incorrectly formatted information that could affect the accuracy of extracted data.
+    
+    \item \textbf{Information Extraction:} The course outline processing component, including any LLM 
+    services used, may incorrectly interpret or omit information such as marking schemes, assignment 
+    deadlines, and midterm dates.
+    
+    \item \textbf{Policy and Accreditation Requirements:} The McMaster policies and CEAB requirements 
+    used for compliance analysis must be relevant to the courses being reviewed. Outdated or incorrectly 
+    interpreted requirements may lead to inaccurate compliance findings.
+    
+    \item \textbf{Deadline Information:} Assessment dates and deadlines extracted from course outlines may be 
+    incomplete, ambiguous, or subject to change. As a result, the system may fail to properly detect actual deadline bottlenecks.
+    
+    \item \textbf{Database Integrity:} Stored course outline information and extracted data may become outdated 
+    or associated with the wrong course.
+    
+    \item \textbf{External Dependencies:} External LLM services and software libraries may produce incorrect 
+    results, become unavailable, or change their behavior (their outputs and availability cannot be guaranteed).
+    
+    \item \textbf{Human Review and Decision-Making:} CAS administrators and instructors are expected to review 
+    the system's findings and recommendations. However, users may overlook or place excessive confidence in inaccurate system outputs.
+    
+    \item \textbf{Scheduling Recommendations:} While the system provides recommendations to help reduce deadline bottlenecks, 
+    it cannot guarantee that all student workload conflicts will be eliminated (instructors retain responsibility for final scheduling decisions).
+\end{itemize}
+
 
 \section{Failure Mode and Effect Analysis}
 
