@@ -178,72 +178,91 @@ practice.}
 
 \subsection{Purpose}
 
-\plt{State the purpose of the system.}
-
-\plt{The purpose should be in the context of the project itself, not in the
-  context of this course. Although the ``purpose'' of the document is to get a
-  grade, you should not mention this.  Instead, ``fake it'' as if this is a real
-  project.}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
+The CAS (Computing and Software) Department currently manages course outlines and assessment schedules on a course-by-course basis. Course instructors set their deadlines independently, so students in the same program and year can face busy weeks of midterms and deadlines with no department-level visibility into them. CAS administrative staff must also manually check each outline against McMaster course outline policy and the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when information is missing.
+The CAS Deadline Management System is intended to make assessment dates visible across courses and to identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, and never changes a course outline or assessment date on its own.
 
 \subsection{Scope}
-\plt{Briefly describe:
+The CAS Deadline Management System aims to improve course outline review and assessment scheduling within 
+the CAS Department at McMaster University. The system addresses the lack of 
+department-wide visibility into assessment dates and the manual effort required to verify course outlines 
+against university policies and CEAB requirements. The system will allow CAS administrators to upload course outlines, extract and store 
+relevant course and assessment information, identify missing information and potential policy or accreditation 
+gaps, and visualize assessment schedules across courses. It will also identify potential assessment conflicts 
+and suggest alternative dates to help distribute assessments more evenly throughout the academic term. 
+The system will support reviewing and exporting extracted information to facilitate administrative coordination.
+\\ \\
+The primary users are CAS administrators and course instructors, while students may benefit indirectly 
+from improved assessment scheduling. The system is intended to reduce administrative workload, 
+improve policy compliance, and support more balanced assessment schedules.
+\\\\
+The system will provide recommendations for review rather than make decisions independently. 
+It will not automatically modify course outlines, change assessment dates, or override instructor decisions. 
+Instructors retain authority over their course schedules, and administrators remain responsible for 
+reviewing policy compliance and accreditation requirements. The system's recommendations will be based 
+on the available course outline data, timetable information, and defined policies; it will not guarantee 
+that all scheduling conflicts or compliance issues are identified.
+
+\subsection{Stakeholders \textcolor{red}{- ITS STAKEHOLDER TIME BOI}}
+
+% \begin{itemize}
+% \item Customer
+% \item End Users
+% \item Project Sponsor
+% \item Development Team
+% \item Administrators
+% \end{itemize}
+
+The CAS Midterm and Assignment Optimization System is intended to support the Computing and Software (CAS) 
+department at McMaster University in reviewing course outlines provided by instructors and coordinating 
+assessment schedules. The stakeholders include individuals who directly use the system, individuals 
+affected by its recommendations, and organizations responsible for ensuring policy requirements and accreditation.
+
+
+\bigskip
+Primary Stakeholders:
 \begin{itemize}
-  \item Problem being solved
-  \item Intended users
-  \item Major functionality
-  \item Expected benefits
-  \item Clarifying the scope often means saying what the software doesn't do
+  \item CAS Administration Team (Customer)
+  \item CAS Department Professors and Instructors (End Users)
+  \item Capstone Project Team 19 (Development Team)
 \end{itemize}
-}
-
-\plt{The scope section is relevant for understanding the boundaries of the system. It is also relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
-
-TODO
-
-\subsection{Stakeholders}
+\bigskip
+Secondary Stakeholders:
 \begin{itemize}
-\item Customer
-\item End Users
-\item Project Sponsor
-\item Development Team
-\item Administrators
+  \item Software Engineering Students (Indirectly affected by assessment scheduling recommendations)
+  \item McMaster University (Affected by the system's support for course coordination and policy compliance)
 \end{itemize}
+\bigskip
+Tertiary Stakeholders:
+\begin{itemize}
+  \item Canadian Engineering Accreditation Board (CEAB)
+  \item Future CAS Administrators and Instructors
+\end{itemize}
+
 
 \subsection{Definitions and Acronyms}
-
-\plt{This section provides the meaning of the different words and phrases used
-  in the domain of the problem.}
 
 \begin{longtable}{p{0.25\textwidth} p{0.65\textwidth}}
 \toprule
 Term & Definition\\
 \midrule
-CAS & Computer \& Software (CAS Department)\\
-CEAB & Canadian Engineering Accreditation Board\\
-TODO & TODO\\
+CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
+LLM & Large Language Model, an AI model trained on large amounts of text to understand and generate human language.\\
+SRS & Software Requirements Specification, a document that describes a software system's requirements, including its expected functionality and constraints.\\
 \bottomrule
 \caption{Definitions and Acronyms} \label{tab:DefinitionsAndAcronyms}
 \end{longtable}
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
+The intended readers of this Software Requirements Specification (SRS) include 
+project supervisors, CAS administrators, software developers, testers, and future 
+maintainers. Technical readers should have a foundational understanding of software 
+development, web applications, databases, and software testing. Familiarity with PDF 
+processing and large language models (LLMs) is beneficial but not required. 
+CAS administrators and project supervisors should be familiar with academic scheduling, 
+course outlines, and relevant university policies, including Canadian Engineering 
+Accreditation Board (CEAB) requirements. This document is intended to communicate 
+system requirements clearly to both technical and non-technical readers.
 
 % ============================================================== 
 \section{System Overview}
@@ -487,6 +506,7 @@ TODO
 
 % ============================================================== 
 \section{Functional Requirements}
+vanessa
 \plt{Functional requirements describe what the system should do.  They are typically
 expressed as a set of conditions or capabilities that the system must have.  These
 requirements are usually derived from the stakeholder requirements and use cases.}
@@ -508,6 +528,7 @@ parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
 
 % ============================================================== 
 \section{Data Requirements}
+vanessa
 
 \plt{The Data Requirements section describes what information the system must manage.
   It includes the major data entities, their attributes, and the relationships
@@ -610,6 +631,7 @@ be covered in the Verification and Validation document.}
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
+vanessa
 
 \plt{Refer to
 \href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/Lxx_DrMosserGuestLecture/2026_09_Capstone.pdf?ref_type=heads}{Dr.
