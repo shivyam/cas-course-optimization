@@ -588,9 +588,9 @@ message (String): description of the problem found. \\ \hline
 
 \begin{itemize}
 \item Course outlines and the data extracted from them are generally public. The master course sheet and other department data may be confidential, and shall only be available to authorized CAS users.
-\item Only publicly available outline content shall be sent to an externally hosted model.
+\item All data shall be processed on CAS-hosted infrastructure, and none shall be sent to an external service.
 \item Users shall only see and change the data their role allows.
-\item The retention period for outlines, extracted data, and findings is \textbf{TODO: confirm with CAS}.
+\item The retention period for outlines, extracted data, and findings is tentativly 3 years.
 \end{itemize}
 
 % ============================================================== 
@@ -656,13 +656,13 @@ be covered in the Verification and Validation document.}
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
 
-\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The LLM is kept behind a replaceable interface so that a model hosted on CAS servers can be substituted without changing the rest of the system.
+\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The LLM is hosted internally on CAS infrastructure and kept behind a replaceable interface, so the model can be changed without changing the rest of the system.
 
 \subsection{Model Inputs}
 
 \begin{itemize}
 \item \textbf{AIR\_Input\_Text:} The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the contents of the master course Excel sheet.
-\item \textbf{AIR\_Input\_Privacy:} Only publicly available outline content shall be sent to an externally hosted model, and no student personal information shall be used as model input.
+\item \textbf{AIR\_Input\_Privacy:} The model shall be hosted on CAS-operated infrastructure, and no model input shall be sent to an external service. No student personal information shall be used as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
