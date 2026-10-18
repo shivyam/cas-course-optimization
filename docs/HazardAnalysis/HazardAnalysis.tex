@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{float}
+
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -90,8 +92,36 @@ documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+\begin{table}[H]
+\caption{Safety and security requirements}
+\label{TblSafetySecurityRequirements}
+\begin{tabularx}{\textwidth}{p{0.16\textwidth}X}
+\toprule
+\textbf{ID} & \textbf{Requirement}\\
+\midrule
+SR-1 & The system shall validate all user-provided course, prerequisite,
+availability, and constraint data before attempting optimization, and shall
+report invalid or incomplete data without silently changing it.\\
+SR-2 & The system shall ensure that every generated course plan satisfies the
+hard constraints defined in the SRS-IEEE, including prerequisites,
+time-conflict restrictions, and course availability.\\
+SR-3 & The system shall clearly distinguish hard constraints from user
+preferences and shall identify any unsatisfied preference or constraint when a
+fully feasible plan cannot be generated.\\
+SR-4 & The system shall not present an infeasible, incomplete, or failed
+optimization result as a valid course plan.\\
+SR-5 & The system shall provide an understandable explanation of the
+constraints and preferences that affected each generated plan, consistent with
+the transparency goals in the Problem Statement.\\
+SR-6 & The system shall protect user-provided academic and personal data from
+unauthorized access and shall not expose such data in logs, error messages, or
+generated results beyond what is necessary for the user.\\
+SR-7 & The system shall handle malformed input, unavailable services, and
+optimization failures gracefully by displaying an actionable error and
+preserving the user's valid input.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \section{Roadmap}
 
