@@ -559,25 +559,50 @@ TODO
 
 % ============================================================== 
 \section{Functional Requirements}
-vanessa
-\plt{Functional requirements describe what the system should do.  They are typically
-expressed as a set of conditions or capabilities that the system must have.  These
-requirements are usually derived from the stakeholder requirements and use cases.}
 
-\plt{Use SHALL statements. Requirements must be atomic, testable, and traceable.}
+\noindent The system shall support the following capabilities, grouped by feature area.
 
-\noindent \begin{itemize}
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label1}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label2}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label3}:] The system shall ...
-
+\subsection*{Outline Intake and Extraction}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake_Data}:] The system shall accept course outlines in PDF format submitted by a CAS administrator or professor.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assessment}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, including a date that is marked TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Dates_Tentative}:] The system shall allow an instructor to enter and update tentative assessment dates for their own courses.
 \end{itemize}
 
-\plt{The requirements are given labels so that they can be referenced in other
-parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
+\subsection*{Calendar and Conflict Detection}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed and tentative assessment dates in a shared calendar that can be filtered by course, year, and program, with tentative dates marked as such.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Reanalyze}:] The system shall re-run conflict detection for the affected courses and cohorts whenever an assessment date is added or changed.
+\end{itemize}
+
+\subsection*{Scheduling Suggestions}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_Generation}:] The system shall, on explicit request by the instructor, suggest alternative dates, for assessments involved in a detected conflict or listed as TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_NoAuto}:] The system shall not change any assessment date without the explicit approval of the responsible instructor.
+\end{itemize}
+
+\subsection*{Compliance Checking}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Grad}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
+\end{itemize}
+
+\subsection*{Access and Export}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Login}:] The system shall require users to log in before they can view or change any data.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Roles}:] The system shall allow administrators to manage data for all courses, and shall allow instructors to change data only for their own courses.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file.
+\end{itemize}
+
+% \subsection*{Notifications}
+% \begin{itemize}
+% \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Notify_Email}:] The system shall send scheduling suggestions and compliance results to instructors by email, and display on the website.
+% \end{itemize}
 
 % ============================================================== 
 \section{Data Requirements}
