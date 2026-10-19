@@ -77,32 +77,23 @@ important library, these are also potential components.}
 %you could assume a part will never fail, but it is generally better to include
 %this potential failure mode.}
 
+The hazard analysis is based on the following assumptions about the system's operating environment, users, 
+and input data. These assumptions establish the context for the FMEA, while risks arising when they do 
+not hold will be assessed and appropriate mitigation measures identified.
+
 \begin{itemize}
-    \item \textbf{Course Outline Quality:} Uploaded course outlines may contain incomplete, 
-    inconsistent, or incorrectly formatted information that could affect the accuracy of extracted data.
-    
-    \item \textbf{Information Extraction:} The course outline processing component, including any LLM 
-    services used, may incorrectly interpret or omit information such as marking schemes, assignment 
-    deadlines, and midterm dates.
-    
-    \item \textbf{Policy and Accreditation Requirements:} The McMaster policies and CEAB requirements 
-    used for compliance analysis must be relevant to the courses being reviewed. Outdated or incorrectly 
-    interpreted requirements may lead to inaccurate compliance findings.
-    
-    \item \textbf{Deadline Information:} Assessment dates and deadlines extracted from course outlines may be 
-    incomplete, ambiguous, or subject to change. As a result, the system may fail to properly detect actual deadline bottlenecks.
-    
-    \item \textbf{Database Integrity:} Stored course outline information and extracted data may become outdated 
-    or associated with the wrong course.
-    
-    \item \textbf{External Dependencies:} External LLM services and software libraries may produce incorrect 
-    results, become unavailable, or change their behavior (their outputs and availability cannot be guaranteed).
-    
-    \item \textbf{Human Review and Decision-Making:} CAS administrators and instructors are expected to review 
-    the system's findings and recommendations. However, users may overlook or place excessive confidence in inaccurate system outputs.
-    
-    \item \textbf{Scheduling Recommendations:} While the system provides recommendations to help reduce deadline bottlenecks, 
-    it cannot guarantee that all student workload conflicts will be eliminated (instructors retain responsibility for final scheduling decisions).
+\item \textbf{Hosting Infrastructure:} The hosting infrastructure is secured, backed up, and maintained by CAS IT. The security of the hosting infrastructure itself is outside the scope of this analysis.
+
+\item \textbf{User Accounts:} Users access the system using valid McMaster accounts and do not share their credentials.
+
+\item \textbf{Master Course Sheet:} The department-provided master course sheet contains correct information for the graduate attribute checks, as assumed in the SRS.
+
+\item \textbf{Academic Calendar:} The academic calendar dates entered into the system are correct for the term being analyzed.
+
+\item \textbf{Course Outline Confidentiality:} Course outlines are treated as public documents, consistent with the SRS. Other stored information, including the master course sheet, compliance findings, and tentative assessment dates, may be confidential.
+
+\item \textbf{Policy and Accreditation Requirements:} The McMaster policies and CEAB requirements maintained in the system reflect the versions in force for the term being reviewed. Updates are made when applicable requirements change.
+
 \end{itemize}
 
 
