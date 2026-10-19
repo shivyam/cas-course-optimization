@@ -44,7 +44,7 @@
 \usepackage{pdflscape}
 \usepackage{afterpage}
 
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{array}
 \usepackage{longtable}
 
@@ -92,11 +92,30 @@
 \newcommand{\rtheairnum}{AIR\theairnum}
 \newcommand{\airref}[1]{AIR\ref{#1}}
 
+\newcounter{ulcnum} %Unlikely Change (ULC) Number
+\newcommand{\ulcthenum}{ULC\theulcnum}
+\newcommand{\ulcref}[1]{ULC\ref{#1}}
+
+\newcounter{asnum} %Assumption (A) Number
+\newcommand{\astheasnum}{A\theasnum}
+\newcommand{\asref}[1]{A\ref{#1}}
+
 \usepackage{fullpage}
 
-\begin{document}
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
+\begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
+
+\title{Software Requirements Specification for \progname: CAS Course Deadline Management System} 
 \author{\authname}
 \date{\today}
 	
@@ -112,87 +131,89 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{p{3.3cm}p{1.6cm}p{5.4cm}X}
+\toprule \textbf{Date} & \textbf{Version} & \textbf{Developer(s)} & \textbf{Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+October 19, 2026 & 1.0 & S. Mehta, A. Bornomala, H.S. Sagar, V. Lai & Initial version\\
 \bottomrule
 \end{tabularx}
+}
 
 ~\\
-\plt{All capstone SRS documents should have a reflection appendix.}
+% \plt{All capstone SRS documents should have a reflection appendix.}
 
 \newpage
 
 \pagenumbering{arabic}
 
-\plt{This SRS template is based on the IEEE template, with input from co-pilot
-  and S. Smith. It will get you started.  You should not modify the section
-  headings, without first discussing the change with the course instructor.
-  Modification means you are not following the template, which loses some of the
-  advantage of a template, especially standardization.}
+% \plt{This SRS template is based on the IEEE template, with input from co-pilot
+%   and S. Smith. It will get you started.  You should not modify the section
+%   headings, without first discussing the change with the course instructor.
+%   Modification means you are not following the template, which loses some of the
+%   advantage of a template, especially standardization.}
 
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
+% \plt{Feel free to change the appearance of the report by modifying the LaTeX
+%   commands.}
 
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.}
+% \plt{This template document assumes that a single program is being documented.
+%   If you are documenting a family of models, you should start with a commonality
+%   analysis.}
 
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.}
+% \plt{The SRS is not generally written, or read, sequentially.  The SRS is a
+%   reference document.  It is generally read in an ad hoc order, as the need
+%   arises.}
 
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.
-\end{itemize}
-}
+% \plt{Guiding principles for the SRS document:
+% \begin{itemize}
+% \item Do not repeat the same information at the same abstraction level.  If
+%   information is repeated, the repetition should be at a different abstraction
+%   level.
+% \end{itemize}
+% }
 
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
+% \plt{The template description comments should be disabled before submitting this
+%   document for grading.}
 
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
+% \plt{You can borrow any wording from the text given in the template.  It is part
+%   of the template, and not considered an instance of academic integrity.  Of
+%   course, you need to cite the source of the template.}
 
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.}
+% \plt{When the documentation is done, it should be possible to trace back to the
+%   source of every piece of information.  Some information will come from
+%   external sources, like terminology.}
 
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
+% \plt{An SRS document should have the following qualities: unambiguous,
+%   consistent, complete, validatable, abstract and traceable.}
 
-\plt{The overall goal of the SRS is that someone can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
+% \plt{The overall goal of the SRS is that someone can learn,
+%   understand and verify the captured domain knowledge.  They should not have to
+%   trust the authors of the SRS on any statements.  They should be able to
+%   independently verify/derive every statement made.}
 
 % ============================================================== 
 \section{Introduction} 
 % ==============================================================
 
-\plt{Explain what system is being specified. State purpose, users, and project goals.}
+% \plt{Explain what system is being specified. State purpose, users, and project goals.}
 
-\plt{Introduce the name of your software as \progname{}.  Using \progname{} as
-a command lets you change the name if necessary and have the change propagate to
-all documents.}
+% \plt{Introduce the name of your software as \progname{}.  Using \progname{} as
+% a command lets you change the name if necessary and have the change propagate to
+% all documents.}
 
-\plt{Include a reference to the template this work is based on.  \citet{ISOIECIEEE29148_2018}
-justifies the SRS structure and \citet{ISOIECIEEE15288_2023} provides the
-broader life-cycle context that underlines modern requirements engineering
-practice.}
+% \plt{Include a reference to the template this work is based on.  \citep{ISOIECIEEE29148_2018}
+% justifies the SRS structure and \citep{ISOIECIEEE15288_2023} provides the
+% broader life-cycle context that underlines modern requirements engineering
+% practice.}
 
 \subsection{Purpose}
 
 The CAS (Computing and Software) Department currently manages course outlines and assessment schedules on a 
 course-by-course basis. Course instructors set their deadlines independently, so students in the same program 
 and year can face busy weeks of midterms and deadlines with no department-level visibility into them. 
-CAS administrative staff must also manually check each outline against McMaster course outline policy and 
-the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when 
+CAS administrative staff must also manually check each outline against McMaster course outline policy~\citep{McMasterUCMP2025} and 
+the Canadian Engineering Accreditation Board (CEAB) requirements~\citep{CEAB2025}, and follow up with instructors when 
 information is missing.
 \\ \\
 The CAS Deadline Management System is intended to make assessment dates visible across courses and to 
@@ -222,7 +243,7 @@ reviewing policy compliance and accreditation requirements. The system's recomme
 on the available course outline data, timetable information, and defined policies; it will not guarantee 
 that all scheduling conflicts or compliance issues are identified.
 
-\subsection{Stakeholders \textcolor{red}{- ITS STAKEHOLDER TIME BOI}}
+\subsection{Stakeholders}
 
 % \begin{itemize}
 % \item Customer
@@ -261,16 +282,55 @@ Tertiary Stakeholders:
 
 \subsection{Definitions and Acronyms}
 
-\begin{longtable}{p{0.25\textwidth} p{0.65\textwidth}}
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.22\textwidth} >{\raggedright\arraybackslash}p{0.70\textwidth}}
 \toprule
-Term & Definition\\
+\textbf{Term} & \textbf{Definition}\\
 \midrule
-CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
-LLM & Large Language Model, an AI model trained on large amounts of text to understand and generate human language.\\
-SRS & Software Requirements Specification, a document that describes a software system's requirements, including its expected functionality and constraints.\\
+\endfirsthead
+\toprule
+\textbf{Term} & \textbf{Definition}\\
+\midrule
+\endhead
+\endfoot
 \bottomrule
 \caption{Definitions and Acronyms} \label{tab:DefinitionsAndAcronyms}
+\endlastfoot
+A & Assumption. Assumptions are numbered A1, A2, \ldots{} and listed in Section~\ref{sec_Assumptions}.\\
+Academic calendar & The university's published dates for a term, including the start and end of classes, recesses, and the final examination period.\\
+AIR & AI Requirement. AI and machine learning requirements are numbered AIR1, AIR2, \ldots{}\\
+AODA & Accessibility for Ontarians with Disabilities Act, the Ontario law that sets accessibility standards, including for websites~\citep{AODA2005, IASR2011}.\\
+Assessment & Any graded component of a course, such as a midterm, assignment, quiz, lab, or project milestone.\\
+CAS & Department of Computing and Software, McMaster University.\\
+CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
+Cohort & The set of CAS courses that share a program and year level (Assumption~\asref{A_CourseCode}). Used to estimate which assessments the same students face together.\\
+Course code & The identifier of a course, made up of a subject prefix and a course number (for example, SFWRENG 2DA4). The prefix identifies the program and the first digit of the number identifies the year level.\\
+Course outline & The official document for a course offering that lists its learning objectives, assessments, weights, and due dates, as required by the Undergraduate Course Management Policy~\citep{McMasterUCMP2025}.\\
+CP-SAT & The constraint-programming solver in Google OR-Tools, used to compute suggested assessment dates~\citep{ORToolsCPSAT}.\\
+Cross-listed course & A single course offered under more than one course code (for example, SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03).\\
+DR & Data Requirement. Privacy and data retention requirements are numbered DR1, DR2, \ldots{}\\
+FR & Functional Requirement.\\
+GA & Graduate Attribute. One of the twelve outcomes the CEAB requires accredited engineering programs to develop in their graduates~\citep{CEAB2025}.\\
+LC & Likely Change.\\
+LLM & Large Language Model, an AI model trained on large amounts of text to understand and generate human language.\\
+Master course sheet & The department's record of which graduate attributes each course is expected to cover.\\
+MSAF & McMaster Student Absence Form, used by students to report short absences that affect academic work.\\
+NFR & Nonfunctional Requirement.\\
+PDF & Portable Document Format.\\
+Restricted period & A date range in which an assessment may not be due under university policy, such as a recess or the test and examination ban period.\\
+RTM & Requirements Traceability Matrix.\\
+Scheduling suggestion & An alternative date for an assessment, proposed by the system with an explanation. Suggestions are not binding; only the instructor can change a date.\\
+SR & Stakeholder Requirement.\\
+SRS & Software Requirements Specification, a document that describes a software system's requirements, including its expected functionality and constraints.\\
+TBD & To Be Determined. Used in course outlines for an assessment date that has not yet been set.\\
+UC & Use Case.\\
+ULC & Unlikely Change.\\
+WCAG & Web Content Accessibility Guidelines, the W3C standard referenced by AODA for web content~\citep{WCAG20, IASR2011}.\\
+Workload cluster & A period of \textit{CLUSTER\_\allowbreak{}WINDOW} days in which one cohort has more than \textit{CLUSTER\_\allowbreak{}THRESHOLD} assessments due (Table~\ref{tab:Constants}).\\
+Year level & The level of a course, given by the first digit of its course number (for example, 2 for SFWRENG 2DA4).\\
 \end{longtable}
+}
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -418,7 +478,7 @@ constraints of McMaster University. The following constraints apply to the syste
     of instructors and authorized administrators.
 
     \item \textbf{Policy and Accreditation Requirements:} Compliance checks must be based on documented 
-    McMaster University policies and applicable CEAB requirements. The system must support human review 
+    McMaster University policies~\citep{McMasterUCMP2025} and applicable CEAB requirements~\citep{CEAB2025}. The system must support human review 
     of flagged issues rather than treating automated results as definitive determinations.
 \end{itemize}
 
@@ -435,46 +495,47 @@ constraints of McMaster University. The following constraints apply to the syste
 
 \noindent \begin{itemize}
   
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}:] \textbf{Centralized Course Outline Submission:} 
 CAS administrators need a centralized location to collect and review course outlines.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}:] \textbf{Course Information Extraction:} 
 CAS administrators need relevant information extracted from submitted course outlines, including course 
-details, assignments and projects, marking schemes, and midterm dates where available.
+details, assignments and projects, marking schemes, and midterm dates where available, and need to be able 
+to export that information for use outside the system.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}:] \textbf{McMaster Policy Review:} 
 CAS administrators need support in identifying potential failures of course outlines to comply 
 with McMaster University and CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Accreditation Review: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}:] \textbf{CEAB Accreditation Review:} 
 CAS administrators need support in reviewing course outlines against CEAB accreditation 
 requirements, including evaluating how each course addresses relevant CEAB graduate attributes.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}:] \textbf{Assessment Schedule Analysis:} 
 Professors/instructors and CAS administrators need to identify periods with high concentrations 
 of assessment and midterm deadlines across relevant CAS department courses and reassess 
 the schedule when dates are updated.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}:] \textbf{Scheduling Recommendations:} 
 Professors/instructors need recommendations for alternative midterm and assessment dates 
 that may reduce deadline bottlenecks for students, while being able to make the final decision.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}:] \textbf{Instructor Decision-Making:}
 Professors/instructors need to retain authority over whether to accept or reject scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Handling Incomplete Information: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}:] \textbf{Handling Incomplete Information:} 
 Professors/instructors and CAS administrators need to be informed when missing or unreadable 
 course outline information may affect the reliability of compliance reviews or scheduling recommendations.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Authorized Access: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}:] \textbf{Authorized Access:} 
 CAS administrators and professors/instructors need access to the information and functions relevant 
 to their roles, while assuring sensitive information is protected and restricted to authorized users.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Shared Assessment Calendar: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}:] \textbf{Shared Assessment Calendar:} 
 Professors/instructors and CAS administrators need access to a shared calendar displaying 
 relevant course assessment dates.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-07}] Exam and Restricted-Period Conflicts: 
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-07}:] \textbf{Exam and Restricted-Period Conflicts:} 
 Professors/instructors and CAS administrators need to identify potential conflicts between 
 assessments, exam dates, and applicable restricted periods.
 
@@ -495,82 +556,73 @@ assessments, exam dates, and applicable restricted periods.
 
 \subsection{Persona 1}
 \begin{itemize}
-\item Name: Bob M. Builder (CAS Administrator)
-\item Description: Bob is responsible for collecting and reviewing CAS course outlines 
+\item \textbf{Name:} Bob M. Builder (CAS Administrator)
+\item \textbf{Description:} Bob is responsible for collecting and reviewing CAS course outlines 
 to help ensure they align with McMaster University and CAS department policies, as well 
 as CEAB accreditation requirements. Bob needs an efficient way to carry out his 
 administrative duties while reducing the amount of redundant back and forth communication 
 with instructors to ensure that outlines are aligned with the required policies and accreditation requirements.
 
-\item Goals: 
+\item \textbf{Goals:} 
 \begin{itemize}
   \item To collect and review course outlines in one centralized location.
   \item To identify missing information and potential policy or accreditation issues.
   \item To reduce the time spent manually reviewing multiple course outlines.
   \item To reduce unproductive communication time with course instructors.
 \end{itemize}
-\item Frustrations:
+\item \textbf{Frustrations:}
 \begin{itemize}
   \item Course outlines may use different formats or organize information differently.
   \item Manually locating relevant information across many documents can be time-consuming.
   \item Missing or unclear information can make it difficult to assess compliance.
 \end{itemize}
-\item Technical Ability: Moderate (experience with administrative software, document management tools, spreadsheets)
+\item \textbf{Technical Ability:} Moderate (experience with administrative software, document management tools, spreadsheets)
 \end{itemize}
 
 
 \subsection{Persona 2}
 \begin{itemize}
-\item Name: Dora Sanchez Explora (Software Engineering Professor)
-\item Description: Dora teaches Software Engineering Design courses and plans 
+\item \textbf{Name:} Dora Sanchez Explora (Software Engineering Professor)
+\item \textbf{Description:} Dora teaches Software Engineering Design courses and plans 
 assignments and two midterms for the semester. She wants to provide students with a workload 
 that is easy to manage and deadlines that allow them to learn and adequately prepare 
 for their midterms without overwhelming them in their other courses.
-\item Goals:
+\item \textbf{Goals:}
 \begin{itemize}
   \item To submit and maintain tentative assessment dates efficiently.
   \item To identify potential conflicts with assessments in other courses.
   \item To receive practical recommendations for distributing assessment deadlines more evenly.
   \item To retain final authority over assessment dates for her course.
 \end{itemize}
-\item Frustrations:
+\item \textbf{Frustrations:}
 \begin{itemize}
   \item Coordinating assessment dates across courses can be difficult.
   \item Several courses may schedule major assessments around the same time.
   \item Changing an assessment date may create conflicts with other course activities or require additional coordination.
 \end{itemize}
-\item Technical Ability: Moderate (experience with administrative management systems, online course and university tools)
+\item \textbf{Technical Ability:} Moderate (experience with administrative management systems, online course and university tools)
 \end{itemize}
 
 
 \subsection{Persona 3}
 \begin{itemize}
-\item Name: Homer Simpson (4th Year Software Engineering Student)
-\item Description: Homer is an undergraduate Software Engineering student taking six courses 
+\item \textbf{Name:} Homer Simpson (4th Year Software Engineering Student)
+\item \textbf{Description:} Homer is an undergraduate Software Engineering student taking six courses 
 for the Fall term. He is feeling overwhelmed by the workload and is struggling to manage his 
 time between getting his work done and studying for his upcoming back-to-back midterms. 
-\item Goals:
+\item \textbf{Goals:}
 \begin{itemize}
 \item To have a more balanced distribution of assessments throughout the term.
 \item To avoid periods when multiple major deadlines occur close together.
 \item To have sufficient time to prepare for major assessments across different courses.
 \end{itemize}
-\item Frustrations:
+\item \textbf{Frustrations:}
 \begin{itemize}
 \item Multiple assignments and midterms may fall within the same few days.
 \item Heavy assessment periods can make it difficult to allocate study/work time effectively.
 \item Assessment dates across different courses may be difficult to coordinate.
 \end{itemize}
-\item Technical Ability: High (experience with online learning platforms, digital calendars, student productivity tools and software)
-\end{itemize}
-
-\subsection{Persona 3}
-\begin{itemize}
-\item Name:
-\item Description:
-\item Goals:
-\item Frustrations:
-\item Technical Ability:
+\item \textbf{Technical Ability:} High (experience with online learning platforms, digital calendars, student productivity tools and software)
 \end{itemize}
 
 % ============================================================== 
@@ -643,6 +695,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
   \item If the system cannot extract certain information, it identifies the missing information for the administrator to review.
   \item If the system extracts information that is uncertain or ambiguous, it flags the affected information for administrator review and indicates that verification is required.
   \item If the administrator identifies incorrect information, they correct it before proceeding.
+  \item If the administrator needs the information outside the system, they export the verified course information as a CSV file.
 \end{itemize}
 
 \noindent \textbf{Postconditions}
@@ -930,7 +983,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake_Data}:] The system shall accept course outlines in PDF format submitted by a CAS administrator or professor.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assessment}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes in a course outline and the graduate attributes each addresses, whether the outline lists them by number, names them, or only describes them.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, including a date that is marked TBD.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Dates_Tentative}:] The system shall allow an instructor to enter and update tentative assessment dates for their own courses.
@@ -940,7 +993,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed and tentative assessment dates in a shared calendar that can be filtered by course, year, and program, with tentative dates marked as such.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy~\citep{McMasterUCMP2025}, such as final exam periods.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Reanalyze}:] The system shall re-run conflict detection for the affected courses and cohorts whenever an assessment date is added or changed.
 \end{itemize}
 
@@ -952,7 +1005,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 
 \subsection*{Compliance Checking}
 \begin{itemize}
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding~\citep{McMasterUCMP2025}.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Grad}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
 \end{itemize}
 
@@ -990,43 +1043,39 @@ time between getting his work done and studying for his upcoming back-to-back mi
 
 \subsection{Data Dictionary}
 
-{\footnotesize
-\setlength{\LTleft}{0pt}
-\setlength{\LTright}{0pt}
+{\small
 \renewcommand{\arraystretch}{1.2}
-
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.23\linewidth}|>{\raggedright\arraybackslash}p{0.67\linewidth}|}
-\caption{Data Dictionary}\label{tab:data-dictionary}\\
-\hline
-\textbf{Entity} & \textbf{Attributes (type): description} \\ \hline
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.26\textwidth} >{\raggedright\arraybackslash}p{0.66\textwidth}}
+\toprule
+\textbf{Entity} & \textbf{Attributes (type): description} \\
+\midrule
 \endfirsthead
-
-\hline
-\textbf{Entity} & \textbf{Attributes (type): description} \\ \hline
+\toprule
+\textbf{Entity} & \textbf{Attributes (type): description} \\
+\midrule
 \endhead
-
+\endfoot
+\bottomrule
+\caption{Data Dictionary} \label{tab:data-dictionary}
+\endlastfoot
 User &
 user\_id (UUID): unique identifier. \newline
 email (String): user's email address. \newline
-role (Enum): administrator or instructor. \\ \hline
-
+role (Enum): administrator or instructor. \\ \addlinespace
 Course &
 course\_id (UUID): unique identifier. \newline
 instructor\_id (UUID): user who teaches the course. \newline
-term (String): academic term of the offering. \\ \hline
-
+term (String): academic term of the offering. \\ \addlinespace
 CourseCode &
 course\_code\_id (UUID): unique identifier. \newline
 course\_id (UUID): course this listing belongs to. \newline
 code (String): course code, e.g., SFWRENG 4X03. \newline
 program (String, derived): program inferred from the subject in the code, for example Software Engineering from SFWRENG. Not entered separately. \newline
-year\_level (Integer, derived): program year inferred from the first digit of the course number, for example 4 in SFWRENG 4X03 and 3 in COMPSCI 3X03. Not entered separately. \\ \hline
-
+year\_level (Integer, derived): program year inferred from the first digit of the course number, for example 4 in SFWRENG 4X03 and 3 in COMPSCI 3X03. Not entered separately. \\ \addlinespace
 CourseOutline &
 outline\_id (UUID): unique identifier. \newline
 course\_id (UUID): course the outline belongs to. \newline
-submitted\_at (Timestamp): when the outline was submitted. \\ \hline
-
+submitted\_at (Timestamp): when the outline was submitted. \\ \addlinespace
 Assessment &
 assessment\_id (UUID): unique identifier. \newline
 outline\_id (UUID): outline the assessment was extracted from. \newline
@@ -1036,36 +1085,31 @@ due\_date (Date or null): null when missing or TBD. \newline
 is\_tentative (Boolean): true when the date was entered by an instructor and is not final. \newline
 weight\_percent (Decimal): percentage of the final grade. \newline
 review\_status (Enum): extracted or confirmed. \newline
-source\_text (String): outline text the values were extracted from. \\ \hline
-
+source\_text (String): outline text the values were extracted from. \\ \addlinespace
 LearningOutcome &
 outcome\_id (UUID): unique identifier. \newline
 outline\_id (UUID): outline the outcome appears in. \newline
 text (String): outcome as written. \newline
 ga\_numbers (List of Integer): graduate attribute numbers listed in the outline. \newline
 review\_status (Enum): extracted or confirmed. \newline
-source\_text (String): outline text the values were extracted from. \\ \hline
-
+source\_text (String): outline text the values were extracted from. \\ \addlinespace
 MasterCourseRecord &
 course\_code (String): course code this row applies to. Matches a CourseCode. \newline
-expected\_ga\_numbers (List of Integer): attribute numbers the master sheet lists for that course code. \\ \hline
-
+expected\_ga\_numbers (List of Integer): attribute numbers the master sheet lists for that course code. \\ \addlinespace
 AcademicCalendarEntry &
 start\_date (Date): start of the range. \newline
 end\_date (Date): end of the range. \newline
-restriction (Enum): holiday, exam period, no-assessment period. \\ \hline
-
+restriction (Enum): holiday, exam period, no-assessment period. \\ \addlinespace
 DateRecommendation &
 recommendation\_id (UUID): unique identifier. \newline
 assessment\_id (UUID): assessment the suggestion applies to. \newline
 suggested\_date (Date): proposed date. \newline
 explanation (String): reason for the suggestion, shown to the instructor. \newline
-decision (Enum): pending, accepted, rejected. \\ \hline
-
+decision (Enum): pending, accepted, rejected. \\ \addlinespace
 ComplianceFinding &
 finding\_id (UUID): unique identifier. \newline
 outline\_id (UUID): outline that was checked. \newline
-message (String): description of the problem found. \\ \hline
+message (String): description of the problem found. \\
 \end{longtable}
 }
 
@@ -1075,11 +1119,11 @@ message (String): description of the problem found. \\ \hline
 
 \item[DR\refstepcounter{drnum}\thedrnum \label{DR_Confidentiality}:] Course outlines and the data extracted from them are generally public. The master course sheet and other department data may be confidential, and shall only be available to authorized CAS users.
 
-\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Hosting}:] Course and department data shall be processed on CAS-hosted infrastructure. GitHub Copilot is an external service and may be used during development. Only publicly available course outline information may be sent to Copilot. Confidential department data and student personal information shall not be sent to Copilot or to any other external service.
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Hosting}:] The system shall use GitHub Copilot as its language model where it meets the system's requirements, and a locally hosted open-weight model on CAS infrastructure otherwise. Copilot is an external service, so only publicly available course outline information may be sent to it. Confidential department data and student personal information shall not be sent to Copilot or to any other external service. All other course and department data shall be stored and processed on CAS-hosted infrastructure.
 
 \item[DR\refstepcounter{drnum}\thedrnum \label{DR_Access}:] Users shall only see and change the data their role allows.
 
-\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Retention}:] The retention period for outlines, extracted data, and findings shall be 10 years. The Undergraduate Course Management Policy requires that course outlines be retained for at least 10 years.
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Retention}:] The retention period for outlines, extracted data, and findings shall be 10 years. The Undergraduate Course Management Policy requires that course outlines be retained for at least 10 years~\citep{McMasterUCMP2025}.
 
 \end{itemize}
 
@@ -1087,6 +1131,9 @@ message (String): description of the problem found. \\ \hline
 \section{Non-Functional Requirements}
 
 \noindent \begin{itemize}
+% The NFR labels replace the outer bullets, so show the sub-points with the
+% first-level bullet (local to this list).
+\renewcommand{\labelitemii}{\textbullet}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
 \textbf{Accuracy:}
@@ -1098,7 +1145,7 @@ message (String): description of the problem found. \\ \hline
     \item The system shall identify at least 95\% of predefined policy and CEAB compliance
     issues and report the results in the Verification and Validation Plan.
     \item These thresholds align with the success measures in the Problem Statement and
-    Goals document.
+    Goals document~\citep{TeamBVSH2026PS}.
 \end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
@@ -1201,7 +1248,7 @@ message (String): description of the problem found. \\ \hline
     \item The system's web interface shall conform to the applicable requirements of the
     \href{https://www.ontario.ca/laws/regulation/110191}{Accessibility for Ontarians with
     Disabilities Act (AODA)} and
-    \href{https://www.w3.org/TR/WCAG20/}{WCAG 2.0 Level AA}.
+    \href{https://www.w3.org/TR/WCAG20/}{WCAG 2.0 Level AA}~\citep{AODA2005, IASR2011, WCAG20}.
     \item Core workflows, including authentication, course-outline submission, information
     review, calendar viewing, and data export, shall be operable using keyboard navigation
     and shall provide accessible labels, headings, focus indicators, and error messages.
@@ -1218,19 +1265,19 @@ message (String): description of the problem found. \\ \hline
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
 
-\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. In operation the LLM is hosted on CAS infrastructure and kept behind a replaceable interface, so the model can be changed without changing the rest of the system. During development, GitHub Copilot may be used in its place. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
+\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. Where an outline does not list graduate attribute numbers or their exact wording, the LLM identifies the attributes from the learning outcome text. The attributes are then compared with the master course sheet by the system's own code, so the confidential master course sheet is never sent to the LLM. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The preferred LLM is GitHub Copilot, with a locally hosted open-weight model on CAS infrastructure as the fallback. The LLM is kept behind a replaceable interface, so the model can be changed without changing the rest of the system. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
 
 \subsection{Model Inputs}
 
 \begin{itemize}
-\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Text}:] The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the contents of the master course Excel sheet.
-\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Privacy}:] The operational model shall be hosted on CAS-operated infrastructure. When GitHub Copilot is used during development, only publicly available course outline text may be sent to it (\drref{DR_Hosting}). No student personal information shall be used as model input.
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Text}:] The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the CEAB graduate attribute definitions~\citep{CEAB2025}. The master course sheet shall not be part of the model input (\drref{DR_Confidentiality}, \drref{DR_Hosting}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Privacy}:] Model input shall be sent only to GitHub Copilot or to a model hosted on CAS-operated infrastructure (\drref{DR_Hosting}). Only publicly available course outline text may be sent to Copilot. No student personal information shall be used as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
 
 \begin{itemize}
-\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Struct}:] The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (\rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Struct}:] The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text, the graduate attributes it addresses, and whether each attribute was listed in the outline or identified by the model (\rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Source}:] Every structured value shall include the passage of extracted text it was taken from, so a reviewer can check it without opening the original document.
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Missing}:] The model shall only use information present in the extracted text, and shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (\rref{FR_Extract_Flag}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Review}:] No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it (\rref{FR_Extract_Review}).
@@ -1240,24 +1287,24 @@ message (String): description of the problem found. \\ \hline
 
 \noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference. Extraction metrics are measured on the final structured output, so they cover the PDF library and the model together.
 
-{\footnotesize
-\setlength{\LTleft}{0pt}
-\setlength{\LTright}{0pt}
+{\small
 \renewcommand{\arraystretch}{1.2}
-
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\linewidth}|>{\raggedright\arraybackslash}p{0.38\linewidth}|>{\raggedright\arraybackslash}p{0.20\linewidth}|}
-\caption{Evaluation Metrics}\label{tab:ai-metrics}\\
-\hline
-\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.26\textwidth} >{\raggedright\arraybackslash}p{0.48\textwidth} >{\raggedright\arraybackslash}p{0.16\textwidth}}
+\toprule
+\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\
+\midrule
 \endfirsthead
-
-\hline
-\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
+\toprule
+\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\
+\midrule
 \endhead
-
-Extraction accuracy & Share of assessment dates and weights that are correct in the final structured output (\rref{FR_Extract_Assessment}) & At least 90\% \\ \hline
-Missing-field detection & Share of missing or TBD fields that are flagged (\rref{FR_Extract_Flag}) & At least 90\% \\ \hline
-Compliance issue detection & Share of known compliance issues that are found (\rref{FR_Comp_Policy}, \rref{FR_Comp_Grad}) & At least 90\% \\ \hline
+\endfoot
+\bottomrule
+\caption{Evaluation Metrics} \label{tab:ai-metrics}
+\endlastfoot
+Extraction accuracy & Share of assessment dates and weights that are correct in the final structured output (\rref{FR_Extract_Assessment}) & At least 95\% \\ \addlinespace
+Missing-field detection & Share of missing or TBD fields that are flagged (\rref{FR_Extract_Flag}) & At least 95\% \\ \addlinespace
+Compliance issue detection & Share of known compliance issues that are found (\rref{FR_Comp_Policy}, \rref{FR_Comp_Grad}) & At least 95\% \\
 \end{longtable}
 }
 
@@ -1265,75 +1312,147 @@ Compliance issue detection & Share of known compliance issues that are found (\r
 
 \noindent The table lists the expected failure modes and how the design contains each one. The main safeguard is that a person confirms every extracted value, with the source text shown beside it. During evaluation, the team also manually reviews a sample of the outputs.
 
-{\footnotesize
-\setlength{\LTleft}{0pt}
-\setlength{\LTright}{0pt}
+{\small
 \renewcommand{\arraystretch}{1.2}
-
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\linewidth}|>{\raggedright\arraybackslash}p{0.28\linewidth}|>{\raggedright\arraybackslash}p{0.32\linewidth}|}
-\caption{Expected Failure Modes}\label{tab:ai-limitations}\\
-\hline
-\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\textwidth} >{\raggedright\arraybackslash}p{0.29\textwidth} >{\raggedright\arraybackslash}p{0.34\textwidth}}
+\toprule
+\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\
+\midrule
 \endfirsthead
-
-\hline
-\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
+\toprule
+\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\
+\midrule
 \endhead
-
-PDF library returns messed up or incomplete text (tables, multiple columns, scanned pages) & Dates, weights, or sections are missing or out of order before the model sees them & Flag outlines with little or no extracted text for manual entry; test on outlines with a range of layouts \\ \hline
-Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage; require review \\ \hline
-Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \hline
-Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \hline
-Courses missing from the master sheet (technical electives, mechatronics, computer science) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \hline
-Uneven accuracy across layouts or programs & Some instructors see more errors than others & Test on outlines from each program; add examples from weak areas \\ \hline
-CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \hline
-LLM unavailable & Extraction and scheduling explanations cannot be completed & Inform the user, keep the submitted outline, do not present an explanation that was not generated, and allow a retry when the service returns (UC\_CAS\_01, UC\_PROF\_03) \\ \hline
+\endfoot
+\bottomrule
+\caption{Expected Failure Modes} \label{tab:ai-limitations}
+\endlastfoot
+PDF library returns messed up or incomplete text (tables, multiple columns, scanned pages) & Dates, weights, or sections are missing or out of order before the model sees them & Flag outlines with little or no extracted text for manual entry; test on outlines with a range of layouts \\ \addlinespace
+Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage; require review \\ \addlinespace
+Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \addlinespace
+Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \addlinespace
+Courses missing from the master sheet (technical electives, mechatronics, computer science) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \addlinespace
+Uneven accuracy across layouts or programs & Some instructors see more errors than others & Test on outlines from each program; add examples from weak areas \\ \addlinespace
+CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \addlinespace
+LLM unavailable & Extraction and scheduling explanations cannot be completed & Inform the user, keep the submitted outline, do not present an explanation that was not generated, and allow a retry when the service returns (UC\_CAS\_01, UC\_PROF\_03) \\
 \end{longtable}
 }
 
-% ============================================================== 
-\section{Requirements Traceability Matrices}
+% ==============================================================
+\section{Requirements Traceability Matrices} \label{sec_RTM}
 
-\plt{The Requirements Traceability Matrix (RTM) is a table that shows the
-relationship between different types of requirements. It is used to ensure that
-all requirements are traceable and that no requirements are missed. The typical
-flow is: Stakeholder Need -> Use Case -> Requirement}
+% This section shows how the requirements in this document relate to one another.
+% Table~\ref{tab:SR2UC2FRtm} traces each stakeholder requirement to the use cases
+% that exercise it and the functional requirements that realize it.
+% Table~\ref{tab:FR2Rtm} shows which nonfunctional requirements each functional
+% requirement supports. Table~\ref{tab:LC2Rtm} links each likely change
+% (Section~\ref{sec_LikelyChanges}) to the requirements and assumptions it would
+% affect. Traceability to test cases is given in the Verification and Validation
+% Plan, and traceability to modules is given in the Module Guide.
 
-\plt{There is also a traceability matrix between functional and nonfunctional
-  requirements. The purpose of some FRs is to satisfy NFRs.  Therefore, it is
-  important to show the relationship between the two.}
-
-\plt{Further traceability to test cases and modules will be given in other
-documents.}
-
-\begin{longtable}{p{0.15\textwidth} p{0.15\textwidth} p{0.20\textwidth} p{0.20\textwidth}}
-
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.17\textwidth} >{\raggedright\arraybackslash}p{0.33\textwidth} >{\raggedright\arraybackslash}p{0.42\textwidth}}
 \toprule
-Stakeholder Req & Use Case & Functional Req \\
+\textbf{Stakeholder Req.} & \textbf{Use Case(s)} & \textbf{Functional Req(s).} \\
 \midrule
-\srref{SR_Label1} & \ucref{UC_Label1} & \rref{FR_Label1} \\
+\endfirsthead
+\toprule
+\textbf{Stakeholder Req.} & \textbf{Use Case(s)} & \textbf{Functional Req(s).} \\
+\midrule
+\endhead
+\endfoot
 \bottomrule
-
 \caption{Traceability Between Stakeholder Requirements, Use Cases, and
 Functional Requirements} \label{tab:SR2UC2FRtm}
+\endlastfoot
+\srref{SR-CAS-01} & \ucref{UC_CAS_01} & \rref{FR_Intake_Data} \\
+\srref{SR-CAS-02} & \ucref{UC_CAS_01}, \ucref{UC_CAS_02} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Extract_Review}, \rref{FR_Export_CSV} \\
+\srref{SR-CAS-03} & \ucref{UC_CAS_03}, \ucref{UC_CAS_05} & \rref{FR_Comp_Policy} \\
+\srref{SR-CAS-04} & \ucref{UC_CAS_04}, \ucref{UC_CAS_05} & \rref{FR_Extract_LO}, \rref{FR_Comp_Grad} \\
+\srref{SR-REC-01} & \ucref{UC_PROF_01}, \ucref{UC_PROF_02}, \ucref{UC_PROF_05} & \rref{FR_Dates_Tentative}, \rref{FR_Work_Cluster}, \rref{FR_Reanalyze} \\
+\srref{SR-REC-02} & \ucref{UC_PROF_03} & \rref{FR_Suggest_Generation} \\
+\srref{SR-REC-03} & \ucref{UC_PROF_04} & \rref{FR_Suggest_NoAuto} \\
+\srref{SR-REC-04} & \ucref{UC_CAS_02}, \ucref{UC_PROF_01}, \ucref{UC_PROF_02} & \rref{FR_Extract_Flag}, \rref{FR_Extract_Review} \\
+\srref{SR-REC-05} & \ucref{UC_CAS_01}, \ucref{UC_PROF_01} & \rref{FR_Access_Login}, \rref{FR_Access_Roles} \\
+\srref{SR-REC-06} & \ucref{UC_PROF_02} & \rref{FR_Calendar} \\
+\srref{SR-REC-07} & \ucref{UC_PROF_02} & \rref{FR_Work_Policy} \\
 \end{longtable}
+}
 
-\begin{longtable}{p{0.20\textwidth} p{0.20\textwidth}}
-
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.27\textwidth} *{9}{>{\centering\arraybackslash}p{0.066\textwidth}}}
 \toprule
-Functional Req & Nonfunctional Req \\
+\textbf{Functional Req.} & {\footnotesize\bfseries\nfrref{NFR_Accuracy}} & {\footnotesize\bfseries\nfrref{NFR_Usability}} & {\footnotesize\bfseries\nfrref{NFR_Maintainability}} & {\footnotesize\bfseries\nfrref{NFR_Portability}} & {\footnotesize\bfseries\nfrref{NFR_Installability}} & {\footnotesize\bfseries\nfrref{NFR_Performance}} & {\footnotesize\bfseries\nfrref{NFR_Reliability}} & {\footnotesize\bfseries\nfrref{NFR_Security}} & {\footnotesize\bfseries\nfrref{NFR_Accessibility}} \\
+ & \scriptsize Acc. & \scriptsize Usab. & \scriptsize Maint. & \scriptsize Port. & \scriptsize Inst. & \scriptsize Perf. & \scriptsize Rel. & \scriptsize Sec. & \scriptsize Access. \\
 \midrule
-\rref{FR_Label1} & \nfrref{NFR_Accuracy} \\
+\rref{FR_Intake_Data} {\footnotesize(outline intake)} &  &  & $\checkmark$ &  &  & $\checkmark$ & $\checkmark$ &  & $\checkmark$ \\
+\rref{FR_Extract_Assessment} {\footnotesize(assessment extraction)} & $\checkmark$ &  & $\checkmark$ &  &  & $\checkmark$ &  &  &  \\
+\rref{FR_Extract_LO} {\footnotesize(outcome extraction)} & $\checkmark$ &  & $\checkmark$ &  &  &  &  &  &  \\
+\rref{FR_Extract_Flag} {\footnotesize(flag missing/TBD)} & $\checkmark$ &  &  &  &  &  & $\checkmark$ &  &  \\
+\rref{FR_Extract_Review} {\footnotesize(user confirmation)} & $\checkmark$ & $\checkmark$ &  &  &  &  &  &  & $\checkmark$ \\
+\rref{FR_Dates_Tentative} {\footnotesize(tentative dates)} &  & $\checkmark$ &  &  &  &  & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\rref{FR_Calendar} {\footnotesize(shared calendar)} &  & $\checkmark$ &  & $\checkmark$ &  & $\checkmark$ &  &  & $\checkmark$ \\
+\rref{FR_Work_Cluster} {\footnotesize(workload clusters)} &  &  & $\checkmark$ &  &  &  &  &  &  \\
+\rref{FR_Work_Policy} {\footnotesize(restricted periods)} &  &  & $\checkmark$ &  &  &  &  &  &  \\
+\rref{FR_Reanalyze} {\footnotesize(re-analysis)} &  & $\checkmark$ &  &  &  &  &  &  &  \\
+\rref{FR_Suggest_Generation} {\footnotesize(date suggestions)} &  & $\checkmark$ & $\checkmark$ &  &  &  &  &  & $\checkmark$ \\
+\rref{FR_Suggest_NoAuto} {\footnotesize(no auto-change)} &  &  &  &  &  &  &  & $\checkmark$ &  \\
+\rref{FR_Comp_Policy} {\footnotesize(policy check)} & $\checkmark$ &  & $\checkmark$ &  &  &  &  &  &  \\
+\rref{FR_Comp_Grad} {\footnotesize(graduate attributes)} & $\checkmark$ &  & $\checkmark$ &  &  &  &  &  &  \\
+\rref{FR_Access_Login} {\footnotesize(log-in)} &  &  &  &  &  &  &  & $\checkmark$ & $\checkmark$ \\
+\rref{FR_Access_Roles} {\footnotesize(role-based access)} &  &  &  &  &  &  &  & $\checkmark$ &  \\
+\rref{FR_Export_CSV} {\footnotesize(CSV export)} &  & $\checkmark$ &  &  &  &  &  & $\checkmark$ & $\checkmark$ \\
 \bottomrule
+\end{tabular}
 \caption{Traceability Between Functional and Nonfunctional Requirements}
 \label{tab:FR2Rtm}
+\end{table}
 
-\end{longtable}
+\noindent \nfrref{NFR_Installability} has no entries in Table~\ref{tab:FR2Rtm}
+because it applies to the system as a whole rather than to any one functional
+requirement. It is verified by the deployment test in the Verification and
+Validation Plan.
 
-\begin{longtable}{p{0.28\textwidth} p{0.42\textwidth}}
-
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.17\textwidth} >{\raggedright\arraybackslash}p{0.75\textwidth}}
 \toprule
-AI Requirement & Related Requirement \\
+\textbf{Likely Change} & \textbf{Affected Requirements and Assumptions} \\
+\midrule
+\lcref{LC_LLMHosting} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Suggest_Generation}, \nfrref{NFR_Performance}, \nfrref{NFR_Security}, \drref{DR_Hosting}, \airref{AIR_Input_Privacy}, \asref{A_PublicOutlines} \\
+\lcref{LC_OutlineFormat} & \rref{FR_Intake_Data}, \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Extract_Flag}, \nfrref{NFR_Performance}, \airref{AIR_Input_Text} \\
+\lcref{LC_PolicyRules} & \rref{FR_Comp_Policy}, \rref{FR_Work_Policy} \\
+\lcref{LC_AccreditationCriteria} & \srref{SR-CAS-04}, \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \asref{A_MasterSheet} \\
+\lcref{LC_GAInference} & \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \airref{AIR_Input_Text}, \airref{AIR_Output_Struct} \\
+\lcref{LC_ClusterDefinition} & \rref{FR_Work_Cluster}, \rref{FR_Reanalyze}, \rref{FR_Suggest_Generation} \\
+\lcref{LC_CohortDefinition} & \rref{FR_Work_Cluster}, \asref{A_CourseCode}, \asref{A_Electives} \\
+\lcref{LC_AcademicCalendar} & \rref{FR_Work_Policy}, \asref{A_AcademicCalendar} \\
+\lcref{LC_SchedulingMethod} & \rref{FR_Suggest_Generation} \\
+\lcref{LC_Notification} & \rref{FR_Suggest_Generation}, \rref{FR_Comp_Policy}, \rref{FR_Comp_Grad} \\
+\lcref{LC_ExportFormat} & \rref{FR_Export_CSV} \\
+\lcref{LC_Authentication} & \srref{SR-REC-05}, \rref{FR_Access_Login}, \nfrref{NFR_Security} \\
+\lcref{LC_Mosaic} & \rref{FR_Work_Cluster}, \asref{A_CourseCode}, \asref{A_Electives} \\
+\lcref{LC_ScopeExpansion} & \srref{SR-CAS-01}, \rref{FR_Calendar}, \rref{FR_Access_Roles}, \asref{A_CourseCode} \\
+\bottomrule
+\end{tabular}
+\caption{Traceability Between Likely Changes and Requirements}
+\label{tab:LC2Rtm}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}p{0.62\textwidth}}
+\toprule
+\textbf{AI or Data Requirement} & \textbf{Related Requirements} \\
 \midrule
 \airref{AIR_Input_Text} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO} \\
 \airref{AIR_Input_Privacy} & \drref{DR_Hosting} \\
@@ -1342,40 +1461,442 @@ AI Requirement & Related Requirement \\
 \airref{AIR_Output_Missing} & \rref{FR_Extract_Flag} \\
 \airref{AIR_Output_Review} & \rref{FR_Extract_Review} \\
 \drref{DR_Confidentiality} & \rref{FR_Access_Roles} \\
+\drref{DR_Hosting} & \airref{AIR_Input_Privacy}, \nfrref{NFR_Security} \\
 \drref{DR_Access} & \rref{FR_Access_Roles} \\
+\drref{DR_Retention} & \nfrref{NFR_Security} \\
 \bottomrule
+\end{tabular}
 \caption{Traceability Between AI Requirements, Data Requirements, and Functional
 Requirements} \label{tab:AIR2Reqtm}
+\end{table}
 
-\end{longtable}
-
-% ============================================================== 
+% ==============================================================
 
 \section{Rationale}
 
-\plt{Provide a rationale for the decisions made in the documentation.  Rationale
-should be provided for scope decisions, functional requirements, nonfunctioanl
-requirements, data requirements, and AI requirements.  You don't need a
-rationale for everything, ust the major decisions that are not obvious.  You
-should have traceability to the entities in the document that you are
-referencing.}
+% \plt{Provide a rationale for the decisions made in the documentation.  Rationale
+% should be provided for scope decisions, functional requirements, nonfunctioanl
+% requirements, data requirements, and AI requirements.  You don't need a
+% rationale for everything, ust the major decisions that are not obvious.  You
+% should have traceability to the entities in the document that you are
+% referencing.}
 
-\section{Likely Changes}    
+This section explains the major decisions in this document that are not
+obvious. It also states the assumptions that the requirements rely on
+(Section~\ref{sec_Assumptions}). Each item references the requirement,
+constraint, or assumption it justifies. The sources are the information
+session and meetings with the CAS supervisors, the project's Problem
+Statement and Goals~\citep{TeamBVSH2026PS} and Development Plan~\citep{TeamBVSH2026DP}, McMaster University's Undergraduate Course
+Management Policy~\citep{McMasterUCMP2025}, and the CEAB Accreditation Criteria
+and Procedures~\citep{CEAB2025}.
+
+\subsection{Assumptions} \label{sec_Assumptions}
+
+The requirements in this document rely on the following assumptions. Each one
+narrows the scope of the system. If an assumption stops holding, the
+requirements that reference it must be revisited.
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with traceability to the entity that is likely to change.}
+\item[A\refstepcounter{asnum}\theasnum \label{A_CourseCode}:] \textbf{Program
+  and year level come from the course code.} The CAS department provides the
+  list of course codes it offers. The subject prefix of a course code
+  identifies the program (for example, SFWRENG, COMPSCI, MECHTRON), and the
+  first digit of the course number identifies the year level (for example,
+  SFWRENG 2DA4 is a second-year course). A cohort is the set of courses that
+  share a program and year level. This replaces timetable data, which the
+  system does not use.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_CrossListed}:]
+\textbf{Cross-listed course codes refer to one course.} A course offered under
+several codes (for example, SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03) has
+one outline, one instructor and one set of assessments. Its assessments count
+once toward each cohort that one of its codes belongs to. A single course can
+therefore belong to cohorts in different years.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_Electives}:] \textbf{All
+  courses at the same year level belong to one cohort, including electives.}
+  Elective enrolment data is not available, and the CAS department has not yet
+  said how electives should be grouped. Treating all same-level courses as one
+  cohort may flag clusters that no individual student experiences. This is a
+  conservative choice: it may produce false positives, but it does not hide
+  real clusters, and users review every flag. This assumption is provisional
+  (\lcref{LC_CohortDefinition}).
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_OffCycle}:] \textbf{Students
+  taking courses outside their year level are not modelled.} A student who
+  takes a higher-level course early, or a course out of sequence, accepts the
+  additional workload. This is the student's responsibility, not the
+  department's.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_PublicOutlines}:]
+  \textbf{Course outlines are public documents.} Outlines must be available to
+  students \citep{McMasterUCMP2025}, so their content can be sent to a
+  language model service covered by McMaster's institutional agreement~\citep{McMasterCopilot}. Other
+  data held by the system, such as compliance findings and tentative dates, is
+  not public.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_AcademicCalendar}:]
+  \textbf{Academic calendar dates are available before analysis.} Term start
+  and end dates, recesses, and examination periods for the term being analyzed
+  are published by the university and entered into the system before
+  workload analysis is run.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_MasterSheet}:] \textbf{The
+  department provides the expected graduate attributes for each course.} The
+  master course sheet used by \rref{FR_Comp_Grad} is supplied and maintained
+  by the CAS department. The system does not decide which graduate attributes
+  a course should cover.
 
 \end{itemize}
 
-\section{Unlikely Changes}    
+\subsection{System Constraints}
+
+\begin{itemize}
+\item \textbf{Language model cost and hosting.} The client does not want to pay
+  for ongoing services, so the language model must be free to the project.
+  GitHub Copilot is preferred because McMaster's agreement with Microsoft
+  provides it at no cost with enterprise data protection, meaning prompts are
+  not used to train models~\citep{McMasterCopilot}. A locally hosted open-weight model is the fallback
+  if programmatic access to Copilot is not available. The final choice has not
+  been made (\lcref{LC_LLMHosting}).
+
+\item \textbf{PDF input only.} The CAS supervisors stated that outlines
+  published in other formats, such as HTML, are converted to PDF before they
+  are submitted. Supporting one format keeps the extraction pipeline simpler
+  to build and test (\rref{FR_Intake_Data}).
+
+\item \textbf{Human decision-making} (\srref{SR-REC-03},
+  \rref{FR_Suggest_NoAuto}). Instructors have authority over course delivery,
+  and CAS administrators are not authorized to reassign assessment dates. The
+  CAS supervisors stated that the project must not change course content or
+  dates. This is a constraint, not a preference: the university, not the team,
+  decides who may change assessment dates.
+
+\item \textbf{Compliance grounded in documented policy.} Compliance checks are
+  limited to rules stated in the Undergraduate Course Management
+  Policy~\citep{McMasterUCMP2025} and the CEAB Accreditation Criteria and
+  Procedures~\citep{CEAB2025}.
+  Rules the team inferred itself could flag outlines incorrectly and could not
+  be justified to instructors.
+\end{itemize}
+
+\subsection{Functional Requirements}
+
+\begin{itemize}
+\item \textbf{Extracted data must be confirmed before use}
+  (\rref{FR_Extract_Review}, \srref{SR-CAS-02}, \srref{SR-REC-04}). Course
+  outlines do not follow a common format, so extraction errors are expected. An
+  incorrect date or weight would affect the calendar, workload analysis,
+  suggestions, and compliance checks. Administrators need extracted information
+  they can rely on (\srref{SR-CAS-02}), and users need to know when it may be
+  unreliable (\srref{SR-REC-04}). A confirmation step meets both needs by
+  stopping an error before it reaches those outputs. The Development
+  Plan~\citep{TeamBVSH2026DP} identifies this semi-automated approach as the fallback if fully automated
+  extraction is not accurate enough.
+
+\item \textbf{Missing and TBD values are flagged, not guessed}
+  (\rref{FR_Extract_Flag}, \srref{SR-REC-04}). The CAS supervisors identified
+  outlines listing ``Midterm Date: TBD'' as a core problem. A guessed date
+  would appear in the calendar as if it were real. Flagging the value makes the
+  gap visible so the administrator can follow up once, instead of repeatedly.
+
+\item \textbf{Instructors can enter tentative dates} (\rref{FR_Dates_Tentative}).
+  Outlines are often written before every date is fixed, which is why TBD dates
+  occur. Letting instructors enter a tentative date gives the workload analysis
+  something to work with, and marking it as tentative in the calendar
+  (\rref{FR_Calendar}) keeps it from being mistaken for a final date.
+
+\item \textbf{Clusters use symbolic constants} (\rref{FR_Work_Cluster}).
+  There is no agreed definition of how many assessments in how many days is
+  too many. The window and threshold are therefore the symbolic constants
+  \textit{CLUSTER\_\allowbreak{}WINDOW} and
+  \textit{CLUSTER\_\allowbreak{}THRESHOLD} (Table~\ref{tab:Constants}), so they
+  can be tuned with the CAS supervisors without changing the requirement
+  (\lcref{LC_ClusterDefinition}).
+
+\item \textbf{Restricted periods come from university policy}
+(\rref{FR_Work_Policy}, \srref{SR-REC-07}). The Undergraduate Course Management
+Policy forbids tests or examinations worth more than
+\textit{BAN\_\allowbreak{}WEIGHT\_\allowbreak{}LIMIT} during the test and
+examination ban period. That period covers the last
+\textit{BAN\_\allowbreak{}CLASS\_\allowbreak{}DAYS} days of classes and the days
+before final examinations begin \citep{McMasterUCMP2025}. Assessments may also
+not be due during recesses \citep{McMasterUCMP2025}. These are the restricted
+periods the system checks.
+
+\item \textbf{Conflicts are re-checked automatically; suggestions are not}
+  (\rref{FR_Reanalyze}, \rref{FR_Suggest_Generation}). Detecting conflicts only
+  reports facts about the stored dates, so it is re-run whenever a date changes
+  to keep the calendar current. Suggestions are produced only when an
+  instructor asks for them. The CAS supervisors noted that instructors already
+  find unrequested follow-up disruptive, and unprompted suggestions would add to
+  it.
+
+\item \textbf{Every suggestion comes with an explanation}
+  (\rref{FR_Suggest_Generation}, \ucref{UC_PROF_03}). Instructors keep final
+  authority, so a suggestion is only useful if the instructor can judge it. An
+  explanation that compares the workload in the original and suggested weeks
+  lets the instructor check the suggestion against the data. If the
+  explanation cannot be generated, the suggested dates are not shown with a
+  made-up reason (\ucref{UC_PROF_03}).
+
+\item \textbf{Policy rules the compliance check uses} (\rref{FR_Comp_Policy},
+  \srref{SR-CAS-03}). The rules are taken from the Undergraduate Course
+  Management Policy~\citep{McMasterUCMP2025}:
+  \begin{itemize}
+  \item assessment weights must total \textit{WEIGHT\_\allowbreak{}TOTAL};
+  \item without approval, no single assessment may be worth more than
+    \textit{MAX\_\allowbreak{}SINGLE\_\allowbreak{}WEIGHT};
+  \item students must receive feedback worth at least
+    \textit{EARLY\_\allowbreak{}FEEDBACK\_\allowbreak{}L2} (Level II) or
+    \textit{EARLY\_\allowbreak{}FEEDBACK\_\allowbreak{}L3} (Level III and
+    above) before the last day to cancel a course.
+  \end{itemize} Weights that do not total
+  \textit{WEIGHT\_\allowbreak{}TOTAL} are either an outline error or an
+  extraction error, and both need review.
+
+\item \textbf{Access is limited by role} (\rref{FR_Access_Login},
+  \rref{FR_Access_Roles}, \srref{SR-REC-05}). Instructors may change only their
+  own courses because they hold authority over those courses and no others.
+  Administrators review outlines across the department, so they need access to
+  all courses.
+
+\item \textbf{Export as CSV} (\rref{FR_Export_CSV}). The CAS supervisors asked
+  that stored data be exportable. CSV opens in the spreadsheet tools CAS staff
+  already use and does not tie the data to this system. Other formats may be
+  added later (\lcref{LC_ExportFormat}).
+\end{itemize}
+
+\subsection{Nonfunctional Requirements}
+
+\begin{itemize}
+\item \textbf{Accuracy targets} (\nfrref{NFR_Accuracy}). The Problem
+  Statement and Goals~\citep{TeamBVSH2026PS} set extraction accuracy, missing-field recall and
+  compliance detection at 90\%. The team raised
+  \textit{EXTRACT\_\allowbreak{}ACCURACY}, \textit{FLAG\_\allowbreak{}RECALL}
+  and \textit{COMPLIANCE\_\allowbreak{}RECALL} to 95\% while writing this
+  document. Every extracted value is confirmed by a person before use
+  (\rref{FR_Extract_Review}), so the system is only useful if review is mostly
+  confirmation rather than correction. At 90\%, an administrator would correct
+  roughly one value in ten, which would leave much of the manual effort the
+  system is meant to remove. The targets are below 100\% because review remains
+  the safeguard. The Problem Statement and Goals~\citep{TeamBVSH2026PS} will be updated to match.
+
+\item \textbf{Maintainability is measured against likely changes}
+  (\nfrref{NFR_Maintainability}). Section~\ref{sec_LikelyChanges} lists the
+  changes the team expects. Measuring maintainability as the effort to make one
+  of those changes, relative to \textit{FRACTION} of the original development
+  effort, gives a target that can be tested rather than a general statement.
+
+\item \textbf{Performance and usability targets} (\nfrref{NFR_Performance},
+  \nfrref{NFR_Usability}). \textit{CALENDAR\_\allowbreak{}LOAD\_\allowbreak{}TIME}
+  applies to stored data that users browse interactively, so it is short.
+  \textit{EXTRACT\_\allowbreak{}TIME\_\allowbreak{}LIMIT} is longer because
+  extraction runs once per outline when it is submitted, and the administrator
+  reviews the result afterwards. These values, together with
+  \textit{TASK\_\allowbreak{}COMPLETION}, are initial targets set by the team.
+  They will be validated in the Proof of Concept and revised if they prove
+  unrealistic.
+
+\item \textbf{Installability} (\nfrref{NFR_Installability}). The system is
+  expected to outlive the capstone team, and will be maintained by CAS IT staff
+  or a later student team. Deployment therefore cannot depend on knowledge that
+  only the current team holds, so every step must be documented and tested.
+
+\item \textbf{Accessibility} (\nfrref{NFR_Accessibility}). The Accessibility
+  for Ontarians with Disabilities Act~\citep{AODA2005} applies to McMaster's web content, and its
+  standard for websites is WCAG 2.0 Level AA~\citep{IASR2011, WCAG20}. This is a legal requirement, not a
+  design preference, so it is stated as a nonfunctional requirement that must be
+  verified.
+\end{itemize}
+
+\subsection{Data Requirements}
+
+\begin{itemize}
+\item \textbf{One record per cross-listed course} (\asref{A_CrossListed}).
+  Storing a cross-listed course once means a correction made under one course
+  code applies under all of them. It also prevents the same assessment from
+  being counted twice in one cohort's workload.
+
+\item \textbf{No student personal data.} Cohorts are derived from course codes
+  (\asref{A_CourseCode}), so the system never needs to know which students
+  take which courses. This reduces privacy risk and the amount of confidential
+  data the system holds.
+\end{itemize}
+
+\subsection{AI and Machine Learning}
+
+\begin{itemize}
+\item \textbf{Suggested dates are computed by a deterministic solver, not
+  generated by the language model} (\rref{FR_Suggest_Generation}). A language
+  model can produce plausible but incorrect dates. A solver that works directly
+  from the stored constraints produces dates that can be checked, and gives the
+  same result for the same input. The language model is used to extract
+  information from outlines (\airref{AIR_Output_Struct}) and to explain
+  suggestions in plain language. It never computes suggested dates or checks
+  assessment weights, which are done by deterministic code.
+
+\item \textbf{The master course sheet is never sent to the language model}
+  (\airref{AIR_Input_Text}, \drref{DR_Hosting}). The sheet is confidential
+  department data (\drref{DR_Confidentiality}), and Copilot is an external
+  service. Outlines word graduate attributes in different ways, so where the
+  numbers or exact wording are missing, the model identifies the attributes from
+  the learning outcome text (\rref{FR_Extract_LO}). It needs only that public
+  text and the public CEAB attribute definitions to do so, not the sheet.
+  Comparing the identified attributes with the sheet (\rref{FR_Comp_Grad}) is
+  then a lookup that ordinary code can do exactly. Attributes identified by the
+  model are less certain than ones listed in the outline, so they are reviewed
+  like every other extracted value (\rref{FR_Extract_Review},
+  \airref{AIR_Output_Review}).
+\end{itemize}
+
+\subsection{Numeric Values}
+
+The numeric values used in this document are symbolic constants defined in
+Appendix~C (Table~\ref{tab:Constants}). Values marked with a section number come
+from the Undergraduate Course Management Policy~\citep{McMasterUCMP2025}. Values marked ``Goal'' are the measurable success
+criteria agreed in the project's Problem Statement and Goals~\citep{TeamBVSH2026PS}. Values marked
+``Proposed'' are the team's initial estimates. These will be reviewed with the
+CAS supervisors and adjusted based on Proof of Concept results.
+
+% ==============================================================
+\section{Likely Changes} \label{sec_LikelyChanges}
+
+The following changes are expected during the life of the system. The design
+should hide each of them, so that a change affects as few components as
+possible. Table~\ref{tab:LC2Rtm} lists the requirements each change affects.
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_LLMHosting}:]
+  \textbf{Language model and its hosting.} Copilot under McMaster's agreement~\citep{McMasterCopilot}
+  is preferred, and a locally hosted model is the fallback. Either choice may
+  change, and models will be replaced as better ones are released.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_OutlineFormat}:]
+  \textbf{Course outline formats.} Instructors use different layouts. The
+  university may also adopt a new outline template or syllabus platform, or
+  the system may need to accept formats other than PDF.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_PolicyRules}:]
+  \textbf{McMaster course management policy rules.} The Undergraduate Course
+  Management Policy has been revised several times, most recently in 2025
+  \citep{McMasterUCMP2025}. Its required outline contents, weight limits, and
+  restricted periods may change again.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_AccreditationCriteria}:]
+  \textbf{Accreditation criteria and the master course sheet.} The CEAB
+  revises its criteria periodically \citep{CEAB2025}. The department may also
+  change which graduate attributes each course is expected to cover.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_GAInference}:]
+  \textbf{How graduate attributes are identified in an outline.} The system
+  uses the attribute numbers or names in the outline where they are given, and
+  the language model identifies them from the learning outcome text where they
+  are not. This may change, for example if the department adopts an outline
+  template that always lists the attribute numbers, or if the CEAB revises the
+  attributes themselves \citep{CEAB2025}.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_ClusterDefinition}:]
+  \textbf{Definition of a workload cluster.} The values of
+  \textit{CLUSTER\_\allowbreak{}WINDOW} and
+  \textit{CLUSTER\_\allowbreak{}THRESHOLD} are initial estimates. Assessment
+  types may also be weighted differently (for example, a midterm counting more
+  than a quiz).
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_CohortDefinition}:]
+  \textbf{Definition of a cohort.} How elective courses are grouped
+  (\asref{A_Electives}) is provisional and will be clarified with the CAS
+  department.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_AcademicCalendar}:]
+  \textbf{Academic calendar dates.} Term dates, recesses, and examination
+  periods change every year.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_SchedulingMethod}:]
+  \textbf{Method for generating suggested dates.} The Development
+  Plan~\citep{TeamBVSH2026DP} proposes a constraint solver, with a simpler scoring method as a fallback.
+  The method may change as the Proof of Concept shows what works.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Notification}:]
+  \textbf{How results reach instructors.} Email notification is on hold until
+  it is confirmed with the CAS supervisors. Results may later be delivered by
+  email or another channel.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_ExportFormat}:]
+  \textbf{Export formats.} CSV is the only export format. Others, such as
+  Excel or calendar files, may be requested.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Authentication}:]
+  \textbf{User authentication.} The system may move to McMaster's single
+  sign-on if it is hosted on university infrastructure.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Mosaic}:] \textbf{Use of
+  enrolment or timetable data.} Integration with Mosaic is a stretch goal. It
+  would replace course-code cohorts (\asref{A_CourseCode}) with cohorts based
+  on actual enrolment. Historical MSAF data, if made available, could also be
+  used to identify weeks with high past assessment pressure.
+
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_ScopeExpansion}:]
+  \textbf{Scope of courses covered.} The project began as part of a larger
+  initiative covering both undergraduate and graduate CAS programs. The
+  system may later include graduate courses or other departments.
+
+\end{itemize}
+
+% ==============================================================
+\section{Unlikely Changes} \label{sec_UnlikelyChanges}
+
+The design may assume that the following will not change. Each item gives the
+reason it is considered stable.
+
+\noindent \begin{itemize}
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_InstructorAuthority}:]
+  \textbf{Instructors keep final authority over assessment dates}
+  (\srref{SR-REC-03}, \rref{FR_Suggest_NoAuto}). Under the Undergraduate
+  Course Management Policy, instructors organize and present their courses, and
+  changes to how a course is evaluated are made in consultation with the
+  Department Chair~\citep{McMasterUCMP2025}. CAS administrators do not have the
+  authority to change an instructor's assessment dates, and a software system
+  cannot be given authority that the people using it do not have.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_OutlineInput}:]
+  \textbf{Course outlines remain the main source of assessment information}
+  (\srref{SR-CAS-01}). University policy requires every course to have an
+  outline that lists its assessments, weights, and due dates
+  \citep{McMasterUCMP2025}. The file format may change
+  (\lcref{LC_OutlineFormat}), but the outline itself will remain.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_CourseCodeConvention}:]
+  \textbf{The first digit of a course number gives its year level}
+  (\asref{A_CourseCode}). The Undergraduate Calendar defines course numbers
+  this way for every McMaster course: the first digit gives the level of the
+  course~\citep{McMasterUGCal2025}. A change would affect every program and
+  system at the university.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_Roles}:] \textbf{The two
+  user roles: CAS administrator and instructor} (\srref{SR-REC-05},
+  \rref{FR_Access_Roles}). These roles reflect how outline review is divided in
+  the department: administrators review outlines, and instructors own their
+  courses. No other users will be given access.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_AssessmentTerm}:]
+  \textbf{Every assessment belongs to one course offering.} Academic
+  records at McMaster are organized by course offering, and the course
+  management policy is written at that level.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_WebDelivery}:]
+  \textbf{The system is used through a web browser}
+  (\nfrref{NFR_Portability}, \nfrref{NFR_Accessibility}). Administrators and instructors use different
+  devices and cannot be expected to install software. The Problem Statement and Goals~\citep{TeamBVSH2026PS}
+  commits to a browser-based system with no additional hardware or software.
+
+\item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_FirstYear}:]
+  \textbf{Level I courses are excluded.} First-year engineering is common to
+  all programs and is not run by the CAS department. This would change only
+  if the Faculty's first-year structure changed.
 
 \end{itemize}
 
@@ -1383,30 +1904,76 @@ referencing.}
 
 \section{Appendices}
 
-\subsection{Appendix A: Additional Materials}
+% \subsection{Appendix A: Additional Materials}
 
-TODO
+% TODO
 
-\subsection{Appendix B: Development Plan}
+% \subsection{Appendix B: Development Plan}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could show the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
+% \plt{This section is optional.  It is used to explain the plan for developing
+%   the software.  In particular, this section gives a list of the order in which
+%   the requirements will be implemented.  In the context of a course  this is
+%   where you can indicate which requirements will be implemented as part of the
+%   course, and which will be ``faked'' as future work.  This section can be
+%   organized as a prioritized list of requirements, or it could show the
+%   requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
 
 \subsection{Appendix C: Values of Auxiliary Constants}
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
+Table~\ref{tab:Constants} gives the values of the symbolic constants used in
+this document. The Source column states where each value comes from: a section number
+(Sec.) refers to the Undergraduate Course Management Policy~\citep{McMasterUCMP2025} (``App.~A'' to its Appendix~A), ``Goal''
+to the given goal in the project's Problem Statement and Goals document~\citep{TeamBVSH2026PS}, and
+``Proposed'' marks an initial estimate that will be confirmed with the CAS
+supervisors.
 
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
-
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
-
-TODO
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.31\textwidth} >{\raggedright\arraybackslash}p{0.08\textwidth} >{\raggedright\arraybackslash}p{0.35\textwidth} >{\raggedright\arraybackslash}p{0.13\textwidth}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning} & \textbf{Source}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning} & \textbf{Source}\\
+\midrule
+\endhead
+\endfoot
+\bottomrule
+\caption{Values of Auxiliary Constants} \label{tab:Constants}
+\endlastfoot
+\multicolumn{4}{l}{\textbf{Workload analysis}}\\
+\textit{CLUSTER\_WINDOW} & 7 days & Length of the period checked for a workload cluster. & Proposed\\
+\textit{CLUSTER\_THRESHOLD} & 3 & Number of assessments a cohort may have due within one window before a cluster is flagged. & Proposed\\
+\textit{MIN\_ALTERNATIVES} & 2 & Minimum number of alternative dates offered for an assessment in a detected conflict. & Goal 4\\
+\midrule
+\multicolumn{4}{l}{\textbf{University policy}}\\
+\textit{WEIGHT\_TOTAL} & 100\% & Required total of all assessment weights in an outline. & App.~A\\
+\textit{MAX\_SINGLE\_WEIGHT} & 75\% & Largest weight one assessment may have without Chair or Associate Dean approval. & Sec.~13\\
+\textit{BAN\_CLASS\_DAYS} & 5 days & Number of final days of classes included in the test and examination ban period. & Sec.~12.5\\
+\textit{BAN\_WEIGHT\_LIMIT} & 10\% & Largest weight a test or examination may have during the ban period. & Sec.~12.5\\
+\textit{EARLY\_FEEDBACK\_L2} & 20\% & Minimum weight of feedback given to Level II students before the last day to cancel a course. & Secs.~16--18\\
+\textit{EARLY\_FEEDBACK\_L3} & 10\% & Minimum weight of feedback given to Level III and higher students before the last day to cancel a course. & Secs.~16--18\\
+\textit{OUTLINE\_LEAD\_TIME} & 14 days & Recommended time before classes begin for an outline to be released. & Sec.~5\\
+\midrule
+\multicolumn{4}{l}{\textbf{Success targets}}\\
+\textit{CALENDAR\_COVERAGE} & 95\% & Share of assessment dates in the test outlines that appear in the calendar. & Goal 1\\
+\textit{EXTRACT\_ACCURACY} & 95\% & Share of assessment dates and weights extracted correctly (\nfrref{NFR_Accuracy}). & Proposed\\
+\textit{FLAG\_RECALL} & 95\% & Share of known missing or incomplete fields that are flagged (\nfrref{NFR_Accuracy}). & Proposed\\
+\textit{CONFLICT\_RECALL} & 90\% & Share of known scheduling conflicts identified. & Goal 3\\
+\textit{SUGGEST\_SUCCESS} & 90\% & Share of conflict cases for which at least \textit{MIN\_ALTERNATIVES} feasible dates are offered. & Goal 4\\
+\textit{COMPLIANCE\_RECALL} & 95\% & Share of known policy and CEAB compliance issues identified (\nfrref{NFR_Accuracy}). & Proposed\\
+\midrule
+\multicolumn{4}{l}{\textbf{Nonfunctional targets}}\\
+\textit{TASK\_COMPLETION} & 80\% & Share of usability-test participants who complete each core task without assistance (\nfrref{NFR_Usability}). & Proposed\\
+\textit{CALENDAR\_LOAD\_TIME} & 3 s & Longest time to display previously processed calendar data (\nfrref{NFR_Performance}). & Proposed\\
+\textit{CALENDAR\_LOAD\_SHARE} & 95\% & Share of calendar requests that must load within the time limit above. & Proposed\\
+\textit{MAX\_OUTLINE\_PAGES} & 30 & Longest outline, in pages, covered by the extraction time target. & Proposed\\
+\textit{EXTRACT\_TIME\_LIMIT} & 60 s & Longest time to process one outline and extract its information (\nfrref{NFR_Performance}). & Proposed\\
+\textit{EXTRACT\_TIME\_SHARE} & 90\% & Share of extraction runs that must finish within the time limit above. & Proposed\\
+\textit{FRACTION} & 0.1 & Largest share of the original development effort that any one likely change may require (\nfrref{NFR_Maintainability}). & Proposed\\
+\end{longtable}
+}
 
 \subsection{Appendix D: Generative AI Disclosure}
 
@@ -1428,7 +1995,7 @@ graduate attribute of Lifelong Learning.
 
 \newpage
 
-\bibliographystyle {plainnat}
+\bibliographystyle {IEEEtran}
 \bibliography {../../refs/References}
 
 \newpage
