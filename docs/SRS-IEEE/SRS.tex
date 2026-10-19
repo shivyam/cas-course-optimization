@@ -102,7 +102,18 @@
 
 \usepackage{fullpage}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{Software Requirements Specification for \progname: subtitle describing software} 
 \author{\authname}
@@ -1128,7 +1139,7 @@ message (String): description of the problem found. \\ \hline
     \item The system shall identify at least 95\% of predefined policy and CEAB compliance
     issues and report the results in the Verification and Validation Plan.
     \item These thresholds align with the success measures in the Problem Statement and
-    Goals document.
+    Goals document~\citep{TeamBVSH2026PS}.
 \end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
@@ -1472,7 +1483,7 @@ obvious. It also states the assumptions that the requirements rely on
 (Section~\ref{sec_Assumptions}). Each item references the requirement,
 constraint, or assumption it justifies. The sources are the information
 session and meetings with the CAS supervisors, the project's Problem
-Statement and Development Plan, McMaster University's Undergraduate Course
+Statement and Goals~\citep{TeamBVSH2026PS} and Development Plan~\citep{TeamBVSH2026DP}, McMaster University's Undergraduate Course
 Management Policy~\citep{McMasterUCMP2025}, and the CEAB Accreditation Criteria
 and Procedures~\citep{CEAB2025}.
 
@@ -1577,8 +1588,8 @@ therefore belong to cohorts in different years.
   suggestions, and compliance checks. Administrators need extracted information
   they can rely on (\srref{SR-CAS-02}), and users need to know when it may be
   unreliable (\srref{SR-REC-04}). A confirmation step meets both needs by
-  stopping an error before it reaches those outputs. The Development Plan
-  identifies this semi-automated approach as the fallback if fully automated
+  stopping an error before it reaches those outputs. The Development
+  Plan~\citep{TeamBVSH2026DP} identifies this semi-automated approach as the fallback if fully automated
   extraction is not accurate enough.
 
 \item \textbf{Missing and TBD values are flagged, not guessed}
@@ -1658,7 +1669,7 @@ periods the system checks.
 
 \begin{itemize}
 \item \textbf{Accuracy targets} (\nfrref{NFR_Accuracy}). The Problem
-  Statement and Goals set extraction accuracy, missing-field recall and
+  Statement and Goals~\citep{TeamBVSH2026PS} set extraction accuracy, missing-field recall and
   compliance detection at 90\%. The team raised
   \textit{EXTRACT\_\allowbreak{}ACCURACY}, \textit{FLAG\_\allowbreak{}RECALL}
   and \textit{COMPLIANCE\_\allowbreak{}RECALL} to 95\% while writing this
@@ -1667,7 +1678,7 @@ periods the system checks.
   confirmation rather than correction. At 90\%, an administrator would correct
   roughly one value in ten, which would leave much of the manual effort the
   system is meant to remove. The targets are below 100\% because review remains
-  the safeguard. The Problem Statement and Goals will be updated to match.
+  the safeguard. The Problem Statement and Goals~\citep{TeamBVSH2026PS} will be updated to match.
 
 \item \textbf{Maintainability is measured against likely changes}
   (\nfrref{NFR_Maintainability}). Section~\ref{sec_LikelyChanges} lists the
@@ -1730,7 +1741,7 @@ periods the system checks.
 The numeric values used in this document are symbolic constants defined in
 Appendix~C (Table~\ref{tab:Constants}). Values marked with a section number come
 from the Undergraduate Course Management Policy~\citep{McMasterUCMP2025}. Values marked ``Goal'' are the measurable success
-criteria agreed in the project's Problem Statement and Goals. Values marked
+criteria agreed in the project's Problem Statement and Goals~\citep{TeamBVSH2026PS}. Values marked
 ``Proposed'' are the team's initial estimates. These will be reviewed with the
 CAS supervisors and adjusted based on Proof of Concept results.
 
@@ -1788,8 +1799,8 @@ possible. Table~\ref{tab:LC2Rtm} lists the requirements each change affects.
   periods change every year.
 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_SchedulingMethod}:]
-  \textbf{Method for generating suggested dates.} The Development Plan
-  proposes a constraint solver, with a simpler scoring method as a fallback.
+  \textbf{Method for generating suggested dates.} The Development
+  Plan~\citep{TeamBVSH2026DP} proposes a constraint solver, with a simpler scoring method as a fallback.
   The method may change as the Proof of Concept shows what works.
 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Notification}:]
@@ -1858,7 +1869,7 @@ reason it is considered stable.
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_WebDelivery}:]
   \textbf{The system is used through a web browser}
   (\nfrref{NFR_Portability}, \nfrref{NFR_Accessibility}). Administrators and instructors use different
-  devices and cannot be expected to install software. The Problem Statement
+  devices and cannot be expected to install software. The Problem Statement and Goals~\citep{TeamBVSH2026PS}
   commits to a browser-based system with no additional hardware or software.
 
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_FirstYear}:]
@@ -1891,7 +1902,7 @@ TODO
 Table~\ref{tab:Constants} gives the values of the symbolic constants used in
 this document. The Source column states where each value comes from: a section number
 (Sec.) refers to the Undergraduate Course Management Policy~\citep{McMasterUCMP2025} (``App.~A'' to its Appendix~A), ``Goal''
-to the given goal in the project's Problem Statement and Goals document, and
+to the given goal in the project's Problem Statement and Goals document~\citep{TeamBVSH2026PS}, and
 ``Proposed'' marks an initial estimate that will be confirmed with the CAS
 supervisors.
 
