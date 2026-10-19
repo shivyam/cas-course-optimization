@@ -59,42 +59,50 @@ Date2 & Name(s) & Description of changes\\
 
 \pagenumbering{arabic}
 
-\wss{You are free to modify this template.}
+% \wss{You are free to modify this template.}
 
 \section{Introduction}
 
 %\wss{You can include your definition of what a hazard is here.}
 
 A hazard is a system condition or failure that could contribute to an undesirable outcome, resulting in losses 
-like inaccurate accreditation assessments, poor deadline recommendations, a loss of course information, or sensitive data breaches.\\
+like inaccurate accreditation assessments, poor scheduling suggestions, a loss of course information, or sensitive data breaches.
 
-The Course Deadline Management system is intended to support McMaster University's Computing and Software Department 
-in reviewing Software Engineering course outlines for compliance with applicable university policies and Canadian 
-Engineering Accreditation Board (CEAB) requirements. The system also analyzes course schedules to recommend assignment 
-and midterm deadlines that reduce overlapping student workloads, while leaving final scheduling decisions to instructors.\\
+The CAS Course Deadline Management System is intended to support the Department of Computing and Software (CAS) at 
+McMaster University in reviewing CAS course outlines for compliance with applicable university policies and Canadian 
+Engineering Accreditation Board (CEAB) requirements. The system also analyzes assessment dates across courses and 
+suggests alternative dates that reduce overlapping student workloads, while leaving final scheduling decisions to 
+instructors. The system's requirements are specified in the project's Software Requirements Specification (SRS).
 
-This document identifies potential hazards associated with the Course Deadline Management system, examines their consequences, 
-and establishes a basis for developing safety and security requirements to mitigate these risks.\\
+This document identifies potential hazards associated with the system, examines their consequences, 
+and establishes a basis for developing safety and security requirements to mitigate these risks. 
+Section~\ref{sec_Scope} defines the scope of the analysis and the losses it considers. 
+Section~\ref{sec_Boundaries} sets the system boundary and divides the system into components, and 
+Section~\ref{sec_Assumptions} lists the critical assumptions. Section~\ref{sec_FMEA} applies Failure Mode and 
+Effect Analysis to each component, and Section~\ref{sec_SSR} lists the resulting safety and security 
+requirements. Section~\ref{sec_Roadmap} states which of these requirements will be implemented during the 
+capstone project.
 
 
-\section{Scope and Purpose of Hazard Analysis}
+\section{Scope and Purpose of Hazard Analysis} \label{sec_Scope}
 
 %\wss{You should say what \textbf{loss} could be incurred because of the hazards.}
 
-The purpose of this hazard analysis is to identify potential failures in the Course Deadline 
-Management system that could negatively affect accreditation compliance reviews, course scheduling, 
+The purpose of this hazard analysis is to identify potential failures in the CAS Course Deadline 
+Management System that could negatively affect accreditation compliance reviews, course scheduling, 
 or the handling of course information. The analysis covers the processing of course outlines, 
-evaluation against McMaster policies and CEAB requirements, deadline conflict detection, and the 
-generation of scheduling recommendations. The scope is limited to Software Engineering courses 
-within the CAS department and excludes first-year courses, courses outside the department, 
-and the security of the hosting infrastructure itself.\\
+evaluation against McMaster policies and CEAB requirements, deadline conflict detection, the 
+generation of scheduling suggestions, user access, and the storage and export of course information. 
+The scope is limited to courses offered by the CAS department (for example, SFWRENG, COMPSCI, and 
+MECHTRON courses) and excludes first-year courses, courses outside the department, and the security 
+of the hosting infrastructure itself.
 
 \noindent Potential losses resulting from system hazards include:
 
 \begin{itemize}
-    \item Accreditation non-compliance, resulting in unaddressed violations of McMaster policies or CEAB requirements.
-    \item Increased student workload conflicts due to overlapping assignment and midterm deadlines, potentially contributing to academic stress and more MSAF requests.
-    \item Incorrect scheduling decisions resulting from inaccurate or misleading recommendations.
+    \item A McMaster policy or CEAB violation in a course outline goes undetected and is not corrected.
+    \item Increased student workload conflicts due to overlapping assignment and midterm deadlines, contributing to student stress, less time to prepare for assessments, and more McMaster Student Absence Form (MSAF) requests.
+    \item An instructor moves an assessment to an unsuitable date, such as one that creates a new conflict or falls in a restricted period, because of an incorrect suggestion.
     \item Loss or corruption of course information, resulting in inaccurate course outline data and scheduling issues.
     \item Unauthorized disclosure of confidential information, including the master course sheet, compliance findings, and tentative assessment dates.
     \item Wasted administrator and instructor time due to false compliance findings, incorrectly identified deadline conflicts, or inaccurate recommendations.
@@ -102,7 +110,7 @@ and the security of the hosting infrastructure itself.\\
 \end{itemize}
 
 
-\section{System Boundaries and Components}
+\section{System Boundaries and Components} \label{sec_Boundaries}
 
 %\wss{Dividing the system into components will help you brainstorm the hazards.
 %You shouldn't do a full design of the components, just get a feel for the major
@@ -142,7 +150,7 @@ boundary, but their interactions with the system and the information they provid
 \noindent \textbf{C11 External Dependencies:} Includes external services and software dependencies, specifically the LLM service used to structure extracted course outline information. The hosting infrastructure and users' web browsers are also external to the system boundary.
 
 
-\section{Critical Assumptions}
+\section{Critical Assumptions} \label{sec_Assumptions}
 
 %\wss{These assumptions that are made about the software or system. You should
 %minimize the number of assumptions that remove potential hazards. For instance,
@@ -170,7 +178,7 @@ sheet and academic calendar).
 \end{itemize}
 
 
-\section{Failure Mode and Effect Analysis}
+\section{Failure Mode and Effect Analysis} \label{sec_FMEA}
 
 % \wss{Include your FMEA table here. This is the most important part of this document.}
 % \wss{The safety requirements in the table do not have to have the prefix SR.
@@ -445,7 +453,7 @@ compared with the sheet by the system's own code.
 \end{tabularx}
 \end{table}
 
-\section{Roadmap}
+\section{Roadmap} \label{sec_Roadmap}
 
 \wss{Which safety requirements will be implemented as part of the capstone timeline?
 Which requirements will be implemented in the future?}
