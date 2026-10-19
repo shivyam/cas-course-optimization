@@ -61,12 +61,44 @@ Date2 & Name(s) & Description of changes\\
 
 \section{Introduction}
 
-\wss{You can include your definition of what a hazard is here.}
+%\wss{You can include your definition of what a hazard is here.}
+
+A hazard is a system condition or failure that could contribute to an undesirable outcome, resulting in losses 
+like inaccurate accreditation assessments, poor deadline recommendations, a loss of course information, or sensitive data breaches.\\
+
+The Course Deadline Management system is intended to support McMaster University's Computing and Software Department 
+in reviewing Software Engineering course outlines for compliance with applicable university policies and Canadian 
+Engineering Accreditation Board (CEAB) requirements. The system also analyzes course schedules to recommend assignment 
+and midterm deadlines that reduce overlapping student workloads, while leaving final scheduling decisions to instructors.\\
+
+This document identifies potential hazards associated with the Course Deadline Management system, examines their consequences, 
+and establishes a basis for developing safety and security requirements to mitigate these risks.\\
+
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\wss{You should say what \textbf{loss} could be incurred because of the
-hazards.}
+%\wss{You should say what \textbf{loss} could be incurred because of the hazards.}
+
+The purpose of this hazard analysis is to identify potential failures in the Course Deadline 
+Management system that could negatively affect accreditation compliance reviews, course scheduling, 
+or the handling of course information. The analysis covers the processing of course outlines, 
+evaluation against McMaster policies and CEAB requirements, deadline conflict detection, and the 
+generation of scheduling recommendations. The scope is limited to Software Engineering courses 
+within the CAS department and excludes first-year courses, courses outside the department, 
+and the security of the hosting infrastructure itself.\\
+
+\noindent Potential losses resulting from system hazards include:
+
+\begin{itemize}
+    \item Accreditation non-compliance, resulting in unaddressed violations of McMaster policies or CEAB requirements.
+    \item Increased student workload conflicts due to overlapping assignment and midterm deadlines, potentially contributing to academic stress and more MSAF requests.
+    \item Incorrect scheduling decisions resulting from inaccurate or misleading recommendations.
+    \item Loss or corruption of course information, resulting in inaccurate course outline data and scheduling issues.
+    \item Unauthorized disclosure of confidential information, including the master course sheet, compliance findings, and tentative assessment dates.
+    \item Wasted administrator and instructor time due to false compliance findings, incorrectly identified deadline conflicts, or inaccurate recommendations.
+    \item Loss of trust in the system due to repeated inaccurate or unreliable results, potentially leading users to stop using the system and reducing its intended benefits.
+\end{itemize}
+
 
 \section{System Boundaries and Components}
 
