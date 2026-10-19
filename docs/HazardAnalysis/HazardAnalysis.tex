@@ -23,6 +23,10 @@
 \input{../Comments.text}
 \input{../Common.text}
 
+\newcounter{srnum} %Safety and Security Requirement (SR) Number
+\newcommand{\srthesrnum}{SR\thesrnum}
+\newcommand{\srref}[1]{SR\ref{#1}}
+
 \begin{document}
 
 \maketitle
@@ -101,13 +105,13 @@ documentation, and/or test cases.}
 \toprule
 \textbf{ID} & \textbf{Requirement}\\
 \midrule
-SR-1 & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\
-SR-2 & The system shall accept only PDF files below a maximum size, and shall reject any other file before processing it.\\
-SR-3 & The system shall not suggest an assessment date that falls on a holiday or in a period restricted by McMaster policy.\\
-SR-4 & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\
-SR-5 & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\
-SR-6 & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed.\\
-SR-7 & The system shall allow only administrators to change the master course sheet.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_ProcessFailure} & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_AcceptedFiles} & The system shall accept only PDF files below a maximum size, and shall reject any other file before processing it.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_RestrictedDates} & The system shall not suggest an assessment date that falls on a holiday or in a period restricted by McMaster policy.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_StaleSuggestion} & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_CheckCoverage} & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_AuditTrail} & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed.\\
+SR\refstepcounter{srnum}\thesrnum \label{SR_MasterSheetEdit} & The system shall allow only administrators to change the master course sheet.\\
 \bottomrule
 \end{tabularx}
 \end{table}
