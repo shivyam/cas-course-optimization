@@ -70,25 +70,36 @@ hazards.}
 %each individual piece of hardware. If your software will have a database, or an
 %important library, these are also potential components.}
 
+The CAS Course Deadline Management system processes Software Engineering course outlines to support accreditation 
+compliance reviews and deadline optimization. Its boundary includes the components responsible for processing course 
+information, evaluating policy and accreditation requirements, detecting scheduling conflicts, generating scheduling 
+suggestions, and managing stored information. The system uses course outlines, a master course sheet for graduate 
+attribute checks, and the academic calendar to identify restricted scheduling periods. The LLM service, hosting 
+infrastructure, users' web browsers, and instructors who prepare course outlines are outside the system boundary, 
+but their interactions with the system and the information they provide are considered in the hazard analysis.\\
 
-The CAS Course Deadline Management system is a software application that processes CAS 
-course outlines to support accreditation compliance reviews and scheduling suggestions. The system 
-boundary includes the components responsible for receiving and processing course outlines, evaluating 
-policy/accreditation requirements, identifying scheduling conflicts, and generating recommendations for instructors.\\
 
-\noindent The major system components are:
+\noindent \textbf{C1 User Interface:} Allows CAS administrators and instructors to interact with the system, upload course outlines, and review compliance findings and scheduling recommendations.\\
 
-\begin{itemize}
-    \item User Interface: Allows CAS administrators and instructors to upload course outlines and review accreditation 
-    results and scheduling recommendations.
-    \item Course Outline Processing: Extracts relevant information from uploaded course outlines, 
-    including marking schemes, assignment deadlines, and midterm dates.
-    \item Course Information Database: Stores course outline information and extracted course schedules.
-    \item McMaster Policy/Accreditation Compliance Analysis: Evaluates course outline information against relevant McMaster policies and CEAB requirements.
-    \item Deadline Optimization and Conflict Detection: Analyzes assessment and midterm dates across various courses to identify deadline bottlenecks and provide scheduling recommendations.
-    \item Scheduling Recommendation Presentation: Presents compliance findings and proposed scheduling changes to CAS administrators and instructors for review and approval.
-    \item External Dependencies: Includes Copilot/LLM services and any external libraries used in course outline processing.
-\end{itemize}
+\noindent \textbf{C2 Course Information Database:} Stores course outline information, extracted assessment details, compliance findings, and tentative assessment dates.\\
+
+\noindent \textbf{C3 PDF Text Extraction:} Extracts text from uploaded PDF course outlines using a text-extraction library.\\
+
+\noindent \textbf{C4 LLM Information Structuring:} Uses an external LLM service to interpret extracted text and structure relevant information, including marking schemes, assignment deadlines, and midterm dates.\\
+
+\noindent \textbf{C5 Accreditation Compliance Analysis:} Evaluates course outline information against applicable McMaster policies and CEAB requirements, including graduate attribute checks using the master course sheet.\\
+
+\noindent \textbf{C6 Conflict Detection:} Analyzes assessment dates across courses to identify overlapping deadlines and potential student workload bottlenecks, taking restricted scheduling periods into account where applicable.\\
+
+\noindent \textbf{C7 Scheduling Suggestions:} Uses a CP-SAT solver to generate proposed assessment dates based on scheduling constraints, identified conflicts, and applicable restricted periods.\\
+
+\noindent \textbf{C8 Results Presentation:} Presents compliance findings, detected conflicts, and proposed scheduling changes to administrators and instructors for review.\\
+
+\noindent \textbf{C9 Authentication and Access Control:} Authenticates users and enforces permissions to restrict access to system functions and confidential information.\\
+
+\noindent \textbf{C10 Data Export:} Exports permitted course information, compliance findings, and scheduling results for authorized users.\\
+
+\noindent \textbf{C11 External Dependencies:} Includes external services and software dependencies, specifically the LLM service used to structure extracted course outline information. The hosting infrastructure and users' web browsers are also external to the system boundary.\\
 
 
 \section{Critical Assumptions}
