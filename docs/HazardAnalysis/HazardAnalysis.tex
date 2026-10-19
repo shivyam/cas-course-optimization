@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{float}
+
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -20,6 +22,10 @@
 
 \input{../Comments.text}
 \input{../Common.text}
+
+\newcounter{ssrnum} %Safety and Security Requirement (SSR) Number
+\newcommand{\ssrthessrnum}{SSR\thessrnum}
+\newcommand{\ssrref}[1]{SSR\ref{#1}}
 
 \begin{document}
 
@@ -111,7 +117,6 @@ this potential failure mode.}
 
 \section{Failure Mode and Effect Analysis}
 
-\wss{Include your FMEA table here. This is the most important part of this document.}
 \wss{The safety requirements in the table do not have to have the prefix SR.
 The most important thing is to show traceability to your SRS. You might trace to
 requirements you have already written, or you might need to add new
@@ -122,8 +127,25 @@ documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+\noindent The requirements below are in addition to safeguards already in the SRS (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to Copilot, but confidential data and student information shall remain internal (see DR2).
+
+\begin{table}[H]
+\caption{Safety and Security Requirements}
+\label{TblSafetySecurityRequirements}
+\begin{tabularx}{\textwidth}{p{0.12\textwidth}p{0.20\textwidth}X}
+\toprule
+\textbf{ID} & \textbf{Hazard(s)} & \textbf{Requirement}\\
+\midrule
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ProcessFailure} & Outline processing failure resulting in an invalid or incomplete schedule or lost data & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AcceptedFiles} & Unsupported or malicious input file & The system shall accept only PDF files smaller than 5 MB, and shall reject any other file before processing it.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_RestrictedDates} & Assessment scheduled during a restricted period & The system shall use the academic calendar and shall not suggest an assessment date that falls on a holiday, recess, examination period, or test and examination ban period.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_StaleSuggestion} & Out-of-date scheduling suggestion & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_CheckCoverage} & Incomplete compliance check or falsely reported absence of findings & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & Unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed, and shall record each change and retain that audit record for the retention period in DR4.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & Unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \section{Roadmap}
 
@@ -138,19 +160,13 @@ Which requirements will be implemented in the future?}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+Grok (version 4.7) was used.
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
+Grok was used to fix formatting issues and address pull request comments in this
+Hazard Analysis document, section 6.
 
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
 
 \subsection{Verification of AI-Generated Content}
 
