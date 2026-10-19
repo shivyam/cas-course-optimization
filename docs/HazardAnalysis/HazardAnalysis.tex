@@ -106,10 +106,10 @@ documentation, and/or test cases.}
 \midrule
 \refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ProcessFailure} & Outline processing failure resulting in an invalid or incomplete schedule or lost data & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\
 \refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AcceptedFiles} & Unsupported or malicious input file & The system shall accept only PDF files smaller than 5 MB, and shall reject any other file before processing it.\\
-\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_RestrictedDates} & Assessment scheduled during a restricted period & The system shall not suggest an assessment date that falls on a holiday, recess, examination period, or test and examination ban period.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_RestrictedDates} & Assessment scheduled during a restricted period & The system shall use the academic calendar and shall not suggest an assessment date that falls on a holiday, recess, examination period, or test and examination ban period.\\
 \refstepcounter{ssrnum}\ssrthessrnum \label{SSR_StaleSuggestion} & Out-of-date scheduling suggestion & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\
 \refstepcounter{ssrnum}\ssrthessrnum \label{SSR_CheckCoverage} & Incomplete compliance check or falsely reported absence of findings & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\
-\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & Unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed, and shall retain that audit record for the retention period in DR4.\\
+\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & Unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed, and shall record each change and retain that audit record for the retention period in DR4.\\
 \refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & Unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet.\\
 \bottomrule
 \end{tabularx}
@@ -125,11 +125,12 @@ Which requirements will be implemented in the future?}
 \section{Appendix --- Generative AI Use Disclosure}
 
 \wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-\wss{Grok (version 4.7) was used to fix formatting issues and address pull request comments.}
 
 \subsection{AI Tools Used}
 
 \wss{Give the name of the AI tool(s) used and the version.}
+
+Grok (version 4.7) was used.
 
 \subsection{How and Where Used}
 
@@ -139,6 +140,9 @@ text, generating or modifying diagrams, identifying errors or omissions or
 inconsistencies.}
 
 \wss{For each of the uses, identify which parts of the document were affected.}
+
+Grok was used to fix formatting issues and address pull request comments in this
+Hazard Analysis document.
 
 \wss{You do not need to report every interaction, but you should disclose the 
 uses that materially contributed to your work}
