@@ -983,7 +983,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake_Data}:] The system shall accept course outlines in PDF format submitted by a CAS administrator or professor.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assessment}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes in a course outline and the graduate attributes each addresses, whether the outline lists them by number, names them, or only describes them.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, including a date that is marked TBD.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Dates_Tentative}:] The system shall allow an instructor to enter and update tentative assessment dates for their own courses.
@@ -1131,6 +1131,9 @@ message (String): description of the problem found. \\
 \section{Non-Functional Requirements}
 
 \noindent \begin{itemize}
+% The NFR labels replace the outer bullets, so show the sub-points with the
+% first-level bullet (local to this list).
+\renewcommand{\labelitemii}{\textbullet}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
 \textbf{Accuracy:}
@@ -1262,19 +1265,19 @@ message (String): description of the problem found. \\
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
 
-\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The preferred LLM is GitHub Copilot, with a locally hosted open-weight model on CAS infrastructure as the fallback. The LLM is kept behind a replaceable interface, so the model can be changed without changing the rest of the system. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
+\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. Where an outline does not list graduate attribute numbers or their exact wording, the LLM identifies the attributes from the learning outcome text. The attributes are then compared with the master course sheet by the system's own code, so the confidential master course sheet is never sent to the LLM. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The preferred LLM is GitHub Copilot, with a locally hosted open-weight model on CAS infrastructure as the fallback. The LLM is kept behind a replaceable interface, so the model can be changed without changing the rest of the system. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
 
 \subsection{Model Inputs}
 
 \begin{itemize}
-\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Text}:] The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the contents of the master course Excel sheet.
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Text}:] The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the CEAB graduate attribute definitions~\citep{CEAB2025}. The master course sheet shall not be part of the model input (\drref{DR_Confidentiality}, \drref{DR_Hosting}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Privacy}:] Model input shall be sent only to GitHub Copilot or to a model hosted on CAS-operated infrastructure (\drref{DR_Hosting}). Only publicly available course outline text may be sent to Copilot. No student personal information shall be used as model input.
 \end{itemize}
 
 \subsection{Model Outputs}
 
 \begin{itemize}
-\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Struct}:] The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (\rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Struct}:] The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text, the graduate attributes it addresses, and whether each attribute was listed in the outline or identified by the model (\rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Source}:] Every structured value shall include the passage of extracted text it was taken from, so a reviewer can check it without opening the original document.
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Missing}:] The model shall only use information present in the extracted text, and shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (\rref{FR_Extract_Flag}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Review}:] No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it (\rref{FR_Extract_Review}).
@@ -1426,7 +1429,7 @@ Validation Plan.
 \lcref{LC_LLMHosting} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Suggest_Generation}, \nfrref{NFR_Performance}, \nfrref{NFR_Security}, \drref{DR_Hosting}, \airref{AIR_Input_Privacy}, \asref{A_PublicOutlines} \\
 \lcref{LC_OutlineFormat} & \rref{FR_Intake_Data}, \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Extract_Flag}, \nfrref{NFR_Performance}, \airref{AIR_Input_Text} \\
 \lcref{LC_PolicyRules} & \rref{FR_Comp_Policy}, \rref{FR_Work_Policy} \\
-\lcref{LC_AccreditationCriteria} & \srref{SR-CAS-04}, \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \airref{AIR_Input_Text}, \asref{A_MasterSheet} \\
+\lcref{LC_AccreditationCriteria} & \srref{SR-CAS-04}, \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \asref{A_MasterSheet} \\
 \lcref{LC_GAInference} & \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \airref{AIR_Input_Text}, \airref{AIR_Output_Struct} \\
 \lcref{LC_ClusterDefinition} & \rref{FR_Work_Cluster}, \rref{FR_Reanalyze}, \rref{FR_Suggest_Generation} \\
 \lcref{LC_CohortDefinition} & \rref{FR_Work_Cluster}, \asref{A_CourseCode}, \asref{A_Electives} \\
@@ -1730,10 +1733,22 @@ periods the system checks.
   model can produce plausible but incorrect dates. A solver that works directly
   from the stored constraints produces dates that can be checked, and gives the
   same result for the same input. The language model is used to extract
-  information from outlines (\airref{AIR_Output_Struct}), to compare graduate
-  attributes with the master course sheet, and to explain suggestions in plain
-  language. It never computes suggested dates or checks assessment weights,
-  which are done by deterministic code.
+  information from outlines (\airref{AIR_Output_Struct}) and to explain
+  suggestions in plain language. It never computes suggested dates or checks
+  assessment weights, which are done by deterministic code.
+
+\item \textbf{The master course sheet is never sent to the language model}
+  (\airref{AIR_Input_Text}, \drref{DR_Hosting}). The sheet is confidential
+  department data (\drref{DR_Confidentiality}), and Copilot is an external
+  service. Outlines word graduate attributes in different ways, so where the
+  numbers or exact wording are missing, the model identifies the attributes from
+  the learning outcome text (\rref{FR_Extract_LO}). It needs only that public
+  text and the public CEAB attribute definitions to do so, not the sheet.
+  Comparing the identified attributes with the sheet (\rref{FR_Comp_Grad}) is
+  then a lookup that ordinary code can do exactly. Attributes identified by the
+  model are less certain than ones listed in the outline, so they are reviewed
+  like every other extracted value (\rref{FR_Extract_Review},
+  \airref{AIR_Output_Review}).
 \end{itemize}
 
 \subsection{Numeric Values}
@@ -1777,10 +1792,11 @@ possible. Table~\ref{tab:LC2Rtm} lists the requirements each change affects.
 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_GAInference}:]
   \textbf{How graduate attributes are identified in an outline.} The system
-  currently uses the graduate attribute numbers listed in the outline. Where an
-  outline does not list them, the attributes may need to be inferred from the
-  learning outcome text, which would require user confirmation of each
-  inferred attribute.
+  uses the attribute numbers or names in the outline where they are given, and
+  the language model identifies them from the learning outcome text where they
+  are not. This may change, for example if the department adopts an outline
+  template that always lists the attribute numbers, or if the CEAB revises the
+  attributes themselves \citep{CEAB2025}.
 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_ClusterDefinition}:]
   \textbf{Definition of a workload cluster.} The values of
@@ -1839,9 +1855,12 @@ reason it is considered stable.
 
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_InstructorAuthority}:]
   \textbf{Instructors keep final authority over assessment dates}
-  (\srref{SR-REC-03}, \rref{FR_Suggest_NoAuto}). This rests on academic
-  freedom and on university policy, which give instructors control of course
-  delivery. A software project cannot change either.
+  (\srref{SR-REC-03}, \rref{FR_Suggest_NoAuto}). Under the Undergraduate
+  Course Management Policy, instructors organize and present their courses, and
+  changes to how a course is evaluated are made in consultation with the
+  Department Chair~\citep{McMasterUCMP2025}. CAS administrators do not have the
+  authority to change an instructor's assessment dates, and a software system
+  cannot be given authority that the people using it do not have.
 
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_OutlineInput}:]
   \textbf{Course outlines remain the main source of assessment information}
@@ -1852,8 +1871,10 @@ reason it is considered stable.
 
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_CourseCodeConvention}:]
   \textbf{The first digit of a course number gives its year level}
-  (\asref{A_CourseCode}). McMaster numbers all of its courses this way. A
-  change would affect every program and system at the university.
+  (\asref{A_CourseCode}). The Undergraduate Calendar defines course numbers
+  this way for every McMaster course: the first digit gives the level of the
+  course~\citep{McMasterUGCal2025}. A change would affect every program and
+  system at the university.
 
 \item[ULC\refstepcounter{ulcnum}\theulcnum\label{ULC_Roles}:] \textbf{The two
   user roles: CAS administrator and instructor} (\srref{SR-REC-05},
