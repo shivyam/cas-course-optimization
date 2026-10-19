@@ -92,33 +92,22 @@ documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
 
+\noindent The requirements below are in addition to safeguards already in the SRS: user review of extracted data (FR\_Extract\_Review), flagging of missing fields (FR\_Extract\_Flag), instructor approval of date changes (FR\_Suggest\_NoAuto), login and role-based access (FR\_Access\_Login, FR\_Access\_Roles), and internal-only processing of data (AIR\_Input\_Privacy).
+
 \begin{table}[H]
-\caption{Safety and security requirements}
+\caption{Safety and Security Requirements}
 \label{TblSafetySecurityRequirements}
-\begin{tabularx}{\textwidth}{p{0.16\textwidth}X}
+\begin{tabularx}{\textwidth}{p{0.12\textwidth}X}
 \toprule
 \textbf{ID} & \textbf{Requirement}\\
 \midrule
-SR-1 & The system shall validate all user-provided course, prerequisite,
-availability, and constraint data before attempting optimization, and shall
-report invalid or incomplete data without silently changing it.\\
-SR-2 & The system shall ensure that every generated course plan satisfies the
-hard constraints defined in the SRS-IEEE, including prerequisites,
-time-conflict restrictions, and course availability.\\
-SR-3 & The system shall clearly distinguish hard constraints from user
-preferences and shall identify any unsatisfied preference or constraint when a
-fully feasible plan cannot be generated.\\
-SR-4 & The system shall not present an infeasible, incomplete, or failed
-optimization result as a valid course plan.\\
-SR-5 & The system shall provide an understandable explanation of the
-constraints and preferences that affected each generated plan, consistent with
-the transparency goals in the Problem Statement.\\
-SR-6 & The system shall protect user-provided academic and personal data from
-unauthorized access and shall not expose such data in logs, error messages, or
-generated results beyond what is necessary for the user.\\
-SR-7 & The system shall handle malformed input, unavailable services, and
-optimization failures gracefully by displaying an actionable error and
-preserving the user's valid input.\\
+SR-1 & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\
+SR-2 & The system shall accept only PDF files below a maximum size, and shall reject any other file before processing it.\\
+SR-3 & The system shall not suggest an assessment date that falls on a holiday or in a period restricted by McMaster policy.\\
+SR-4 & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\
+SR-5 & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\
+SR-6 & The system shall record the user, the time, and the previous value whenever an assessment date or extracted value is changed.\\
+SR-7 & The system shall allow only administrators to change the master course sheet.\\
 \bottomrule
 \end{tabularx}
 \end{table}
