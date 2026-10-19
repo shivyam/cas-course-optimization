@@ -180,19 +180,16 @@ not hold will be assessed and appropriate mitigation measures identified.
 % entered in the table, including strategies involving providing additional
 % documentation, and/or test cases.}
 
-% Defined by the Safety and Security Requirements section; provided here so
-% this section compiles on its own.
-\providecommand{\ssrref}[1]{SSR\ref{#1}}
-
 This section applies Failure Mode and Effect Analysis (FMEA) to each component
-identified in the System Boundaries and Components section. For each component,
+identified in the System Boundaries and Components section (C1 to C11). For each component,
 the team asked how it could fail, what loss each failure would lead to, why it
 could happen, and how it would be noticed. Table~\ref{TblFMEA} records the
 result. Each row gives:
 
 \begin{itemize}
   \item \textbf{Ref:} a unique identifier for the hazard, in the form
-    H\textit{component}-\textit{row}, followed by the hazard's category and
+    H\textit{component}-\textit{row}, where \textit{component} is the
+    component number (H4-2 is the second hazard of C4), followed by the hazard's category and
     severity (Tables~\ref{TblHazardCategories} and~\ref{TblHazardSeverity}).
     The safety and security requirements refer back to these identifiers.
   \item \textbf{Failure Mode, Effects of Failure, Causes of Failure:} what goes
@@ -204,7 +201,7 @@ result. Each row gives:
     are lettered a., b., and so on. FR, NFR, DR, AIR and A refer to the
     functional, nonfunctional, data and AI requirements and the assumptions in
     the SRS. SSR refers to the safety and security requirements in this
-    document. ``New'' marks an action that does not yet have a requirement;
+    document (Table~\ref{TblSafetySecurityRequirements}). ``New'' marks an action that does not yet have a requirement;
     these are listed after the table.
 \end{itemize}
 
@@ -282,37 +279,35 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \bottomrule
 \caption{Failure Mode and Effect Analysis} \label{TblFMEA}
 \endlastfoot
-\multicolumn{6}{l}{\textbf{1.\ User Interface}}\\*
+\multicolumn{6}{l}{\textbf{C1: User Interface}}\\*
 \midrule
 H1-1\newline \textit{HF, H} & Reviewer confirms extracted values without checking them & Incorrect dates or weights enter the calendar, conflict detection, and compliance results & \fmi{a}{Over-trust in automated output}\par \fmi{b}{Long review lists} & \fmi{a}{Show the source passage beside each value}\par \fmi{b}{Require explicit confirmation, never by default; show flagged fields first} & \fmi{a}{FR5, AIR4}\par \fmi{b}{FR5}\\
 \addlinespace
 H1-2\newline \textit{DQ, H} & Unconfirmed extracted data is shown or used & Unchecked values appear in the calendar and analysis as if they were correct & Review status not checked before use & Use only confirmed values in the calendar, conflict detection, and compliance checking & FR5, AIR6\\
 \addlinespace
-H1-3\newline \textit{DQ, M} & A tentative date is shown as if it were confirmed & Instructors plan around a date that may change and judge conflicts wrongly & Display does not distinguish date status & Mark tentative dates in the calendar and in exports & FR7\\
-\addlinespace
-H1-4\newline \textit{HF, M} & Too many workload warnings are shown & Users ignore warnings and real conflicts are missed; instructors feel pressured & \fmi{a}{Threshold set too low}\par \fmi{b}{All same-level courses grouped as one cohort (A3)} & \fmi{a}{Rank clusters by size and show the largest first}\par \fmi{b}{Tune \textit{CLUSTER\_\allowbreak{}THRESHOLD} with the CAS supervisors} & \fmi{a}{New: warning ranking}\par \fmi{b}{FR8}\\
-\addlinespace
-H1-5\newline \textit{HF, M} & Interface cannot be used with a keyboard or screen reader & Staff with disabilities cannot use the system; AODA requirements are not met & Inaccessible interface components & Build and verify the interface to WCAG 2.0 Level AA & NFR9\\
+H1-3\newline \textit{HF, M} & Interface cannot be used with a keyboard or screen reader & Staff with disabilities cannot use the system; AODA requirements are not met & Inaccessible interface components & Build and verify the interface to WCAG 2.0 Level AA & NFR9\\
 \midrule
-\multicolumn{6}{l}{\textbf{2.\ Authentication and Access Control}}\\*
+\multicolumn{6}{l}{\textbf{C2: Course Information Database}}\\*
 \midrule
-H2-1\newline \textit{SE, H} & A user reaches data without logging in & Confidential data, such as the master course sheet, findings, and tentative dates, is exposed & An endpoint without an authentication check & Require login for every request to data & FR15, NFR8\\
+H2-1\newline \textit{DI, H} & Stored data is lost or corrupted & Confirmed data and decisions are lost and review must be repeated & \fmi{a}{Hardware or software failure}\par \fmi{b}{Failed update} & \fmi{a}{Back up data regularly and test that it can be restored}\par \fmi{b}{Keep records for the retention period} & \fmi{a}{New: backup and restore}\par \fmi{b}{DR4}\\
 \addlinespace
-H2-2\newline \textit{SE, H} & An instructor changes another instructor's course & Assessment dates are changed without the authority to do so & Missing or incorrect role check & \fmi{a}{Enforce role checks on the server for every change}\par \fmi{b}{Record each change} & \fmi{a}{FR16, DR3}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
+H2-2\newline \textit{DI, M} & Uploading an outline again replaces confirmed values & Reviewed values are replaced by unreviewed ones & New upload overwrites existing records & \fmi{a}{Keep confirmed values until the user chooses to replace them}\par \fmi{b}{Review the new values first} & \fmi{a}{New: confirm before replace}\par \fmi{b}{FR5}\\
 \addlinespace
-H2-3\newline \textit{SE, M} & A session is left open on a shared computer & Another person views or changes data as that user & No inactivity timeout & End a session after a period of inactivity & New: session timeout\\
+H2-3\newline \textit{DI, M} & An outline is attached to the wrong course or term & Assessments are counted in the wrong cohort or term & \fmi{a}{Course code misread}\par \fmi{b}{Wrong course selected} & Show the course code and term on the review screen for confirmation & FR5\\
 \addlinespace
-H2-4\newline \textit{SE, H} & A non-administrator changes the master course sheet or academic calendar & Compliance and restricted-period results become wrong for every course & Reference data editable by all roles & \fmi{a}{Allow only administrators to change reference data}\par \fmi{b}{Record each change} & \fmi{a}{\ssrref{SSR_MasterSheetEdit}}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
+H2-4\newline \textit{DQ, M} & A cross-listed course is stored more than once & Its assessments are counted twice, creating false clusters & Each course code treated as a separate course & Store one course with several course codes & A2\\
+\addlinespace
+H2-5\newline \textit{DI, L} & A change cannot be traced to who made it & Errors cannot be traced or corrected, and disputes cannot be resolved & Changes not recorded & Record the user, time, and previous value of each change & \ssrref{SSR_AuditTrail}\\
 \midrule
-\multicolumn{6}{l}{\textbf{3.\ PDF Text Extraction}}\\*
+\multicolumn{6}{l}{\textbf{C3: PDF Text Extraction}}\\*
 \midrule
 H3-1\newline \textit{AV, M} & Little or no text is extracted from an outline & Assessments for the course are missing from all results & Scanned or image-only PDF & \fmi{a}{Report the problem and keep the outline}\par \fmi{b}{Allow the values to be entered manually} & \fmi{a}{\ssrref{SSR_ProcessFailure}}\par \fmi{b}{NFR7}\\
 \addlinespace
 H3-2\newline \textit{DQ, H} & Extracted text is out of order & A date or weight is attached to the wrong assessment & Tables and multi-column layouts & \fmi{a}{Show the source passage for each value}\par \fmi{b}{Test on outlines with a range of layouts} & \fmi{a}{FR5, AIR4}\par \fmi{b}{NFR1}\\
 \addlinespace
-H3-3\newline \textit{SE, M} & An unsupported, oversized, or malicious file is uploaded & Processing fails or slows the system; a malformed file exploits the PDF library & No file checks before processing & Accept only PDF files below a maximum size; reject others before processing & \ssrref{SSR_AcceptedFiles}\\
+H3-3\newline \textit{SE, M} & An unsupported, oversized, or malicious file is uploaded & Processing fails or slows the system; a malformed file exploits the PDF library & No file checks before processing & Accept only PDF files smaller than 5 MB; reject others before processing & \ssrref{SSR_AcceptedFiles}\\
 \midrule
-\multicolumn{6}{l}{\textbf{4.\ LLM Extraction (external)}}\\*
+\multicolumn{6}{l}{\textbf{C4: LLM Information Structuring}}\\*
 \midrule
 H4-1\newline \textit{DQ, H} & The model reports a value that is not in the outline & A false date or weight is shown and may be confirmed & Model fills gaps or rewrites text & \fmi{a}{Reject values without a source passage}\par \fmi{b}{Require review} & \fmi{a}{AIR4, AIR5}\par \fmi{b}{FR5}\\
 \addlinespace
@@ -320,94 +315,100 @@ H4-2\newline \textit{DQ, H} & The model omits an assessment or a field & Conflic
 \addlinespace
 H4-3\newline \textit{DQ, M} & A date marked TBD, or too vague to resolve, is turned into a date & A guessed date appears in the calendar as if it were real & Model resolves ambiguity instead of reporting it & Report such dates as missing and never guess & AIR5, FR4\\
 \addlinespace
-H4-4\newline \textit{AV, M} & The language model service is unavailable & Extraction and suggestion explanations are delayed & \fmi{a}{Service outage}\par \fmi{b}{Network failure} & \fmi{a}{Keep the outline, inform the user, and allow a retry}\par \fmi{b}{Keep other functions available} & \fmi{a}{\ssrref{SSR_ProcessFailure}}\par \fmi{b}{NFR7}\\
+H4-4\newline \textit{DQ, M} & The model links a learning outcome to the wrong graduate attribute & A graduate attribute is reported as covered or missing when it is not & \fmi{a}{Attribute not listed by number or name}\par \fmi{b}{Ambiguous learning outcome wording} & \fmi{a}{Give the model the CEAB graduate attribute definitions}\par \fmi{b}{Record whether each attribute was listed in the outline or identified by the model}\par \fmi{c}{Require review of identified attributes before the compliance check uses them} & \fmi{a}{AIR1}\par \fmi{b}{AIR3}\par \fmi{c}{FR5, AIR6}\\
 \addlinespace
-H4-5\newline \textit{DQ, M} & A change of model or model version lowers accuracy & More extraction errors reach reviewers without anyone noticing & \fmi{a}{Provider updates the model}\par \fmi{b}{Team switches model (LC1)} & Re-run the accuracy test set before any model change is deployed & NFR1; New: model change test\\
+H4-5\newline \textit{SE, M} & Text in an outline changes the model's behaviour (prompt injection) & Manipulated values or findings are shown & Outline text treated as instructions & \fmi{a}{Treat outline text as data only}\par \fmi{b}{Check the output against the expected structure}\par \fmi{c}{Keep human review} & \fmi{a}{New: output validation}\par \fmi{b}{New: output validation}\par \fmi{c}{FR5}\\
 \addlinespace
-H4-6\newline \textit{SE, M} & Text in an outline changes the model's behaviour (prompt injection) & Manipulated values or findings are shown & Outline text treated as instructions & \fmi{a}{Treat outline text as data only}\par \fmi{b}{Check the output against the expected structure}\par \fmi{c}{Keep human review} & \fmi{a}{New: output validation}\par \fmi{b}{New: output validation}\par \fmi{c}{FR5}\\
-\addlinespace
-H4-7\newline \textit{SE, H} & Confidential data is sent to an external model service & Confidential department data, such as the master course sheet, leaves McMaster's control & Master course sheet included in model input (AIR1) & \fmi{a}{Send only public outline text to an external service}\par \fmi{b}{Compare graduate attributes in the system's own code or on a CAS-hosted model, and revise AIR1} & \fmi{a}{DR1, DR2, AIR2}\par \fmi{b}{DR2}\\
+H4-6\newline \textit{SE, H} & Confidential data is sent to an external model service & Confidential department data, such as the master course sheet, leaves McMaster's control & Confidential data included in a request to the model by mistake & \fmi{a}{Send only public outline text and the CEAB attribute definitions to an external service}\par \fmi{b}{Compare graduate attributes with the master course sheet in the system's own code} & \fmi{a}{AIR1, AIR2, DR2}\par \fmi{b}{FR14, DR1}\\
 \midrule
-\multicolumn{6}{l}{\textbf{5.\ Course Information Database}}\\*
+\multicolumn{6}{l}{\textbf{C5: Accreditation Compliance Analysis}}\\*
 \midrule
-H5-1\newline \textit{DI, H} & Stored data is lost or corrupted & Confirmed data and decisions are lost and review must be repeated & \fmi{a}{Hardware or software failure}\par \fmi{b}{Failed update} & \fmi{a}{Back up data regularly and test that it can be restored}\par \fmi{b}{Keep records for the retention period} & \fmi{a}{New: backup and restore}\par \fmi{b}{DR4}\\
+H5-1\newline \textit{DQ, H} & A real policy or CEAB violation is missed & The violation is not corrected & \fmi{a}{Rule not encoded}\par \fmi{b}{Extraction error} & \fmi{a}{List the rules checked for each outline}\par \fmi{b}{Require review of extracted values}\par \fmi{c}{Measure on a test set of outlines with known issues} & \fmi{a}{\ssrref{SSR_CheckCoverage}}\par \fmi{b}{FR5}\par \fmi{c}{FR13, FR14, NFR1}\\
 \addlinespace
-H5-2\newline \textit{DI, M} & Uploading an outline again replaces confirmed values & Reviewed values are replaced by unreviewed ones & New upload overwrites existing records & \fmi{a}{Keep confirmed values until the user chooses to replace them}\par \fmi{b}{Review the new values first} & \fmi{a}{New: confirm before replace}\par \fmi{b}{FR5}\\
+H5-2\newline \textit{HF, L} & A violation is reported that does not exist & Staff waste time, and trust in the system falls & \fmi{a}{Extraction error}\par \fmi{b}{Rule too strict} & Show the rule and the source text for each finding & FR13, AIR4\\
 \addlinespace
-H5-3\newline \textit{DI, M} & An outline is attached to the wrong course or term & Assessments are counted in the wrong cohort or term & \fmi{a}{Course code misread}\par \fmi{b}{Wrong course selected} & Show the course code and term on the review screen for confirmation & FR5\\
+H5-3\newline \textit{DQ, M} & A result with no findings is read as full compliance & Issues outside the encoded rules are assumed not to exist & Only some rules can be checked automatically & State which rules were and were not checked & \ssrref{SSR_CheckCoverage}\\
 \addlinespace
-H5-4\newline \textit{DQ, M} & A cross-listed course is stored more than once & Its assessments are counted twice, creating false clusters & Each course code treated as a separate course & Store one course with several course codes & A2\\
+H5-4\newline \textit{DQ, M} & The master course sheet is wrong or out of date & Graduate attribute findings are wrong & Department changes the expected attributes (LC4) & \fmi{a}{Show which version of the sheet each check used}\par \fmi{b}{Only administrators change it} & \fmi{a}{New: reference version shown}\par \fmi{b}{A7, \ssrref{SSR_MasterSheetEdit}}\\
 \addlinespace
-H5-5\newline \textit{DI, L} & A change cannot be traced to who made it & Errors cannot be traced or corrected, and disputes cannot be resolved & Changes not recorded & Record the user, time, and previous value of each change & \ssrref{SSR_AuditTrail}\\
+H5-5\newline \textit{DQ, M} & A course is missing from the master course sheet & No graduate attribute findings are reported, which reads as compliant & Electives and some programs are not on the sheet & State that the course was not checked & \ssrref{SSR_CheckCoverage}\\
+\addlinespace
+H5-6\newline \textit{DQ, M} & Policy rules are out of date & Outlines are checked against an old version of the policy & Policy revised (LC3) & \fmi{a}{Record the policy version used for each finding}\par \fmi{b}{Review the rules when the policy changes} & \fmi{a}{New: reference version shown}\par \fmi{b}{LC3}\\
 \midrule
-\multicolumn{6}{l}{\textbf{6.\ Reference Data (master course sheet, academic calendar, policy rules)}}\\*
+\multicolumn{6}{l}{\textbf{C6: Conflict Detection}}\\*
 \midrule
-H6-1\newline \textit{DQ, H} & The academic calendar is wrong or out of date & Restricted-period checks and suggestions are wrong for every course & \fmi{a}{Entry error}\par \fmi{b}{Previous term's dates reused} & \fmi{a}{Show which calendar each analysis used}\par \fmi{b}{Confirm the calendar each term; only administrators change it} & \fmi{a}{New: reference version shown}\par \fmi{b}{A6, \ssrref{SSR_MasterSheetEdit}}\\
+H6-1\newline \textit{DQ, M} & A cohort is derived incorrectly from course codes & Clusters are missed, or reported for students who are not affected & \fmi{a}{Unusual course codes}\par \fmi{b}{Electives grouped with core courses (A3)} & \fmi{a}{Test the derivation on all CAS course codes}\par \fmi{b}{Report codes that cannot be read} & \fmi{a}{A1, FR8}\par \fmi{b}{A1}\\
 \addlinespace
-H6-2\newline \textit{DQ, M} & The master course sheet is wrong or out of date & Graduate attribute findings are wrong & Department changes the expected attributes (LC4) & \fmi{a}{Show which version of the sheet each check used}\par \fmi{b}{Only administrators change it} & \fmi{a}{New: reference version shown}\par \fmi{b}{A7, \ssrref{SSR_MasterSheetEdit}}\\
+H6-2\newline \textit{DQ, M} & A missing or TBD date hides a conflict & A real cluster is not shown & Dates not yet set & \fmi{a}{Show the number of undated assessments with each result}\par \fmi{b}{Prompt the instructor for a tentative date} & \fmi{a}{FR4}\par \fmi{b}{FR6}\\
 \addlinespace
-H6-3\newline \textit{DQ, M} & A course is missing from the master course sheet & No graduate attribute findings are reported, which reads as compliant & Electives and some programs are not on the sheet & State that the course was not checked & \ssrref{SSR_CheckCoverage}\\
+H6-3\newline \textit{DQ, M} & Analysis is not re-run after a date changes & Out-of-date conflicts are shown & Re-analysis not triggered & Re-run analysis on every change and show when it last ran & FR10\\
 \addlinespace
-H6-4\newline \textit{DQ, M} & Policy rules are out of date & Outlines are checked against an old version of the policy & Policy revised (LC3) & \fmi{a}{Record the policy version used for each finding}\par \fmi{b}{Review the rules when the policy changes} & \fmi{a}{New: reference version shown}\par \fmi{b}{LC3}\\
+H6-4\newline \textit{DQ, H} & An assessment in a restricted period is not detected & A policy violation goes unnoticed & Restricted period missing or wrongly encoded & \fmi{a}{Check every assessment against each restricted period}\par \fmi{b}{Test each type of restricted period} & \fmi{a}{FR9}\par \fmi{b}{NFR1}\\
+\addlinespace
+H6-5\newline \textit{DQ, H} & The academic calendar is wrong or out of date & Restricted-period checks and suggestions are wrong for every course & \fmi{a}{Entry error}\par \fmi{b}{Previous term's dates reused} & \fmi{a}{Show which calendar each analysis used}\par \fmi{b}{Confirm the calendar each term; only administrators change it} & \fmi{a}{New: reference version shown}\par \fmi{b}{A6, \ssrref{SSR_MasterSheetEdit}}\\
 \midrule
-\multicolumn{6}{l}{\textbf{7.\ Conflict Detection}}\\*
+\multicolumn{6}{l}{\textbf{C7: Scheduling Suggestions}}\\*
 \midrule
-H7-1\newline \textit{DQ, M} & A cohort is derived incorrectly from course codes & Clusters are missed, or reported for students who are not affected & \fmi{a}{Unusual course codes}\par \fmi{b}{Electives grouped with core courses (A3)} & \fmi{a}{Test the derivation on all CAS course codes}\par \fmi{b}{Report codes that cannot be read} & \fmi{a}{A1, FR8}\par \fmi{b}{A1}\\
+H7-1\newline \textit{DQ, H} & A suggested date falls on a holiday or in a restricted period & An instructor moves an assessment to a date that breaks policy & Restricted periods not passed to the solver & Exclude restricted periods from the dates the solver may choose & \ssrref{SSR_RestrictedDates}\\
 \addlinespace
-H7-2\newline \textit{DQ, M} & A missing or TBD date hides a conflict & A real cluster is not shown & Dates not yet set & \fmi{a}{Show the number of undated assessments with each result}\par \fmi{b}{Prompt the instructor for a tentative date} & \fmi{a}{FR4}\par \fmi{b}{FR6}\\
+H7-2\newline \textit{DQ, M} & A suggestion is based on data that has since changed & The accepted date creates a new conflict & Other dates change before the instructor decides & Mark the suggestion as out of date and offer to recompute & \ssrref{SSR_StaleSuggestion}\\
 \addlinespace
-H7-3\newline \textit{DQ, M} & Analysis is not re-run after a date changes & Out-of-date conflicts are shown & Re-analysis not triggered & Re-run analysis on every change and show when it last ran & FR10\\
+H7-3\newline \textit{DQ, M} & A suggested date creates a conflict for another cohort & The workload moves to other students instead of being reduced & Cross-listed course belongs to several cohorts (A2) & Check every cohort each course code belongs to before suggesting a date & A2, FR11\\
 \addlinespace
-H7-4\newline \textit{DQ, H} & An assessment in a restricted period is not detected & A policy violation goes unnoticed & Restricted period missing or wrongly encoded & \fmi{a}{Check every assessment against each restricted period}\par \fmi{b}{Test each type of restricted period} & \fmi{a}{FR9}\par \fmi{b}{NFR1}\\
+H7-4\newline \textit{AV, L} & No feasible date is found, or the solver times out & The instructor receives no suggestion & Constraints cannot all be met & \fmi{a}{State that no suitable date was found and why}\par \fmi{b}{Never return a date that breaks a constraint} & \fmi{a}{FR11}\par \fmi{b}{\ssrref{SSR_RestrictedDates}}\\
+\addlinespace
+H7-5\newline \textit{DQ, M} & The explanation does not match the data & The instructor is misled about why a date is suggested & Explanation generated without the solver's figures & Build the explanation only from the solver's figures, and show those figures beside it & FR11\\
+\addlinespace
+H7-6\newline \textit{DQ, H} & An assessment date is changed without the instructor's approval & The instructor's authority over the course is overridden & Suggestion applied automatically & Never change a date without explicit approval & FR12\\
 \midrule
-\multicolumn{6}{l}{\textbf{8.\ Scheduling Suggestions}}\\*
+\multicolumn{6}{l}{\textbf{C8: Results Presentation}}\\*
 \midrule
-H8-1\newline \textit{DQ, H} & A suggested date falls on a holiday or in a restricted period & An instructor moves an assessment to a date that breaks policy & Restricted periods not passed to the solver & Exclude restricted periods from the dates the solver may choose & \ssrref{SSR_RestrictedDates}\\
+H8-1\newline \textit{DQ, M} & A tentative date is shown as if it were confirmed & Instructors plan around a date that may change and judge conflicts wrongly & Display does not distinguish date status & Mark tentative dates in the calendar and in exports & FR7\\
 \addlinespace
-H8-2\newline \textit{DQ, M} & A suggestion is based on data that has since changed & The accepted date creates a new conflict & Other dates change before the instructor decides & Mark the suggestion as out of date and offer to recompute & \ssrref{SSR_StaleSuggestion}\\
-\addlinespace
-H8-3\newline \textit{DQ, M} & A suggested date creates a conflict for another cohort & The workload moves to other students instead of being reduced & Cross-listed course belongs to several cohorts (A2) & Check every cohort each course code belongs to before suggesting a date & A2, FR11\\
-\addlinespace
-H8-4\newline \textit{AV, L} & No feasible date is found, or the solver times out & The instructor receives no suggestion & Constraints cannot all be met & \fmi{a}{State that no suitable date was found and why}\par \fmi{b}{Never return a date that breaks a constraint} & \fmi{a}{FR11}\par \fmi{b}{\ssrref{SSR_RestrictedDates}}\\
-\addlinespace
-H8-5\newline \textit{DQ, M} & The explanation does not match the data & The instructor is misled about why a date is suggested & Explanation generated without the solver's figures & Build the explanation only from the solver's figures, and show those figures beside it & FR11\\
-\addlinespace
-H8-6\newline \textit{DQ, H} & An assessment date is changed without the instructor's approval & The instructor's authority over the course is overridden & Suggestion applied automatically & Never change a date without explicit approval & FR12\\
+H8-2\newline \textit{HF, M} & Too many workload warnings are shown & Users ignore warnings and real conflicts are missed; instructors feel pressured & \fmi{a}{Threshold set too low}\par \fmi{b}{All same-level courses grouped as one cohort (A3)} & \fmi{a}{Rank clusters by size and show the largest first}\par \fmi{b}{Tune \textit{CLUSTER\_\allowbreak{}THRESHOLD} with the CAS supervisors} & \fmi{a}{New: warning ranking}\par \fmi{b}{FR8}\\
 \midrule
-\multicolumn{6}{l}{\textbf{9.\ Compliance Checking}}\\*
+\multicolumn{6}{l}{\textbf{C9: Authentication and Access Control}}\\*
 \midrule
-H9-1\newline \textit{DQ, H} & A real policy or CEAB violation is missed & The violation is not corrected & \fmi{a}{Rule not encoded}\par \fmi{b}{Extraction error} & \fmi{a}{List the rules checked for each outline}\par \fmi{b}{Require review of extracted values}\par \fmi{c}{Measure on a test set of outlines with known issues} & \fmi{a}{\ssrref{SSR_CheckCoverage}}\par \fmi{b}{FR5}\par \fmi{c}{FR13, FR14, NFR1}\\
+H9-1\newline \textit{SE, H} & A user reaches data without logging in & Confidential data, such as the master course sheet, findings, and tentative dates, is exposed & An endpoint without an authentication check & Require login for every request to data & FR15, NFR8\\
 \addlinespace
-H9-2\newline \textit{HF, L} & A violation is reported that does not exist & Staff waste time, and trust in the system falls & \fmi{a}{Extraction error}\par \fmi{b}{Rule too strict} & Show the rule and the source text for each finding & FR13, AIR4\\
+H9-2\newline \textit{SE, H} & An instructor changes another instructor's course & Assessment dates are changed without the authority to do so & Missing or incorrect role check & \fmi{a}{Enforce role checks on the server for every change}\par \fmi{b}{Record each change} & \fmi{a}{FR16, DR3}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
 \addlinespace
-H9-3\newline \textit{DQ, M} & A result with no findings is read as full compliance & Issues outside the encoded rules are assumed not to exist & Only some rules can be checked automatically & State which rules were and were not checked & \ssrref{SSR_CheckCoverage}\\
+H9-3\newline \textit{SE, M} & A session is left open on a shared computer & Another person views or changes data as that user & No inactivity timeout & End a session after a period of inactivity & New: session timeout\\
+\addlinespace
+H9-4\newline \textit{SE, H} & A non-administrator changes the master course sheet or academic calendar & Compliance and restricted-period results become wrong for every course & Reference data editable by all roles & \fmi{a}{Allow only administrators to change reference data}\par \fmi{b}{Record each change} & \fmi{a}{\ssrref{SSR_MasterSheetEdit}}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
 \midrule
-\multicolumn{6}{l}{\textbf{10.\ Data Export}}\\*
+\multicolumn{6}{l}{\textbf{C10: Data Export}}\\*
 \midrule
 H10-1\newline \textit{SE, M} & An export contains confidential or unconfirmed data & Confidential data leaves the system, or unchecked values are used elsewhere & Export not limited by role or review status & \fmi{a}{Export only confirmed data that the user's role may see}\par \fmi{b}{Mark tentative dates} & \fmi{a}{FR17, DR3; New: export limits}\par \fmi{b}{FR7}\\
 \addlinespace
 H10-2\newline \textit{SE, L} & A cell in the exported file runs as a formula when opened & A harmful formula runs in the user's spreadsheet program & Outline text that begins with =, +, $-$, or @ & Escape cells that begin with these characters & New: CSV escaping\\
 \addlinespace
 H10-3\newline \textit{DI, L} & Characters in the export are garbled & Course names or text cannot be read & Wrong character encoding & Export in UTF-8 and test in common spreadsheet programs & FR17\\
+\midrule
+\multicolumn{6}{l}{\textbf{C11: External Dependencies}}\\*
+\midrule
+H11-1\newline \textit{AV, M} & The language model service is unavailable & Extraction and suggestion explanations are delayed & \fmi{a}{Service outage}\par \fmi{b}{Network failure} & \fmi{a}{Keep the outline, inform the user, and allow a retry}\par \fmi{b}{Keep other functions available} & \fmi{a}{\ssrref{SSR_ProcessFailure}}\par \fmi{b}{NFR7}\\
+\addlinespace
+H11-2\newline \textit{DQ, M} & A change of model or model version lowers accuracy & More extraction errors reach reviewers without anyone noticing & \fmi{a}{Provider updates the model}\par \fmi{b}{Team switches model (LC1)} & Re-run the accuracy test set before any model change is deployed & NFR1; New: model change test\\
 \end{longtable}
 }
 
 \noindent The analysis identified the following recommended actions that do not
 yet have a requirement. Each will be added to the Safety and Security
-Requirements section and to the SRS:
+Requirements (Table~\ref{TblSafetySecurityRequirements}) and to the SRS:
 
 \begin{itemize}
-  \item \textbf{Warning ranking} (H1-4): rank workload clusters by size.
-  \item \textbf{Session timeout} (H2-3): end a session after inactivity.
-  \item \textbf{Model change test} (H4-5): re-run the accuracy test set before a
+  \item \textbf{Warning ranking} (H8-2): rank workload clusters by size.
+  \item \textbf{Session timeout} (H9-3): end a session after inactivity.
+  \item \textbf{Model change test} (H11-2): re-run the accuracy test set before a
     model change is deployed.
-  \item \textbf{Output validation} (H4-6): check model output against the
+  \item \textbf{Output validation} (H4-5): check model output against the
     expected structure.
-  \item \textbf{Backup and restore} (H5-1): back up stored data and test
+  \item \textbf{Backup and restore} (H2-1): back up stored data and test
     restoring it.
-  \item \textbf{Confirm before replace} (H5-2): keep confirmed values when an
+  \item \textbf{Confirm before replace} (H2-2): keep confirmed values when an
     outline is uploaded again.
-  \item \textbf{Reference version shown} (H6-1, H6-2, H6-4): record which
+  \item \textbf{Reference version shown} (H5-4, H5-6, H6-5): record which
     calendar, master course sheet, and policy version each result used.
   \item \textbf{Export limits} (H10-1): export only confirmed data the user's
     role may see.
@@ -415,10 +416,9 @@ Requirements section and to the SRS:
     formulas.
 \end{itemize}
 
-\noindent Row H4-7 also shows a conflict in the SRS: AIR1 includes the master
-course sheet in the model's input, while DR2 does not allow confidential data to
-be sent to an external service. AIR1 will be revised to match the recommended
-action.
+\noindent Row H4-6 also led to a change in the SRS: AIR1 now excludes the
+master course sheet from the model's input, and the graduate attributes are
+compared with the sheet by the system's own code.
 
 \section{Safety and Security Requirements}
 
