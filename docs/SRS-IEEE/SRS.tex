@@ -45,6 +45,8 @@
 \usepackage{afterpage}
 
 \usepackage[round]{natbib}
+\usepackage{array}
+\usepackage{longtable}
 
 %\usepackage{refcheck}
 
@@ -81,6 +83,14 @@
 \newcounter{lcnum} %Likely Change (LC) Number
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
+
+\newcounter{drnum} %Data Requirement (DR) Number
+\newcommand{\rthedrnum}{DR\thedrnum}
+\newcommand{\drref}[1]{DR\ref{#1}}
+
+\newcounter{airnum} %AI Requirement (AIR) Number
+\newcommand{\rtheairnum}{AIR\theairnum}
+\newcommand{\airref}[1]{AIR\ref{#1}}
 
 \usepackage{fullpage}
 
@@ -960,46 +970,118 @@ time between getting his work done and studying for his upcoming back-to-back mi
 
 % ============================================================== 
 \section{Data Requirements}
-vanessa
-
-\plt{The Data Requirements section describes what information the system must manage.
-  It includes the major data entities, their attributes, and the relationships
-  between them.  It also includes a data dictionary that defines the meaning of
-  each attribute.}
 
 \subsection{Major Data Entities}
 
-\plt{What information must exist for the system to accomplish its goals?}
-
-\plt{For each entity, provide a short explanation.}
-
 \begin{itemize}
-\item User
-\item Song
-\item Session
-\item Report
+\item \textbf{User:} an administrator or instructor. Both can submit outlines and confirm extracted data. Instructors also enter tentative dates, and request and approve date suggestions, for their own courses.
+\item \textbf{Course:} a CAS course offering in a given term, taught by one instructor. A course may be cross-listed. SFWRENG 4X03, COMPSCI 3X03, and MECHTRON 3X03 are one course taught by one instructor, with a separate course code for each program. The outline and its assessments are stored once.
+\item \textbf{CourseCode:} one listing of a course. Each code belongs to one course, and a course has one or more codes. The program and year level are derived from the code and are not entered separately.
+\item \textbf{CourseOutline:} a submitted course outline PDF. Each outline belongs to one course, including when that course has several course codes.
+\item \textbf{Assessment:} a graded component of a course (midterm, assignment, lab, etc.) with a weight and a date. The date is empty when it is missing or TBD, and an instructor can enter a tentative date.
+\item \textbf{LearningOutcome:} a learning outcome stated in an outline, with any graduate attribute numbers listed beside it. A user reviews each outcome after extraction, and the review status records whether it is still extracted or has been confirmed.
+\item \textbf{MasterCourseRecord:} a row of the master course sheet, listing the graduate attribute numbers expected for a course code. A cross-listed course can match more than one row, one for each of its codes.
+\item \textbf{AcademicCalendarEntry:} a holiday, exam period, or other restricted date range.
+\item \textbf{DateRecommendation:} a suggested alternative date for an assessment, with its explanation and decision.
+\item \textbf{ComplianceFinding:} a problem found when checking an outline against McMaster policy or the master course sheet.
 \end{itemize}
+
+\noindent An instructor teaches one or more courses. Each course has one or more course codes and one or more outlines. Each outline contains many assessments and learning outcomes, stored once for the course rather than once per course code. Student cohorts are found by grouping course codes that share the same derived program and year level. Workload conflicts are calculated from the stored assessments when needed, so neither cohorts nor conflicts are stored separately.
 
 \subsection{Data Dictionary}
 
-\plt{For each entity, define all important attributes.}
+{\footnotesize
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\renewcommand{\arraystretch}{1.2}
 
-\begin{longtable}{p{0.20\textwidth} p{0.20\textwidth} p{0.45\textwidth}}
-\toprule
-Attribute & Type & Description\\
-\midrule
-user\_id & UUID & Unique identifier\\
-email & String & User email address\\
-\bottomrule
-\caption{Data Dictionary} \label{tab:DataDictionary}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.23\linewidth}|>{\raggedright\arraybackslash}p{0.67\linewidth}|}
+\caption{Data Dictionary}\label{tab:data-dictionary}\\
+\hline
+\textbf{Entity} & \textbf{Attributes (type): description} \\ \hline
+\endfirsthead
+
+\hline
+\textbf{Entity} & \textbf{Attributes (type): description} \\ \hline
+\endhead
+
+User &
+user\_id (UUID): unique identifier. \newline
+email (String): user's email address. \newline
+role (Enum): administrator or instructor. \\ \hline
+
+Course &
+course\_id (UUID): unique identifier. \newline
+instructor\_id (UUID): user who teaches the course. \newline
+term (String): academic term of the offering. \\ \hline
+
+CourseCode &
+course\_code\_id (UUID): unique identifier. \newline
+course\_id (UUID): course this listing belongs to. \newline
+code (String): course code, e.g., SFWRENG 4X03. \newline
+program (String, derived): program inferred from the subject in the code, for example Software Engineering from SFWRENG. Not entered separately. \newline
+year\_level (Integer, derived): program year inferred from the first digit of the course number, for example 4 in SFWRENG 4X03 and 3 in COMPSCI 3X03. Not entered separately. \\ \hline
+
+CourseOutline &
+outline\_id (UUID): unique identifier. \newline
+course\_id (UUID): course the outline belongs to. \newline
+submitted\_at (Timestamp): when the outline was submitted. \\ \hline
+
+Assessment &
+assessment\_id (UUID): unique identifier. \newline
+outline\_id (UUID): outline the assessment was extracted from. \newline
+name (String): name as written in the outline. \newline
+type (Enum): midterm, assignment, quiz, lab, project, final exam, other. \newline
+due\_date (Date or null): null when missing or TBD. \newline
+is\_tentative (Boolean): true when the date was entered by an instructor and is not final. \newline
+weight\_percent (Decimal): percentage of the final grade. \newline
+review\_status (Enum): extracted or confirmed. \newline
+source\_text (String): outline text the values were extracted from. \\ \hline
+
+LearningOutcome &
+outcome\_id (UUID): unique identifier. \newline
+outline\_id (UUID): outline the outcome appears in. \newline
+text (String): outcome as written. \newline
+ga\_numbers (List of Integer): graduate attribute numbers listed in the outline. \newline
+review\_status (Enum): extracted or confirmed. \newline
+source\_text (String): outline text the values were extracted from. \\ \hline
+
+MasterCourseRecord &
+course\_code (String): course code this row applies to. Matches a CourseCode. \newline
+expected\_ga\_numbers (List of Integer): attribute numbers the master sheet lists for that course code. \\ \hline
+
+AcademicCalendarEntry &
+start\_date (Date): start of the range. \newline
+end\_date (Date): end of the range. \newline
+restriction (Enum): holiday, exam period, no-assessment period. \\ \hline
+
+DateRecommendation &
+recommendation\_id (UUID): unique identifier. \newline
+assessment\_id (UUID): assessment the suggestion applies to. \newline
+suggested\_date (Date): proposed date. \newline
+explanation (String): reason for the suggestion, shown to the instructor. \newline
+decision (Enum): pending, accepted, rejected. \\ \hline
+
+ComplianceFinding &
+finding\_id (UUID): unique identifier. \newline
+outline\_id (UUID): outline that was checked. \newline
+message (String): description of the problem found. \\ \hline
 \end{longtable}
+}
 
 \subsection{Privacy and Data Retention} \label{SecPrivacyDataRetention}
 
-\plt{Discuss storage, retention, deletion, privacy controls,
- consent, encryption, and compliance requirements.}
+\begin{itemize}
 
-TODO
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Confidentiality}:] Course outlines and the data extracted from them are generally public. The master course sheet and other department data may be confidential, and shall only be available to authorized CAS users.
+
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Hosting}:] Course and department data shall be processed on CAS-hosted infrastructure. GitHub Copilot is an external service and may be used during development. Only publicly available course outline information may be sent to Copilot. Confidential department data and student personal information shall not be sent to Copilot or to any other external service.
+
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Access}:] Users shall only see and change the data their role allows.
+
+\item[DR\refstepcounter{drnum}\thedrnum \label{DR_Retention}:] The retention period for outlines, extracted data, and findings shall be 10 years. The Undergraduate Course Management Policy requires that course outlines be retained for at least 10 years.
+
+\end{itemize}
 
 % ============================================================== 
 \section{Non-Functional Requirements}
@@ -1135,33 +1217,79 @@ TODO
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
-vanessa
 
-\plt{Refer to
-\href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/Lxx_DrMosserGuestLecture/2026_09_Capstone.pdf?ref_type=heads}{Dr.
-Mosser's guest lecture} on AI requirements.}
-
-\plt{Include only when applicable.}
+\noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. The LLM also compares the graduate attribute numbers in an outline with the master course sheet. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. In operation the LLM is hosted on CAS infrastructure and kept behind a replaceable interface, so the model can be changed without changing the rest of the system. During development, GitHub Copilot may be used in its place. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
 
 \subsection{Model Inputs}
 
-TODO
+\begin{itemize}
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Text}:] The model shall receive the text that the PDF extraction library produced from each course outline, rather than the PDF file itself, together with the contents of the master course Excel sheet.
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Input_Privacy}:] The operational model shall be hosted on CAS-operated infrastructure. When GitHub Copilot is used during development, only publicly available course outline text may be sent to it (\drref{DR_Hosting}). No student personal information shall be used as model input.
+\end{itemize}
 
 \subsection{Model Outputs}
 
-TODO
+\begin{itemize}
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Struct}:] The model shall organize the extracted outline text into structured data containing, for each assessment, its name, type, date, and weight, and for each learning outcome, its text and the graduate attribute numbers listed beside it (\rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Source}:] Every structured value shall include the passage of extracted text it was taken from, so a reviewer can check it without opening the original document.
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Missing}:] The model shall only use information present in the extracted text, and shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (\rref{FR_Extract_Flag}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Review}:] No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it (\rref{FR_Extract_Review}).
+\end{itemize}
 
 \subsection{Evaluation Metrics}
 
-\plt{Accuracy, Precision, Recall, F1, BLEU, WER, etc.}
+\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference. Extraction metrics are measured on the final structured output, so they cover the PDF library and the model together.
 
-TODO
+{\footnotesize
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\linewidth}|>{\raggedright\arraybackslash}p{0.38\linewidth}|>{\raggedright\arraybackslash}p{0.20\linewidth}|}
+\caption{Evaluation Metrics}\label{tab:ai-metrics}\\
+\hline
+\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
+\endfirsthead
+
+\hline
+\textbf{Metric} & \textbf{What it measures} & \textbf{Target} \\ \hline
+\endhead
+
+Extraction accuracy & Share of assessment dates and weights that are correct in the final structured output (\rref{FR_Extract_Assessment}) & At least 90\% \\ \hline
+Missing-field detection & Share of missing or TBD fields that are flagged (\rref{FR_Extract_Flag}) & At least 90\% \\ \hline
+Compliance issue detection & Share of known compliance issues that are found (\rref{FR_Comp_Policy}, \rref{FR_Comp_Grad}) & At least 90\% \\ \hline
+\end{longtable}
+}
 
 \subsection{Known Limitations}
 
-\plt{Explicitly document expected failure modes.}
+\noindent The table lists the expected failure modes and how the design contains each one. The main safeguard is that a person confirms every extracted value, with the source text shown beside it. During evaluation, the team also manually reviews a sample of the outputs.
 
-TODO
+{\footnotesize
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\linewidth}|>{\raggedright\arraybackslash}p{0.28\linewidth}|>{\raggedright\arraybackslash}p{0.32\linewidth}|}
+\caption{Expected Failure Modes}\label{tab:ai-limitations}\\
+\hline
+\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
+\endfirsthead
+
+\hline
+\textbf{Failure mode} & \textbf{Effect} & \textbf{Mitigation} \\ \hline
+\endhead
+
+PDF library returns messed up or incomplete text (tables, multiple columns, scanned pages) & Dates, weights, or sections are missing or out of order before the model sees them & Flag outlines with little or no extracted text for manual entry; test on outlines with a range of layouts \\ \hline
+Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage; require review \\ \hline
+Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \hline
+Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \hline
+Courses missing from the master sheet (technical electives, mechatronics, computer science) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \hline
+Uneven accuracy across layouts or programs & Some instructors see more errors than others & Test on outlines from each program; add examples from weak areas \\ \hline
+CEAB requirements are not exhaustive & A clean result does not mean full accreditation compliance & State that only the encoded rules were checked \\ \hline
+LLM unavailable & Extraction and scheduling explanations cannot be completed & Inform the user, keep the submitted outline, do not present an explanation that was not generated, and allow a retry when the service returns (UC\_CAS\_01, UC\_PROF\_03) \\ \hline
+\end{longtable}
+}
 
 % ============================================================== 
 \section{Requirements Traceability Matrices}
@@ -1199,6 +1327,25 @@ Functional Req & Nonfunctional Req \\
 \bottomrule
 \caption{Traceability Between Functional and Nonfunctional Requirements}
 \label{tab:FR2Rtm}
+
+\end{longtable}
+
+\begin{longtable}{p{0.28\textwidth} p{0.42\textwidth}}
+
+\toprule
+AI Requirement & Related Requirement \\
+\midrule
+\airref{AIR_Input_Text} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO} \\
+\airref{AIR_Input_Privacy} & \drref{DR_Hosting} \\
+\airref{AIR_Output_Struct} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO} \\
+\airref{AIR_Output_Source} & \rref{FR_Extract_Review} \\
+\airref{AIR_Output_Missing} & \rref{FR_Extract_Flag} \\
+\airref{AIR_Output_Review} & \rref{FR_Extract_Review} \\
+\drref{DR_Confidentiality} & \rref{FR_Access_Roles} \\
+\drref{DR_Access} & \rref{FR_Access_Roles} \\
+\bottomrule
+\caption{Traceability Between AI Requirements, Data Requirements, and Functional
+Requirements} \label{tab:AIR2Reqtm}
 
 \end{longtable}
 
