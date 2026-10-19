@@ -188,23 +188,39 @@ practice.}
 
 \subsection{Purpose}
 
-The Department of Computing and Software (CAS) currently manages course outlines and assessment schedules on a course-by-course basis. Course instructors set their deadlines independently, so students in the same program and year can face busy weeks of midterms and deadlines with no department-level visibility into them. CAS administrative staff must also manually check each outline against McMaster course outline policy and the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when information is missing.
-The CAS Deadline Management System is intended to make assessment dates visible across courses and to identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, and never changes a course outline or assessment date on its own.
+The CAS (Computing and Software) Department currently manages course outlines and assessment schedules on a 
+course-by-course basis. Course instructors set their deadlines independently, so students in the same program 
+and year can face busy weeks of midterms and deadlines with no department-level visibility into them. 
+CAS administrative staff must also manually check each outline against McMaster course outline policy and 
+the Canadian Engineering Accreditation Board (CEAB) requirements, and follow up with instructors when 
+information is missing.
+\\ \\
+The CAS Deadline Management System is intended to make assessment dates visible across courses and to 
+identify policy and accreditation gaps early. It reduces the manual effort of checking outlines against 
+these requirements and helps avoid weeks with heavily clustered assessments. Instructors and administrators 
+remain in the loop and responsible for every decision. The system only flags issues and makes suggestions, 
+and never changes a course outline or assessment date on its own.
 
 \subsection{Scope}
-\plt{Briefly describe:
-\begin{itemize}
-  \item Problem being solved
-  \item Intended users
-  \item Major functionality
-  \item Expected benefits
-  \item Clarifying the scope often means saying what the software doesn't do
-\end{itemize}
-}
-
-\plt{The scope section is relevant for understanding the boundaries of the system. It is also relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
-
-TODO
+The CAS Deadline Management System aims to improve course outline review and assessment scheduling within 
+the CAS Department at McMaster University. The system addresses the lack of 
+department-wide visibility into assessment dates and the manual effort required to verify course outlines 
+against university policies and CEAB requirements. The system will allow CAS administrators to upload course outlines, extract and store 
+relevant course and assessment information, identify missing information and potential policy or accreditation 
+gaps, and visualize assessment schedules across courses. It will also identify potential assessment conflicts 
+and suggest alternative dates to help distribute assessments more evenly throughout the academic term. 
+The system will support reviewing and exporting extracted information to facilitate administrative coordination.
+\\ \\
+The primary users are CAS administrators and course instructors, while students may benefit indirectly 
+from improved assessment scheduling. The system is intended to reduce administrative workload, 
+improve policy compliance, and support more balanced assessment schedules.
+\\\\
+The system will provide recommendations for review rather than make decisions independently. 
+It will not automatically modify course outlines, change assessment dates, or override instructor decisions. 
+Instructors retain authority over their course schedules, and administrators remain responsible for 
+reviewing policy compliance and accreditation requirements. The system's recommendations will be based 
+on the available course outline data, timetable information, and defined policies; it will not guarantee 
+that all scheduling conflicts or compliance issues are identified.
 
 \subsection{Stakeholders \textcolor{red}{- ITS STAKEHOLDER TIME BOI}}
 
@@ -245,34 +261,27 @@ Tertiary Stakeholders:
 
 \subsection{Definitions and Acronyms}
 
-\plt{This section provides the meaning of the different words and phrases used
-  in the domain of the problem.}
-
 \begin{longtable}{p{0.25\textwidth} p{0.65\textwidth}}
 \toprule
 Term & Definition\\
 \midrule
-TODO & TODO\\
+CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
+LLM & Large Language Model, an AI model trained on large amounts of text to understand and generate human language.\\
+SRS & Software Requirements Specification, a document that describes a software system's requirements, including its expected functionality and constraints.\\
 \bottomrule
 \caption{Definitions and Acronyms} \label{tab:DefinitionsAndAcronyms}
 \end{longtable}
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
+The intended readers of this Software Requirements Specification include 
+project supervisors, CAS administrators, software developers, testers, and future 
+maintainers. Technical readers should have a foundational understanding of software 
+development, web applications, databases, and software testing. Familiarity with PDF 
+processing and large language models (LLMs) is beneficial but not required. 
+CAS administrators and project supervisors should be familiar with academic scheduling, 
+course outlines, and relevant university policies, including CEAB requirements. This document is intended to communicate 
+system requirements clearly to both technical and non-technical readers.
 
 % ============================================================== 
 \section{System Overview}
@@ -282,155 +291,280 @@ problem, the vision, and the interfaces between the system and its environment.
 This section also describes user characteristics and lists the system
 constraints.
 
-\plt{The purpose of this section is to provide general information about the
-  system so that the specific requirements in the later sections will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
-
 \subsection{Problem Statement}
 
-\plt{Current situation, problem, impact, desired improvement.  You will likely borrow some text from your problem description document.}
+The CAS Department at McMaster University currently manages 
+course outlines and assessment schedules independently across courses. Without a centralized 
+view of assessment dates, students in the same program and academic year may face multiple
+midterms and assignment deadlines within short periods. CAS administrative staff must also 
+manually review course outlines for compliance with university policies and CEAB requirements. 
+Missing or incomplete information, such as midterm dates listed as ``TBD,'' 
+creates additional work and requires repeated communication with instructors.
+\\\\
+These challenges contribute to uneven student workloads, increased academic stress, and 
+significant administrative overhead. Furthermore, instructors retain authority over their 
+course schedules, limiting administrators' ability to directly resolve scheduling conflicts.
+\\\\
+The CAS Deadline Management System aims to improve this process by centralizing assessment 
+information, identifying potential scheduling conflicts and policy compliance gaps, and 
+suggesting alternative assessment dates. This will help administrators coordinate schedules 
+more efficiently, reduce manual review efforts, and support more balanced student workloads 
+while preserving instructors' authority over their courses.
 
-TODO
 
 \subsection{Product Vision}
 
-\plt{A clear and concise statement of the product's purpose and goals.}
-
-\plt{The goal statements are functional and nonfunctional objectives that system
-  under consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements pertinence.
-  Goals will be refined by requirements.  The goals are written abstractly, with
-  a minimal amount of technical language.  They should be understandable by
-  non-domain experts.}
-
-\plt{You will likely borrow from your goal statements in your problem
-description document.}
-
-TODO
+The CAS Deadline Management System will provide the CAS Department with a trusted,
+department-wide foundation for collaborative assessment planning. It will turn
+course-outline information into a consistent, reviewable source of scheduling
+knowledge that helps instructors and administrators make informed decisions
+together. The system is intended to improve coordination and transparency over
+time, while keeping final responsibility for course schedules and policy
+interpretation with the appropriate human decision-makers.
   
 \subsection{System Context}
 
-\plt{Include users, external systems, APIs, databases, and third-party services.}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{../SRS/SystemContextFigure.pdf}
+ \includegraphics[width=0.6\textwidth]{../SRS-IEEE/SystemContext2.3.png}
 \caption{System Context}
 \label{Fig_SystemContext} 
 \end{center}
 \end{figure}
 
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
+The CAS Deadline Management System is a web-based application intended to support 
+course outline review, assessment scheduling, and policy compliance within the CAS Department at 
+McMaster University. CAS administrators and course instructors 
+interact with the system to upload course outlines, review extracted information, view assessment 
+schedules, and evaluate potential scheduling conflicts and compliance issues.
+Figure~\ref{Fig_SystemContext} summarizes these interactions by showing the system boundary
+and its relationships with instructors, CAS administrators, the LLM, and the database.
+\\ \\
+The system processes course outlines and relevant academic scheduling information to extract 
+assessment details, identify missing or potentially non-compliant information, and recommend 
+alternative assessment dates. Results are presented to users for review, while instructors and 
+authorized administrators retain responsibility for final scheduling and compliance decisions.
+\\ \\
+The system is intended for academic administration and planning rather than mission-critical or 
+safety-critical applications. Since extracted information and automated recommendations may be 
+incomplete or inaccurate, users must review flagged issues and verify important results before 
+making decisions.
 
 \begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+    \item \textbf{User Responsibilities:}
+    \begin{itemize}
+        \item Provide course outlines and relevant academic scheduling information.
+        \item Ensure submitted documents are appropriate for review and that the information provided is sufficiently complete and accurate.
+        \item Review extracted course and assessment information and correct errors where supported.
+        \item Evaluate flagged scheduling conflicts, missing information, and potential policy compliance issues.
+        \item Decide whether to accept or reject suggested assessment dates and determine any final changes to course schedules.
+    \end{itemize}
+
+    \item \textbf{\progname{} Responsibilities:}
+    \begin{itemize}
+        \item Accept and process supported course outline documents and scheduling information.
+        \item Extract and organize relevant course and assessment details for review.
+        \item Validate extracted data for missing, inconsistent, or incorrectly formatted values where possible.
+        \item Present assessment schedules and identify potential workload conflicts.
+        \item Flag potential gaps in course outline requirements and applicable accreditation criteria.
+        \item Generate alternative assessment date recommendations with supporting explanations.
+        \item Present results and warnings to users without automatically changing course outlines or assessment schedules.
+    \end{itemize}
+
+    \item \textbf{External System Responsibilities:}
+    \begin{itemize}
+        \item \textbf{LLM:} Process course outline content to support information extraction and, where applicable, the generation of explanations for scheduling recommendations.
+        \item \textbf{Database:} Store and retrieve course information, extracted assessment details, review results, and scheduling information.
+    \end{itemize}
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} 
 
-\plt{This additional context information is needed to determine how much effort
-should be devoted to the rationale section.  If the application is
-safety-critical, the bar is higher.  This is currently less structured, but
-analogous to, the idea to the Automotive Safety Integrity Levels (ASILs) that
-McSCert uses in their automotive hazard analyses.}
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
+The primary users of the CAS Deadline Management System are CAS administrators 
+and course instructors at McMaster University. Users are expected to have basic 
+computer skills, including navigating web applications and viewing course information. 
+CAS administrators should be familiar with course outline reviews, academic scheduling, 
+and applicable university policies. Course instructors should have knowledge of their own 
+course outlines and assessment schedules. No programming or machine learning knowledge is 
+required. Users should be able to review extracted information, interpret flagged issues 
+and scheduling recommendations, and make informed decisions regarding their courses or 
+administrative responsibilities.
 
 \subsection{System Constraints}
 
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
+The CAS Deadline Management System must operate within the technical and institutional 
+constraints of McMaster University. The following constraints apply to the system:
 
-\plt{This is where you would mention platform constrains, and licensing
-restrictions.}
+\begin{itemize}
+    \item \textbf{Deployment Environment:} The system must be deployable within 
+    the computing resources made available by McMaster University. The availability and 
+    capacity of these resources may limit the models and processing workloads the system can support.
+
+    \item \textbf{Data Sources:} The system must process course outlines provided in PDF format. 
+    Variations in document structure, formatting, and scan quality may affect the accuracy of 
+    information extraction.
+
+    \item \textbf{Language Model Cost and Hosting:} The system must use an LLM that is
+    available at no cost to the project. GitHub Copilot should be preferred where it
+    satisfies the system's technical and institutional requirements. Otherwise, the
+    system should prioritize locally hosted, open-weight language models to minimize
+    reliance on external services. Model selection must account for available computing
+    resources and applicable licensing restrictions.
+
+    \item \textbf{Human Decision-Making:} The system must not automatically modify course outlines or 
+    assessment dates. All scheduling changes and final compliance decisions remain the responsibility 
+    of instructors and authorized administrators.
+
+    \item \textbf{Policy and Accreditation Requirements:} Compliance checks must be based on documented 
+    McMaster University policies and applicable CEAB requirements. The system must support human review 
+    of flagged issues rather than treating automated results as definitive determinations.
+\end{itemize}
+
 
 % ============================================================== 
 \section{Stakeholder Requirements}
 
-\plt{Technology-independent requirements.  These come from statements made by
-the stakeholders.  You will find these through interviews and surveys.  They are
-often expressed in natural language.  They are not necessarily testable, but
-they should be verifiable.}
+%\plt{Technology-independent requirements. These come from statements made by
+%the stakeholders.  You will find these through interviews and surveys.  They are
+%often expressed in natural language. They are not necessarily testable, but
+%they should be verifiable.}
 
-\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
+%\plt{The stakeholder requirements are numbered so that you can have traceability to other parts of your document.}
 
 \noindent \begin{itemize}
+  
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-01}] Centralized Course Outline Submission: 
+CAS administrators need a centralized location to collect and review course outlines.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label1}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-02}] Course Information Extraction: 
+CAS administrators need relevant information extracted from submitted course outlines, including course 
+details, assignments and projects, marking schemes, and midterm dates where available.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label2}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-03}] McMaster Policy Review: 
+CAS administrators need support in identifying potential failures of course outlines to comply 
+with McMaster University and CAS department policies.
 
-\item[SR\refstepcounter{srnum}\thesrnum \label{SR_Label3}] TODO
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-CAS-04}] CEAB Accreditation Review: 
+CAS administrators need support in reviewing course outlines against CEAB accreditation 
+requirements, including evaluating how each course addresses relevant CEAB graduate attributes.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-01}] Assessment Schedule Analysis: 
+Professors/instructors and CAS administrators need to identify periods with high concentrations 
+of assessment and midterm deadlines across relevant CAS department courses and reassess 
+the schedule when dates are updated.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-02}] Scheduling Recommendations: 
+Professors/instructors need recommendations for alternative midterm and assessment dates 
+that may reduce deadline bottlenecks for students, while being able to make the final decision.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-03}] Instructor Decision-Making:
+Professors/instructors need to retain authority over whether to accept or reject scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-04}] Handling Incomplete Information: 
+Professors/instructors and CAS administrators need to be informed when missing or unreadable 
+course outline information may affect the reliability of compliance reviews or scheduling recommendations.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-05}] Authorized Access: 
+CAS administrators and professors/instructors need access to the information and functions relevant 
+to their roles, while assuring sensitive information is protected and restricted to authorized users.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-06}] Shared Assessment Calendar: 
+Professors/instructors and CAS administrators need access to a shared calendar displaying 
+relevant course assessment dates.
+
+\item[SR\refstepcounter{srnum}\thesrnum \label{SR-REC-07}] Exam and Restricted-Period Conflicts: 
+Professors/instructors and CAS administrators need to identify potential conflicts between 
+assessments, exam dates, and applicable restricted periods.
 
 \end{itemize}
 
-\plt{You should give your SRs meaningful labels, so that you can refer to them
-in other parts of the SRS.  The label names should be meaningful mnemonics, not
-numbers.}
+
+%\plt{You should give your SRs meaningful labels, so that you can refer to them
+%in other parts of the SRS.  The label names should be meaningful mnemonics, not
+%numbers.}
 
 % ============================================================== 
 \section{User Personas}
-\plt{Create 2-5 realistic personas.
-  Personas are fictional characters that represent the different user types that
-  might use your software.  They are used to help understand the users'
-  needs, experiences, behaviors and goals.  They are not real people, but they
-  should be based on real data collected from user research.}
+%\plt{Create 2-5 realistic personas.
+%  Personas are fictional characters that represent the different user types that
+%  might use your software.  They are used to help understand the users'
+%  needs, experiences, behaviors and goals.  They are not real people, but they
+%  should be based on real data collected from user research.}
 
 \subsection{Persona 1}
 \begin{itemize}
-\item Name:
-\item Description:
-\item Goals:
+\item Name: Bob M. Builder (CAS Administrator)
+\item Description: Bob is responsible for collecting and reviewing CAS course outlines 
+to help ensure they align with McMaster University and CAS department policies, as well 
+as CEAB accreditation requirements. Bob needs an efficient way to carry out his 
+administrative duties while reducing the amount of redundant back and forth communication 
+with instructors to ensure that outlines are aligned with the required policies and accreditation requirements.
+
+\item Goals: 
+\begin{itemize}
+  \item To collect and review course outlines in one centralized location.
+  \item To identify missing information and potential policy or accreditation issues.
+  \item To reduce the time spent manually reviewing multiple course outlines.
+  \item To reduce unproductive communication time with course instructors.
+\end{itemize}
 \item Frustrations:
-\item Technical Ability:
+\begin{itemize}
+  \item Course outlines may use different formats or organize information differently.
+  \item Manually locating relevant information across many documents can be time-consuming.
+  \item Missing or unclear information can make it difficult to assess compliance.
+\end{itemize}
+\item Technical Ability: Moderate (experience with administrative software, document management tools, spreadsheets)
 \end{itemize}
 
+
 \subsection{Persona 2}
+\begin{itemize}
+\item Name: Dora Sanchez Explora (Software Engineering Professor)
+\item Description: Dora teaches Software Engineering Design courses and plans 
+assignments and two midterms for the semester. She wants to provide students with a workload 
+that is easy to manage and deadlines that allow them to learn and adequately prepare 
+for their midterms without overwhelming them in their other courses.
+\item Goals:
+\begin{itemize}
+  \item To submit and maintain tentative assessment dates efficiently.
+  \item To identify potential conflicts with assessments in other courses.
+  \item To receive practical recommendations for distributing assessment deadlines more evenly.
+  \item To retain final authority over assessment dates for her course.
+\end{itemize}
+\item Frustrations:
+\begin{itemize}
+  \item Coordinating assessment dates across courses can be difficult.
+  \item Several courses may schedule major assessments around the same time.
+  \item Changing an assessment date may create conflicts with other course activities or require additional coordination.
+\end{itemize}
+\item Technical Ability: Moderate (experience with administrative management systems, online course and university tools)
+\end{itemize}
+
+
+\subsection{Persona 3}
+\begin{itemize}
+\item Name: Homer Simpson (4th Year Software Engineering Student)
+\item Description: Homer is an undergraduate Software Engineering student taking six courses 
+for the Fall term. He is feeling overwhelmed by the workload and is struggling to manage his 
+time between getting his work done and studying for his upcoming back-to-back midterms. 
+\item Goals:
+\begin{itemize}
+\item To have a more balanced distribution of assessments throughout the term.
+\item To avoid periods when multiple major deadlines occur close together.
+\item To have sufficient time to prepare for major assessments across different courses.
+\end{itemize}
+\item Frustrations:
+\begin{itemize}
+\item Multiple assignments and midterms may fall within the same few days.
+\item Heavy assessment periods can make it difficult to allocate study/work time effectively.
+\item Assessment dates across different courses may be difficult to coordinate.
+\end{itemize}
+\item Technical Ability: High (experience with online learning platforms, digital calendars, student productivity tools and software)
+\end{itemize}
+
+\subsection{Persona 3}
 \begin{itemize}
 \item Name:
 \item Description:
@@ -441,62 +575,398 @@ numbers.}
 
 % ============================================================== 
 \section{Use Cases}
-\plt{Use cases are a way to describe the interactions between users and the system.
-  They are typically written in natural language and describe the steps that a
-  user takes to achieve a specific goal.  Use cases can be used to identify
-  functional requirements and to create test cases.}  
-\plt{Typically 8-15 substantial use cases.}
+%\plt{Use cases are a way to describe the interactions between users and the system.
+%  They are typically written in natural language and describe the steps that a
+%  user takes to achieve a specific goal.  Use cases can be used to identify
+%  functional requirements and to create test cases.}  
+%\plt{Typically 8-15 substantial use cases.}
 
-\refstepcounter{ucnum} \label{UC_Label1}
-\subsection{\ucref{UC_Label1}: Example Use Case}
+\refstepcounter{ucnum} \label{UC_CAS_01}
+\subsection{\ucref{UC_CAS_01}: Submit Course Outline}
 
-\textbf{Primary Actor}
+\noindent \textbf{Primary Actor:} CAS Administrator
 
-TODO
-
-\textbf{Preconditions}
+\noindent \textbf{Preconditions}
 \begin{itemize}
-\item TODO
+  \item The administrator has access to the system.
+  \item A CAS course outline is available for submission.
 \end{itemize}
 
-\textbf{Main Success Scenario}
+\noindent \textbf{Main Success Scenario}
 \begin{enumerate}
-\item TODO
-\item TODO
-\item TODO
+  \item The administrator logs into the system.
+  \item The administrator selects the option to submit a course outline.
+  \item The administrator selects and submits the course outline.
+  \item The system receives the document and attempts to extract relevant course information.
+  \item The system confirms that the course outline has been submitted successfully.
+  \item The system makes the submitted outline available for information extraction and review.
 \end{enumerate}
 
-\textbf{Alternative Flows}
+\noindent \textbf{Alternative Flows}
 \begin{itemize}
-\item TODO
+  \item If the submitted document cannot be read, the system informs the administrator that a readable document is required.
+  \item If the submission fails, the system informs the administrator and allows them to try again.
+  \item If relevant course information is missing, the system proceeds with the information that is available and identifies the missing information.
+  \item If the Copilot or LLM service is unavailable, the system informs the administrator that automatic information extraction cannot be completed. The submitted course outline remains available, and the administrator can retry extraction when the service becomes available.
 \end{itemize}
 
-\textbf{Postconditions}
+\noindent \textbf{Postconditions}
 \begin{itemize}
-\item TODO
+  \item If submission succeeds, the course outline is stored and available for review, even if automatic information extraction could not be completed.
+  \item If submission fails, the administrator is informed that the course outline was not submitted successfully.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_02}
+\subsection{\ucref{UC_CAS_02}: Review Extracted Course Information}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted successfully.
+  \item The system has attempted to extract relevant course information.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a submitted course outline.
+  \item The system presents the extracted course details and information, including assignments, marking schemes, and midterm dates where available, and flags any missing, uncertain, or ambiguous information for review.
+  \item The administrator reviews the extracted information against the original course outline.
+  \item The administrator fills in any missing information or confirms that the information is correct.
+  \item The system saves the verified course information for later steps and scheduling analysis.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If the system cannot extract certain information, it identifies the missing information for the administrator to review.
+  \item If the system extracts information that is uncertain or ambiguous, it flags the affected information for administrator review and indicates that verification is required.
+  \item If the administrator identifies incorrect information, they correct it before proceeding.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The extracted course information has been reviewed and corrected where necessary.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_03}
+\subsection{\ucref{UC_CAS_03}: Review Course Outline Against McMaster and CAS Policies}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item Relevant course information is available for review.
+  \item McMaster University and CAS department policy criteria are available to the system.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a course outline for policy review.
+  \item The system evaluates the available course information against policy criteria.
+  \item The system identifies potential policy inconsistencies or missing required information.
+  \item The system presents the findings and supporting information to the administrator.
+  \item The administrator reviews the findings and determines which issues require further investigation or correction.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If relevant information is missing, the system identifies the limitation and presents any findings that can still be supported.
+  \item If a potential policy issue cannot be determined conclusively, the system flags it for manual review.
+  \item If the necessary policy criteria are unavailable, the system informs the administrator that the review cannot be completed reliably.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has access to policy review findings and can identify issues requiring further attention.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_CAS_04}
+\subsection{\ucref{UC_CAS_04}: Review Course Outline Against CEAB Criteria}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item Relevant course information is available for review.
+  \item Applicable CEAB accreditation criteria are available to the system.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator selects a course outline for CEAB-related review.
+  \item The system evaluates the available course information against CEAB criteria.
+  \item The system identifies potential information gaps that may require further examination.
+  \item The system presents the findings and supporting information to the administrator.
+  \item The administrator reviews the findings and determines which issues require further investigation or correction.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If relevant information is missing, the system identifies the limitation and presents any findings that can still be supported.
+  \item If a potential gap requires professional judgment, the system flags it for manual review.
+  \item If the necessary CEAB criteria are unavailable, the system informs the administrator that the review cannot be completed reliably.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has access to CEAB-related review findings and can identify issues requiring further attention.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_CAS_05}
+\subsection{\ucref{UC_CAS_05}: Review Course Outline Findings}
+
+\noindent \textbf{Primary Actor:} CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item A course outline has been submitted.
+  \item At least one policy or CEAB-related review has been performed.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The administrator opens the review findings for a course outline.
+  \item The system displays identified potential issues, missing information, and relevant supporting details.
+  \item The administrator examines the findings and determines required follow-up.
+  \item The administrator uses the findings to support the course outline review process.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If no potential issues are identified, the system indicates that no issues were detected by the review.
+  \item If the findings depend on incomplete or uncertain information, the system identifies those limitations.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The administrator has reviewed the available findings and identified any issues requiring follow-up.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_01}
+\subsection{\ucref{UC_PROF_01}: Submit Tentative Assessment Dates}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item The professor or instructor has access to the system.
+  \item The instructor has tentative assessment dates for a relevant course.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor selects the relevant course.
+  \item The instructor enters or submits tentative dates for assessments and midterms.
+  \item The system checks the submitted information for completeness.
+  \item The system presents any identified missing or invalid information to the instructor.
+  \item The instructor corrects any identified issues and submits the information.
+  \item The system saves the tentative assessment dates for scheduling analysis.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If required assessment information is missing, the system identifies the missing details and asks the instructor to complete them.
+  \item If a date is invalid or cannot be interpreted, the system asks the instructor to correct it.
+  \item If the instructor needs to revise the submitted dates, they can update the information and submit it again.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor's tentative assessment dates are stored and available for scheduling analysis.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_02}
+\subsection{\ucref{UC_PROF_02}: Analyze Assessment Schedule}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor, CAS Administrator
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item The user has access to the system.
+  \item Assessment dates are available for the relevant courses, if any have been submitted.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor requests an analysis of the assessment schedule.
+  \item The system gathers the available assessment dates for relevant courses.
+  \item The system analyzes the distribution of assessments and midterms across the relevant period.
+  \item The system identifies periods with high concentrations of assessments or potential student workload bottlenecks.
+  \item The system presents the analysis results to the instructor.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If assessment information is incomplete, the system identifies the missing information and explains how it limits the analysis.
+  \item If insufficient assessment dates are available, the system informs the instructor that a reliable analysis cannot be completed.
+  \item If no significant bottlenecks are identified, the system presents the analysis without recommending unnecessary changes.
+  \item If the instructor or administrator wants to view the assessment calendar without performing an analysis, they can filter the calendar by academic year and program. The system displays the assessment dates matching the selected filters without generating workload analysis or recommendations.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor or administrator can review the assessment schedule, either through the calendar view or through the results of a schedule analysis, depending on the requested operation.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_03}
+\subsection{\ucref{UC_PROF_03}: Generate Scheduling Recommendations}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item An assessment schedule analysis has been completed.
+  \item Sufficient information is available to identify potential alternative dates.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor requests scheduling recommendations based on the available assessment schedule.
+  \item The system identifies assessments that contribute to periods with high concentrations of deadlines.
+  \item The system evaluates potential alternative dates for affected assessments.
+  \item The system generates recommendations intended to reduce assessment bottlenecks while considering the available scheduling information.
+  \item The system presents the suggested dates and the available reasoning behind the recommendations.
+  \item The instructor reviews the recommendations.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If no suitable alternative dates can be identified, the system informs the instructor that it cannot provide a suitable recommendation.
+  \item If relevant scheduling information is missing, the system identifies the limitation.
+  \item If several alternatives are available, the system presents the alternatives for the instructor to evaluate.
+  \item If the LLM/Copilot service goes down, the system notifies the instructor, prevents showing false explanations, and allows retrying once the service recovers.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item Scheduling recommendations (if applicable) are presented to the instructor for consideration. No assessment dates are changed automatically.
+\end{itemize}
+
+
+\refstepcounter{ucnum} \label{UC_PROF_04}
+\subsection{\ucref{UC_PROF_04}: Review and Decide on Scheduling Recommendations}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item Scheduling recommendations have been generated for the relevant assessment schedule.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor opens the scheduling recommendations.
+  \item The system displays the suggested assessment dates and the rationale for each recommendation.
+  \item The instructor evaluates the suggestions against course-specific constraints and other relevant considerations.
+  \item The instructor chooses to accept, reject, or modify a proposed date.
+  \item The system records the instructor's decision and updates the schedule if an accepted or modified date is submitted.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If the instructor rejects a recommendation, the existing assessment date remains unchanged.
+  \item If the instructor modifies a recommendation, the system allows the revised date to be submitted.
+  \item If the instructor needs more information, they can review the schedule analysis before making a decision.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The instructor's decision is reflected in the schedule where an update has been submitted. Rejected recommendations do not change the existing assessment dates.
+\end{itemize}
+
+
+
+\refstepcounter{ucnum} \label{UC_PROF_05}
+\subsection{\ucref{UC_PROF_05}: Update Assessment Dates and Re-analyze Schedule}
+
+\noindent \textbf{Primary Actor:} Professor/Instructor
+
+\noindent \textbf{Preconditions}
+\begin{itemize}
+  \item Assessment dates for the relevant course have previously been submitted.
+  \item The instructor has identified a need to change one or more tentative assessment dates.
+\end{itemize}
+
+\noindent \textbf{Main Success Scenario}
+\begin{enumerate}
+  \item The instructor selects the relevant course and assessment schedule.
+  \item The instructor updates one or more tentative assessment dates.
+  \item The system checks the updated information for completeness and validity, then saves the updated dates.
+  \item The instructor requests a new assessment schedule analysis.
+  \item The system analyzes the updated schedule and identifies any remaining or newly introduced bottlenecks.
+  \item The system presents the updated analysis and any resulting recommendations.
+\end{enumerate}
+
+\noindent \textbf{Alternative Flows}
+\begin{itemize}
+  \item If an updated date is invalid or incomplete, the system asks the instructor to correct it before proceeding.
+  \item If insufficient information is available for re-analysis, the system identifies the missing information.
+  \item If the updated schedule introduces new bottlenecks, the system identifies them in the new analysis.
+\end{itemize}
+
+\noindent \textbf{Postconditions}
+\begin{itemize}
+  \item The updated tentative assessment dates are available in the system, and a new analysis is available if sufficient information was provided.
 \end{itemize}
 
 % ============================================================== 
 \section{Functional Requirements}
 
-\plt{Functional requirements describe what the system should do.  They are typically
-expressed as a set of conditions or capabilities that the system must have.  These
-requirements are usually derived from the stakeholder requirements and use cases.}
+\noindent The system shall support the following capabilities, grouped by feature area.
 
-\plt{Use SHALL statements. Requirements must be atomic, testable, and traceable.}
-
-\noindent \begin{itemize}
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label1}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label2}:] The system shall ...
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Label3}:] The system shall ...
-
+\subsection*{Outline Intake and Extraction}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Intake_Data}:] The system shall accept course outlines in PDF format submitted by a CAS administrator or professor.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Assessment}:] The system shall extract each assessment's name, type, date, and weight from a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_LO}:] The system shall extract the learning outcomes and graduate attribute numbers listed in a course outline.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Flag}:] The system shall flag any extracted field that is missing, including a date that is marked TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Extract_Review}:] The system shall require a user to review and confirm extracted data before it is used for the calendar, conflict detection, or compliance checking.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Dates_Tentative}:] The system shall allow an instructor to enter and update tentative assessment dates for their own courses.
 \end{itemize}
 
-\plt{The requirements are given labels so that they can be referenced in other
-parts of the SRS.  The label names should be meaningful mnemonics, not numbers.}
+\subsection*{Calendar and Conflict Detection}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Calendar}:] The system shall display confirmed and tentative assessment dates in a shared calendar that can be filtered by course, year, and program, with tentative dates marked as such.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Cluster}:] The system shall identify weeks in which a student cohort has more assessments than a configurable threshold.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Work_Policy}:] The system shall identify assessments scheduled in periods restricted by McMaster policy, such as final exam periods.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Reanalyze}:] The system shall re-run conflict detection for the affected courses and cohorts whenever an assessment date is added or changed.
+\end{itemize}
+
+\subsection*{Scheduling Suggestions}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_Generation}:] The system shall, on explicit request by the instructor, suggest alternative dates, for assessments involved in a detected conflict or listed as TBD.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Suggest_NoAuto}:] The system shall not change any assessment date without the explicit approval of the responsible instructor.
+\end{itemize}
+
+\subsection*{Compliance Checking}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Policy}:] The system shall check each outline against the McMaster course outline policy rules, including required sections and assessment weights totalling 100\%, and report each finding.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Comp_Grad}:] The system shall compare the graduate attribute numbers in an outline with the master course sheet and flag any that are missing or inconsistent.
+\end{itemize}
+
+\subsection*{Access and Export}
+\begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Login}:] The system shall require users to log in before they can view or change any data.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Roles}:] The system shall allow administrators to manage data for all courses, and shall allow instructors to change data only for their own courses.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file.
+\end{itemize}
+
+% \subsection*{Notifications}
+% \begin{itemize}
+% \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Notify_Email}:] The system shall send scheduling suggestions and compliance results to instructors by email, and display on the website.
+% \end{itemize}
 
 % ============================================================== 
 \section{Data Requirements}
@@ -599,7 +1069,7 @@ message (String): description of the problem found. \\ \hline
 \end{longtable}
 }
 
-\subsection{Privacy and Data Retention}
+\subsection{Privacy and Data Retention} \label{SecPrivacyDataRetention}
 
 \begin{itemize}
 
@@ -616,62 +1086,134 @@ message (String): description of the problem found. \\ \hline
 % ============================================================== 
 \section{Non-Functional Requirements}
 
-\plt{You may have to add other NFRs.}
-
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
-
 \noindent \begin{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  If you do this provide a link to the VnV plan.}
+\textbf{Accuracy:}
+\begin{itemize}
+    \item The system shall achieve at least 95\% accuracy for extracted assessment dates and
+    weights on a representative test dataset of course outlines.
+    \item The system shall achieve at least 95\% recall for predefined missing or incomplete
+    information in the same test dataset.
+    \item The system shall identify at least 95\% of predefined policy and CEAB compliance
+    issues and report the results in the Verification and Validation Plan.
+    \item These thresholds align with the success measures in the Problem Statement and
+    Goals document.
+\end{itemize}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  Include a link to the VnV plan.}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
+\textbf{Usability:}
+\begin{itemize}
+    \item The system shall allow the CAS administrators and course instructors described in
+    Section~\ref{SecUserCharacteristics} to upload course outlines, review extracted information,
+    view assessment schedules, and interpret flagged issues without programming or machine
+    learning knowledge.
+    \item At least 80\% of participants in representative usability testing shall complete
+    each designated core task without assistance.
+    \item The 80\% target is a project-defined validation threshold intended to demonstrate
+    that the core workflows are usable by the intended non-technical users.
+\end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+\textbf{Maintainability:}
+\begin{itemize}
+    \item The system shall be organized into modular components for document processing,
+    information extraction, scheduling analysis, and compliance rules.
+    \item Changes to one of these components shall not require unrelated components to be
+    rewritten.
+    \item For representative maintenance tasks defined in the Verification and Validation
+    Plan, the effort required to implement each change shall be documented and assessed
+    against the original implementation effort for the affected component.
+\end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
+\textbf{Portability:}
+\begin{itemize}
+    \item The system shall be deployable in the designated McMaster University hosting
+    environment.
+    \item The system shall be usable through Google Chrome 120 or later, Mozilla Firefox 121
+    or later, and Safari 17 or later on supported desktop operating systems.
+    \item The deployment and core workflow tests defined in the Verification and Validation
+    Plan shall be executed in each supported browser environment. These browser versions
+    define the project's verification baseline and may be updated for a future release.
+\end{itemize}
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability, reusability, performance, reliability and availability, security, and accessibility.  You may have to add other NFRs.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Installability}:]
+\textbf{Installability and Deployability:}
+\begin{itemize}
+    \item A new maintainer shall be able to deploy the system to the designated McMaster
+    University hosting environment by following the documented installation and deployment
+    instructions.
+    \item The documented procedure shall identify required software, configuration values,
+    environment variables, database setup, and service startup steps without relying on
+    undocumented knowledge.
+    \item The deployment shall be verified by a deployment test in the Verification and
+    Validation Plan, including confirmation that the deployed system supports the core
+    workflows.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Performance}:]
+\textbf{Performance:}
+\begin{itemize}
+    \item Under the test environment and workload defined in the Verification and Validation
+    Plan, the system shall display previously processed assessment calendar data within 3
+    seconds for at least 95\% of requests.
+    \item For a supported course outline of up to 30 pages, the system shall complete document
+    processing and information extraction within 60 seconds for at least 90\% of test runs,
+    excluding failures or delays caused by unavailable external dependencies.
+    \item The test environment, document characteristics, workload, and response-time results
+    shall be recorded.
+    \item The 3-second target is a project-defined interactive response target, while the
+    60-second target bounds processing time for a typical supported outline; both targets
+    shall be validated under the controlled conditions defined in the Verification and
+    Validation Plan.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Reliability}:]
+\textbf{Reliability:}
+\begin{itemize}
+    \item The system shall handle invalid, incomplete, or unsupported input documents without
+    crashing or corrupting previously stored information.
+    \item All predefined invalid-input cases shall produce an appropriate error message, and
+    previously stored records shall remain accessible after a failed upload or processing
+    attempt.
+    \item If the LLM or Copilot service is unavailable, the system shall continue to support
+    viewing and editing stored course and assessment information, viewing the assessment
+    calendar, and exporting available data.
+    \item Submitted course outlines shall be retained, and users shall be able to retry
+    extraction or recommendations when the service becomes available, as described in
+    \ucref{UC_CAS_01} and \ucref{UC_PROF_03}.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Security}:]
+\textbf{Security:}
+\begin{itemize}
+    \item The system shall implement the access controls specified in \rref{FR_Access_Login}
+    and \rref{FR_Access_Roles}, together with the privacy and data-retention requirements
+    in Section~\ref{SecPrivacyDataRetention}.
+    \item Security verification shall include tests for unauthorized access, role-based
+    permissions, and the protection of sensitive configuration values and credentials.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accessibility}:]
+\textbf{Accessibility:}
+\begin{itemize}
+    \item The system's web interface shall conform to the applicable requirements of the
+    \href{https://www.ontario.ca/laws/regulation/110191}{Accessibility for Ontarians with
+    Disabilities Act (AODA)} and
+    \href{https://www.w3.org/TR/WCAG20/}{WCAG 2.0 Level AA}.
+    \item Core workflows, including authentication, course-outline submission, information
+    review, calendar viewing, and data export, shall be operable using keyboard navigation
+    and shall provide accessible labels, headings, focus indicators, and error messages.
+    \item Accessibility verification shall include an automated accessibility scan and
+    manual keyboard and screen-reader checks for the core workflows. The applicable WCAG
+    success criteria and test results shall be recorded in the Verification and Validation
+    Plan.
+\end{itemize}
 
 \end{itemize}
+
+
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
