@@ -104,18 +104,70 @@ and the security of the hosting infrastructure itself.\\
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+%\wss{Dividing the system into components will help you brainstorm the hazards.
+%You shouldn't do a full design of the components, just get a feel for the major
+%ones. For projects that involve hardware, the components will typically include
+%each individual piece of hardware. If your software will have a database, or an
+%important library, these are also potential components.}
+
+The CAS Course Deadline Management system processes Software Engineering course outlines to support accreditation 
+compliance reviews and deadline optimization. Its boundary includes the components responsible for processing course 
+information, evaluating policy and accreditation requirements, detecting scheduling conflicts, generating scheduling 
+suggestions, and managing stored information. The system uses course outlines, a master course sheet for graduate 
+attribute checks, and the academic calendar to identify restricted scheduling periods. The LLM service, hosting 
+infrastructure, users' web browsers, and instructors who prepare course outlines are outside the system boundary, 
+but their interactions with the system and the information they provide are considered in the hazard analysis.\\
+
+
+\noindent \textbf{C1 User Interface:} Allows CAS administrators and instructors to interact with the system, upload course outlines, and review compliance findings and scheduling recommendations.\\
+
+\noindent \textbf{C2 Course Information Database:} Stores course outline information, extracted assessment details, compliance findings, and tentative assessment dates.\\
+
+\noindent \textbf{C3 PDF Text Extraction:} Extracts text from uploaded PDF course outlines using a text-extraction library.\\
+
+\noindent \textbf{C4 LLM Information Structuring:} Uses an external LLM service to interpret extracted text and structure relevant information, including marking schemes, assignment deadlines, and midterm dates.\\
+
+\noindent \textbf{C5 Accreditation Compliance Analysis:} Evaluates course outline information against applicable McMaster policies and CEAB requirements, including graduate attribute checks using the master course sheet.\\
+
+\noindent \textbf{C6 Conflict Detection:} Analyzes assessment dates across courses to identify overlapping deadlines and potential student workload bottlenecks, taking restricted scheduling periods into account where applicable.\\
+
+\noindent \textbf{C7 Scheduling Suggestions:} Uses a CP-SAT solver to generate proposed assessment dates based on scheduling constraints, identified conflicts, and applicable restricted periods.\\
+
+\noindent \textbf{C8 Results Presentation:} Presents compliance findings, detected conflicts, and proposed scheduling changes to administrators and instructors for review.\\
+
+\noindent \textbf{C9 Authentication and Access Control:} Authenticates users and enforces permissions to restrict access to system functions and confidential information.\\
+
+\noindent \textbf{C10 Data Export:} Exports permitted course information, compliance findings, and scheduling results for authorized users.\\
+
+\noindent \textbf{C11 External Dependencies:} Includes external services and software dependencies, specifically the LLM service used to structure extracted course outline information. The hosting infrastructure and users' web browsers are also external to the system boundary.\\
+
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+%\wss{These assumptions that are made about the software or system. You should
+%minimize the number of assumptions that remove potential hazards. For instance,
+%you could assume a part will never fail, but it is generally better to include
+%this potential failure mode.}
+
+The hazard analysis is based on the following assumptions about the system's operating environment, users, 
+and input data. These assumptions establish the context for the FMEA, while risks arising when they do 
+not hold will be assessed and appropriate mitigation measures identified.
+
+\begin{itemize}
+\item \textbf{Hosting Infrastructure:} The hosting infrastructure is secured, backed up, and maintained by CAS IT. The security of the hosting infrastructure itself is outside the scope of this analysis.
+
+\item \textbf{User Accounts:} Users access the system using valid McMaster accounts and do not share their credentials.
+
+\item \textbf{Master Course Sheet:} The department-provided master course sheet contains correct information for the graduate attribute checks, as assumed in the SRS.
+
+\item \textbf{Academic Calendar:} The academic calendar dates entered into the system are correct for the term being analyzed.
+
+\item \textbf{Course Outline Confidentiality:} Course outlines are treated as public documents, consistent with the SRS. Other stored information, including the master course sheet, compliance findings, and tentative assessment dates, may be confidential.
+
+\item \textbf{Policy and Accreditation Requirements:} The McMaster policies and CEAB requirements maintained in the system reflect the versions in force for the term being reviewed. Updates are made when applicable requirements change.
+
+\end{itemize}
+
 
 \section{Failure Mode and Effect Analysis}
 
