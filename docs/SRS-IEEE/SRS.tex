@@ -994,7 +994,7 @@ email & String & User email address\\
 \caption{Data Dictionary} \label{tab:DataDictionary}
 \end{longtable}
 
-\subsection{Privacy and Data Retention}
+\subsection{Privacy and Data Retention} \label{SecPrivacyDataRetention}
 
 \plt{Discuss storage, retention, deletion, privacy controls,
  consent, encryption, and compliance requirements.}
@@ -1004,62 +1004,134 @@ TODO
 % ============================================================== 
 \section{Non-Functional Requirements}
 
-\plt{You may have to add other NFRs.}
-
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
-
 \noindent \begin{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  If you do this provide a link to the VnV plan.}
+\textbf{Accuracy:}
+\begin{itemize}
+    \item The system shall achieve at least 95\% accuracy for extracted assessment dates and
+    weights on a representative test dataset of course outlines.
+    \item The system shall achieve at least 95\% recall for predefined missing or incomplete
+    information in the same test dataset.
+    \item The system shall identify at least 95\% of predefined policy and CEAB compliance
+    issues and report the results in the Verification and Validation Plan.
+    \item These thresholds align with the success measures in the Problem Statement and
+    Goals document.
+\end{itemize}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  Include a link to the VnV plan.}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
+\textbf{Usability:}
+\begin{itemize}
+    \item The system shall allow the CAS administrators and course instructors described in
+    Section~\ref{SecUserCharacteristics} to upload course outlines, review extracted information,
+    view assessment schedules, and interpret flagged issues without programming or machine
+    learning knowledge.
+    \item At least 80\% of participants in representative usability testing shall complete
+    each designated core task without assistance.
+    \item The 80\% target is a project-defined validation threshold intended to demonstrate
+    that the core workflows are usable by the intended non-technical users.
+\end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+\textbf{Maintainability:}
+\begin{itemize}
+    \item The system shall be organized into modular components for document processing,
+    information extraction, scheduling analysis, and compliance rules.
+    \item Changes to one of these components shall not require unrelated components to be
+    rewritten.
+    \item For representative maintenance tasks defined in the Verification and Validation
+    Plan, the effort required to implement each change shall be documented and assessed
+    against the original implementation effort for the affected component.
+\end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
+\textbf{Portability:}
+\begin{itemize}
+    \item The system shall be deployable in the designated McMaster University hosting
+    environment.
+    \item The system shall be usable through Google Chrome 120 or later, Mozilla Firefox 121
+    or later, and Safari 17 or later on supported desktop operating systems.
+    \item The deployment and core workflow tests defined in the Verification and Validation
+    Plan shall be executed in each supported browser environment. These browser versions
+    define the project's verification baseline and may be updated for a future release.
+\end{itemize}
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability, reusability, performance, reliability and availability, security, and accessibility.  You may have to add other NFRs.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Installability}:]
+\textbf{Installability and Deployability:}
+\begin{itemize}
+    \item A new maintainer shall be able to deploy the system to the designated McMaster
+    University hosting environment by following the documented installation and deployment
+    instructions.
+    \item The documented procedure shall identify required software, configuration values,
+    environment variables, database setup, and service startup steps without relying on
+    undocumented knowledge.
+    \item The deployment shall be verified by a deployment test in the Verification and
+    Validation Plan, including confirmation that the deployed system supports the core
+    workflows.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Performance}:]
+\textbf{Performance:}
+\begin{itemize}
+    \item Under the test environment and workload defined in the Verification and Validation
+    Plan, the system shall display previously processed assessment calendar data within 3
+    seconds for at least 95\% of requests.
+    \item For a supported course outline of up to 30 pages, the system shall complete document
+    processing and information extraction within 60 seconds for at least 90\% of test runs,
+    excluding failures or delays caused by unavailable external dependencies.
+    \item The test environment, document characteristics, workload, and response-time results
+    shall be recorded.
+    \item The 3-second target is a project-defined interactive response target, while the
+    60-second target bounds processing time for a typical supported outline; both targets
+    shall be validated under the controlled conditions defined in the Verification and
+    Validation Plan.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Reliability}:]
+\textbf{Reliability:}
+\begin{itemize}
+    \item The system shall handle invalid, incomplete, or unsupported input documents without
+    crashing or corrupting previously stored information.
+    \item All predefined invalid-input cases shall produce an appropriate error message, and
+    previously stored records shall remain accessible after a failed upload or processing
+    attempt.
+    \item If the LLM or Copilot service is unavailable, the system shall continue to support
+    viewing and editing stored course and assessment information, viewing the assessment
+    calendar, and exporting available data.
+    \item Submitted course outlines shall be retained, and users shall be able to retry
+    extraction or recommendations when the service becomes available, as described in
+    \ucref{UC_CAS_01} and \ucref{UC_PROF_03}.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Security}:]
+\textbf{Security:}
+\begin{itemize}
+    \item The system shall implement the access controls specified in \rref{FR_Access_Login}
+    and \rref{FR_Access_Roles}, together with the privacy and data-retention requirements
+    in Section~\ref{SecPrivacyDataRetention}.
+    \item Security verification shall include tests for unauthorized access, role-based
+    permissions, and the protection of sensitive configuration values and credentials.
+\end{itemize}
+
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accessibility}:]
+\textbf{Accessibility:}
+\begin{itemize}
+    \item The system's web interface shall conform to the applicable requirements of the
+    \href{https://www.ontario.ca/laws/regulation/110191}{Accessibility for Ontarians with
+    Disabilities Act (AODA)} and
+    \href{https://www.w3.org/TR/WCAG20/}{WCAG 2.0 Level AA}.
+    \item Core workflows, including authentication, course-outline submission, information
+    review, calendar viewing, and data export, shall be operable using keyboard navigation
+    and shall provide accessible labels, headings, focus indicators, and error messages.
+    \item Accessibility verification shall include an automated accessibility scan and
+    manual keyboard and screen-reader checks for the core workflows. The applicable WCAG
+    success criteria and test results shall be recorded in the Verification and Validation
+    Plan.
+\end{itemize}
 
 \end{itemize}
+
+
 
 % ============================================================== 
 \section{AI and Machine Learning Requirements}
