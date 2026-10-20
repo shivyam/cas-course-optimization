@@ -15,11 +15,11 @@ define COMPILE_TEX
 endef
 
 # Define the bibtex command
-BIBTEX_CMD = bibtex $(basename $(notdir $1))
+BIBTEX_CMD = [ -f $(basename $(notdir $1)).aux ] && bibtex $(basename $(notdir $1)) || echo "No bibtex references found" || { echo "Error: bibtex failed for $1"; exit 1; }
 
 # Define the compile step for bibtex
 define COMPILE_BIBTEX
-	cd $(dir $1) && if [ -f $(basename $(notdir $1)).aux ] && grep -q '\\bibdata' $(basename $(notdir $1)).aux; then $(BIBTEX_CMD); else echo "No bibtex references found for $1"; fi
+	cd $(dir $1) && $(BIBTEX_CMD)
 endef
 
 # Default target: Compile all .tex files if no specific target is given
