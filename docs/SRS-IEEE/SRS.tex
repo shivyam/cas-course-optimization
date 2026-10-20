@@ -305,30 +305,30 @@ Assessment & Any graded component of a course, such as a midterm, assignment, qu
 CAS & Department of Computing and Software, McMaster University.\\
 CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
 Cohort & The set of CAS courses that share a program and year level (Assumption~\asref{A_CourseCode}). Used to estimate which assessments the same students face together.\\
-Course code & The identifier of a course, made up of a subject prefix and a course number (for example, SFWRENG 2DA4). The prefix identifies the program and the first digit of the number identifies the year level.\\
-Course outline & The official document for a course offering that lists its learning objectives, assessments, weights, and due dates, as required by the Undergraduate Course Management Policy~\citep{McMasterUCMP2025}.\\
+Course Code & The identifier of a course, made up of a subject prefix and a course number (for example, SFWRENG 2DA4). The prefix identifies the program and the first digit of the number identifies the year level.\\
+Course Outline & The official document for a course offering that lists its learning objectives, assessments, weights, and due dates, as required by the Undergraduate Course Management Policy~\citep{McMasterUCMP2025}.\\
 CP-SAT & The constraint-programming solver in Google OR-Tools, used to compute suggested assessment dates~\citep{ORToolsCPSAT}.\\
-Cross-listed course & A single course offered under more than one course code (for example, SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03).\\
+Cross-Listed Course & A single course offered under more than one course code (for example, SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03).\\
 DR & Data Requirement. Privacy and data retention requirements are numbered DR1, DR2, \ldots{}\\
 FR & Functional Requirement.\\
 GA & Graduate Attribute. One of the twelve outcomes the CEAB requires accredited engineering programs to develop in their graduates~\citep{CEAB2025}.\\
 LC & Likely Change.\\
 LLM & Large Language Model, an AI model trained on large amounts of text to understand and generate human language.\\
-Master course sheet & The department's record of which graduate attributes each course is expected to cover.\\
+Master Course Sheet & The department's record of which graduate attributes each course is expected to cover.\\
 MSAF & McMaster Student Absence Form, used by students to report short absences that affect academic work.\\
 NFR & Nonfunctional Requirement.\\
 PDF & Portable Document Format.\\
-Restricted period & A date range in which an assessment may not be due under university policy, such as a recess or the test and examination ban period.\\
+Restricted Period & A date range in which an assessment may not be due under university policy, such as a recess or the test and examination ban period.\\
 RTM & Requirements Traceability Matrix.\\
-Scheduling suggestion & An alternative date for an assessment, proposed by the system with an explanation. Suggestions are not binding; only the instructor can change a date.\\
+Scheduling Suggestion & An alternative date for an assessment, proposed by the system with an explanation. Suggestions are not binding; only the instructor can change a date.\\
 SR & Stakeholder Requirement.\\
 SRS & Software Requirements Specification, a document that describes a software system's requirements, including its expected functionality and constraints.\\
 TBD & To Be Determined. Used in course outlines for an assessment date that has not yet been set.\\
 UC & Use Case.\\
 ULC & Unlikely Change.\\
 WCAG & Web Content Accessibility Guidelines, the W3C standard referenced by AODA for web content~\citep{WCAG20, IASR2011}.\\
-Workload cluster & A period of \textit{CLUSTER\_\allowbreak{}WINDOW} days in which one cohort has more than \textit{CLUSTER\_\allowbreak{}THRESHOLD} assessments due (Table~\ref{tab:Constants}).\\
-Year level & The level of a course, given by the first digit of its course number (for example, 2 for SFWRENG 2DA4).\\
+Workload Cluster & A period of \textit{CLUSTER\_\allowbreak{}WINDOW} days in which one cohort has more than \textit{CLUSTER\_\allowbreak{}THRESHOLD} assessments due (Table~\ref{tab:Constants}).\\
+Year Level & The level of a course, given by the first digit of its course number (for example, 2 for SFWRENG 2DA4).\\
 \end{longtable}
 }
 
@@ -401,7 +401,7 @@ Figure~\ref{Fig_SystemContext} summarizes these interactions by showing the syst
 and its relationships with instructors, CAS administrators, the LLM, and the database.
 \\ \\
 The system processes course outlines and relevant academic scheduling information to extract 
-assessment details, identify missing or potentially non-compliant information, and recommend 
+assessment details, identify missing or non-compliant information, and recommend 
 alternative assessment dates. Results are presented to users for review, while instructors and 
 authorized administrators retain responsibility for final scheduling and compliance decisions.
 \\ \\
@@ -1996,7 +1996,7 @@ The tools were used in the following manner:
 \begin{itemize}
     \item Grok was used to fix formatting issues and address pull request comments
     in Sections \hyperref[sec_FRs]{6}, \hyperref[sec_DataReqs]{7}, \hyperref[sec_AIReqs]{9}.
-    \item Claude was was used to review and refine the document, suggesting
+    \item Claude was used to review and refine the document, suggesting
     improvements to structure and clarity, and assisting with grammar and style. It
     was used to primarily refine the Sections \hyperref[sec_RTM]{10}-\hyperref[sec_UnlikelyChanges]{13} and \hyperref[sec_AppC]{Appendix C} section.
     \item ChatGPT and Copilot were used for formatting and grammar suggestions, and
@@ -2019,12 +2019,12 @@ Any output by LLM models was reviewed thoroughly and modified before its suggest
 
 \subsection{Appendix E: Reflection}
 
-\plt{This isn't part of the SRS, but it is part of the course.}
+%\plt{This isn't part of the SRS, but it is part of the course.}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  
+%The information in this section will be used to evaluate the team members on the
+%graduate attribute of Lifelong Learning.  
 
-\input{../Reflection.text}
+%\input{../Reflection.text}
 
 \input{../SRS_Reflection.text}
 
