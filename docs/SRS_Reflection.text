@@ -1,20 +1,88 @@
 \begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how did
-  you resolve them?
-  \item How many of your requirements were inspired by speaking to your
-  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?
-  \item Which of the courses you have taken, or are currently taking, will help
-  your team to be successful with your capstone project.
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete this capstone project?  Examples of possible knowledge
-  to acquire include domain specific knowledge from the domain of your
-  application, or software engineering knowledge, mechatronics knowledge or
-  computer science knowledge.  Skills may be related to technology, or writing,
-  or presentation, or team management, etc.  You should look to identify at
-  least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
+  \item \textbf{What went well while writing this deliverable?}
+
+  We believe that the strongest part of the process was making useful progress
+  by reviewing the document in small pull requests. Our team members carefully
+  reviewed each section and highlighted duplicated descriptions, vague browser
+  support, missing accessibility and deployment requirements, and missing or
+  broken links. A team member also pointed out that the system-context figure,
+  which was initially included without an explanation or legend, needed text
+  explaining the relationships shown in the diagram. We added that explanation
+  so the figure communicates system context rather than appearing to be
+  included only to satisfy a documentation requirement.
+
+
+  \item \textbf{What pain points did you experience during this deliverable, and
+  how did you resolve them?}
+
+  The main difficulty was converting a broad project vision into requirements
+  that were specific enough to verify without pretending that uncertain design
+  decisions had already been made. At first, we described the LLM, calendar,
+  and recommendation features in terms of capabilities, but not in terms of
+  failure behavior or evidence of success. Choosing numerical targets was also
+  difficult. We addressed this by reviewing comparable document-processing and
+  scheduling systems, consulting course requirements and project guidance, and
+  discussing whether each target was realistic for our expected workload and
+  resources.
+
+  Another pain point was maintaining consistency across several documents. A
+  safety roadmap initially used identifiers that were not the labels in the
+  Safety and Security Requirements table, and some SRS sections repeated
+  information instead of referencing it. We resolved this through our PR reviews.
+
+  \item \textbf{How many of your requirements were inspired by speaking to your
+  client(s) or their proxies?}
+
+  The core requirements came from the project brief and conversations with the
+  CAS project supervisors (Matt \& Connie): outline submission, extraction of assessment
+  information, compliance checking, shared calendar views, workload-conflict
+  detection, and instructor control over suggested dates.
+
+
+  \item \textbf{Which courses have helped, or will help, your team to be
+  successful with the capstone project?}
+
+  Our Software Requirements course helped us distinguish stakeholder needs
+  from functional and non-functional requirements. The course also helped us
+  realize that statements such as ``balance workloads'' are not testable until
+  they are converted into a measurable
+  recommendation outcome. Our Software Testing course helped us define
+  representative datasets, invalid-input cases, and verification methods. Our
+  Database course provided the foundation for storing course and assessment
+  information and will help us plan the structure of that information. Machine
+  learning courses will be relevant to evaluating extraction quality, handling
+  model uncertainty, and designing human review around LLM output.
+
+  \item \textbf{What knowledge and skills will the team collectively need to
+  acquire?}
+Collectively, we need to build up our skills in a few areas to bring the 
+different parts of the system together. This includes learning how to integrate 
+an LLM, get consistent outputs from it, and handle issues like timeouts or 
+unavailable services while keeping data private. We also need to figure out how 
+to process course outline PDFs, including scanned documents, and turn the extracted 
+information into assessment records that users can review. For scheduling, 
+we need to learn how to use a constraint solver like CP-SAT to find assessment 
+conflicts, account for restricted dates, and suggest better ways to spread out 
+workloads without automatically changing dates. On the full-stack side, 
+we need experience with database design, API development, authentication, 
+and connecting the frontend to the different backend components. We also need 
+to make sure the interface is accessible and test it against WCAG guidelines. 
+Finally, we need to learn how to deploy and configure the system properly so 
+that someone outside our team can set it up and maintain it.
+
+  \item \textbf{How will the team acquire this knowledge and master these
+  skills?}
+
+The team will develop these skills through independent research,
+official documentation, tutorials, and hands-on experimentation.
+For unfamiliar technologies or tasks, we will conduct technical spikes 
+(which we havea already started doing when evaluating llm models and testing our PDF text extraction libraries) to test
+different approaches, identify limitations, and determine the best
+solutions before implementation. We will document the findings of each spike on
+\href{https://github.com/shivyam/cas-course-optimization/discussions}{GitHub Discussions}
+so that the whole team can refer back to them throughout development.
+We will also share knowledge through regular meetings and code reviews,
+and continue learning through implementation, troubleshooting, and testing
+as the project progresses.
+
 \end{enumerate}
