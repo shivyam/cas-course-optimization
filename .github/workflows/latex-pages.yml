@@ -135,6 +135,14 @@ jobs:
             # Build using existing Makefile rules
             make -B "$pdf"
 
+            # Do not publish PDFs with unresolved bibliography citations.
+            log="${src%.*}.log"
+            if grep -qE 'Citation .* undefined|There were undefined citations' "$log"; then
+              echo "Unresolved citations found in $log"
+              grep -nE 'Citation .* undefined|There were undefined citations' "$log"
+              exit 1
+            fi
+
             # Record what this document actually read, for the next run's
             # change detection. Runs after the build so the .fls is present.
             python3 .github/scripts/record_deps.py "$src" .pdf-deps.json .
