@@ -193,7 +193,7 @@ October 19, 2026 & 1.0 & S. Mehta, A. Bornomala, H.S. Sagar, V. Lai & Initial ve
 %   independently verify/derive every statement made.}
 
 % ============================================================== 
-\section{Introduction} 
+\section{Introduction} \label{sec_Intro}
 % ==============================================================
 
 % \plt{Explain what system is being specified. State purpose, users, and project goals.}
@@ -344,7 +344,7 @@ course outlines, and relevant university policies, including CEAB requirements. 
 system requirements clearly to both technical and non-technical readers.
 
 % ============================================================== 
-\section{System Overview}
+\section{System Overview} \label{sec_SysOverview}
 
 This section provides general information about the system.  It identifies the
 problem, the vision, and the interfaces between the system and its environment.
@@ -975,7 +975,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \end{itemize}
 
 % ============================================================== 
-\section{Functional Requirements}
+\section{Functional Requirements} \label{sec_FRs}
 
 \noindent The system shall support the following capabilities, grouped by feature area.
 
@@ -1022,7 +1022,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 % \end{itemize}
 
 % ============================================================== 
-\section{Data Requirements}
+\section{Data Requirements} \label{sec_DataReqs}
 
 \subsection{Major Data Entities}
 
@@ -1128,7 +1128,7 @@ message (String): description of the problem found. \\
 \end{itemize}
 
 % ============================================================== 
-\section{Non-Functional Requirements}
+\section{Non-Functional Requirements} \label{sec_NFRs}
 
 \noindent \begin{itemize}
 % The NFR labels replace the outer bullets, so show the sub-points with the
@@ -1263,7 +1263,7 @@ message (String): description of the problem found. \\
 
 
 % ============================================================== 
-\section{AI and Machine Learning Requirements}
+\section{AI and Machine Learning Requirements} \label{sec_AIReqs}
 
 \noindent The system extracts information from course outline PDFs in two steps. First, a Python PDF text extraction library reads the text from each PDF. Then a large language model (LLM) cleans up that text and organizes it into structured data. Where an outline does not list graduate attribute numbers or their exact wording, the LLM identifies the attributes from the learning outcome text. The attributes are then compared with the master course sheet by the system's own code, so the confidential master course sheet is never sent to the LLM. The date suggestions come from a constraint solver (CP-SAT), and the assessment weight check is ordinary deterministic code, so neither uses the LLM. The preferred LLM is GitHub Copilot, with a locally hosted open-weight model on CAS infrastructure as the fallback. The LLM is kept behind a replaceable interface, so the model can be changed without changing the rest of the system. Copilot is an external service, and the only model input that may be sent to it is publicly available course outline text (\drref{DR_Hosting}).
 
@@ -1918,7 +1918,7 @@ reason it is considered stable.
 %   organized as a prioritized list of requirements, or it could show the
 %   requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
 
-\subsection{Appendix C: Values of Auxiliary Constants}
+\subsection{Appendix C: Values of Auxiliary Constants} \label{sec_AppC}
 
 Table~\ref{tab:Constants} gives the values of the symbolic constants used in
 this document. The Source column states where each value comes from: a section number
@@ -1977,10 +1977,45 @@ supervisors.
 
 \subsection{Appendix D: Generative AI Disclosure}
 
-\plt{Provide full transparency on how generative AI was used in the creation of
-  this document.  This includes any text, figures, or tables that were generated
-  by AI.  If any skills were created for AI agents to review the documentation,
-  those should be disclosed here.}
+% \plt{Provide full transparency on how generative AI was used in the creation of
+%   this document.  This includes any text, figures, or tables that were generated
+%   by AI.  If any skills were created for AI agents to review the documentation,
+%   those should be disclosed here.}
+\subsection{AI Tools Used}
+
+The following AI tools were used:
+\begin{itemize}
+    \item Grok (version 4.7)
+    \item Claude (Anthropic), Claude Opus 5.5 model
+    \item ChatGPT (OpenAI), GPT-4-turbo model
+    \item GitHub Copilot (version 1.79.0)
+\end{itemize}
+\subsection{How and Where Used}
+
+The tools were used in the following manner:
+\begin{itemize}
+    \item Grok was used to fix formatting issues and address pull request comments
+    in Sections \hyperref[sec_FRs]{6}, \hyperref[sec_DataReqs]{7}, \hyperref[sec_AIReqs]{9}.
+    \item Claude was was used to review and refine the document, suggesting
+    improvements to structure and clarity, and assisting with grammar and style. It
+    was used to primarily refine the Sections \hyperref[sec_RTM]{10}-\hyperref[sec_UnlikelyChanges]{13} and \hyperref[sec_AppC]{Appendix C} section.
+    \item ChatGPT and Copilot were used for formatting and grammar suggestions, and
+    to assist with the writing of the Sections \hyperref[sec_Intro]{1e}, \hyperref[sec_SysOverview]{2}, and \hyperref[sec_NFRs]{8}.
+\end{itemize}
+
+\subsection{Verification of AI-Generated Content}
+
+% \wss{\begin{itemize}
+%     \item Describe how the team checked AI-generated or AI-assisted material
+%     before including it in the document.
+%     \item In particular, verify factual claims, technical assertions,
+%     requirements, calculations, references, and other information for which an
+%     AI system may produce incorrect or fabricated results.
+%     \item \textbf{The team is responsible for the accuracy, completeness,
+% consistency, and appropriateness of the submitted document, regardless of
+% whether material was generated by a human or an AI system.}
+% \end{itemize}}
+Any output by LLM models was reviewed thoroughly and modified before its suggestions were added to the document. Course materials and deliverable requirements were manually reviewed to ensure that all technical assertions, requirements, and references were accurate and complete.
 
 \subsection{Appendix E: Reflection}
 
