@@ -7,6 +7,7 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{fullpage}
+\usepackage[numbers,square,sort&compress]{natbib}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -33,7 +34,18 @@
 \newcommand{\haz}[1]{\leavevmode\phantomsection\label{haz:#1}#1}
 \newcommand{\hazref}[1]{\hyperref[haz:#1]{#1}}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \maketitle
 \thispagestyle{empty}
@@ -73,10 +85,10 @@ A hazard is a system condition or failure that could contribute to an undesirabl
 like inaccurate accreditation assessments, poor scheduling suggestions, a loss of course information, or sensitive data breaches.
 
 The CAS Course Deadline Management System is intended to support the Department of Computing and Software (CAS) at 
-McMaster University in reviewing CAS course outlines for compliance with applicable university policies and Canadian 
-Engineering Accreditation Board (CEAB) requirements. The system also analyzes assessment dates across courses and 
+McMaster University in reviewing CAS course outlines for compliance with applicable university policies~\citep{McMasterUCMP2025} and Canadian 
+Engineering Accreditation Board (CEAB) requirements~\citep{CEAB2025}. The system also analyzes assessment dates across courses and 
 suggests alternative dates that reduce overlapping student workloads, while leaving final scheduling decisions to 
-instructors. The system's requirements are specified in the project's Software Requirements Specification (SRS).
+instructors. The system's requirements are specified in the project's Software Requirements Specification (SRS)~\citep{TeamBVSH2026SRS}.
 
 This document identifies potential hazards associated with the system, examines their consequences, 
 and establishes a basis for developing safety and security requirements to mitigate these risks. 
@@ -138,7 +150,7 @@ boundary, but their interactions with the system and the information they provid
   \item \textbf{C4 LLM Information Structuring:} Uses an external LLM service to interpret extracted text and structure relevant information, including assessments, marking schemes, due dates, learning outcomes, and the graduate attributes each outcome addresses.
   \item \textbf{C5 Accreditation Compliance Analysis:} Evaluates course outline information against applicable McMaster policies and CEAB requirements, including graduate attribute checks using the master course sheet.
   \item \textbf{C6 Conflict Detection:} Analyzes assessment dates across courses to identify overlapping deadlines and potential student workload bottlenecks, taking restricted scheduling periods into account where applicable.
-  \item \textbf{C7 Scheduling Suggestions:} Uses a CP-SAT solver to generate proposed assessment dates based on scheduling constraints, identified conflicts, and applicable restricted periods.
+  \item \textbf{C7 Scheduling Suggestions:} Uses a CP-SAT solver~\citep{ORToolsCPSAT} to generate proposed assessment dates based on scheduling constraints, identified conflicts, and applicable restricted periods.
   \item \textbf{C8 Results Presentation:} Presents compliance findings, detected conflicts, and proposed scheduling changes to administrators and instructors for review.
   \item \textbf{C9 Authentication and Access Control:} Authenticates users and enforces permissions to restrict access to system functions and confidential information.
   \item \textbf{C10 Data Export:} Exports permitted course information, compliance findings, and scheduling results for authorized users.
@@ -163,7 +175,7 @@ sheet and academic calendar).
 
 \item \textbf{User Accounts:} Users access the system using valid McMaster accounts and do not share their credentials.
 
-\item \textbf{Master Course Sheet:} The department-provided master course sheet contains correct information for the graduate attribute checks (SRS assumption A7).
+\item \textbf{Master Course Sheet:} The department-provided master course sheet contains correct information for the graduate attribute checks (SRS assumption A7~\citep{TeamBVSH2026SRS}).
 
 \item \textbf{Academic Calendar:} The academic calendar dates entered into the system are correct for the term being analyzed (SRS assumption A6).
 
@@ -205,7 +217,7 @@ result. Each row gives:
     Where a row has more than one action, the actions and their requirements
     are lettered a., b., and so on. FR, NFR, DR, AIR and A refer to the
     functional, nonfunctional, data and AI requirements and the assumptions in
-    the SRS. SSR refers to the safety and security requirements in this
+    the SRS~\citep{TeamBVSH2026SRS}. SSR refers to the safety and security requirements in this
     document (Table~\ref{TblSafetySecurityRequirements}). ``New'' marks an action that does not yet have a requirement;
     these are listed after the table.
 \end{itemize}
@@ -290,7 +302,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \addlinespace
 \haz{H1-2}\newline \textit{DQ, H} & Unconfirmed extracted data is shown or used & Unchecked values appear in the calendar and analysis as if they were correct & Review status not checked before use & Use only confirmed values in the calendar, conflict detection, and compliance checking & FR5, AIR6\\
 \addlinespace
-\haz{H1-3}\newline \textit{HF, M} & Interface cannot be used with a keyboard or screen reader & Staff with disabilities cannot use the system; AODA requirements are not met & Inaccessible interface components & Build and verify the interface to WCAG 2.0 Level AA & NFR9\\
+\haz{H1-3}\newline \textit{HF, M} & Interface cannot be used with a keyboard or screen reader & Staff with disabilities cannot use the system; AODA requirements~\citep{AODA2005, IASR2011} are not met & Inaccessible interface components & Build and verify the interface to WCAG 2.0 Level AA~\citep{WCAG20} & NFR9\\
 \midrule
 \multicolumn{6}{l}{\textbf{C2: Course Information Database}}\\*
 \midrule
@@ -427,7 +439,7 @@ compared with the sheet by the system's own code.
 
 \section{Safety and Security Requirements} \label{sec_SSR}
 
-\noindent The requirements below are in addition to safeguards already in the SRS (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to Copilot, but confidential data and student information shall remain internal (see DR2).
+\noindent The requirements below are in addition to safeguards already in the SRS~\citep{TeamBVSH2026SRS} (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to Copilot~\citep{McMasterCopilot}, but confidential data and student information shall remain internal (see DR2).
 
 \begin{table}[H]
 \caption{Safety and Security Requirements}
@@ -453,6 +465,11 @@ compared with the sheet by the system's own code.
 
 \wss{Which safety requirements will be implemented as part of the capstone timeline?
 Which requirements will be implemented in the future?}
+
+\newpage{}
+
+\bibliographystyle{../SRS-IEEE/IEEEtran}
+\bibliography{../../refs/References}
 
 \newpage{}
 
