@@ -439,7 +439,7 @@ compared with the sheet by the system's own code.
 
 \section{Safety and Security Requirements} \label{sec_SSR}
 
-\noindent The requirements below are in addition to safeguards already in the SRS~\citep{TeamBVSH2026SRS} (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to Copilot~\citep{McMasterCopilot}, but confidential data and student information shall remain internal (see DR2).
+\noindent The requirements below are in addition to safeguards already in the SRS~\citep{TeamBVSH2026SRS} (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to our LLM, but confidential data and student information shall remain internal (see DR2).
 
 \begin{table}[H]
 \caption{Safety and Security Requirements}
@@ -463,9 +463,35 @@ compared with the sheet by the system's own code.
 
 \section{Roadmap} \label{sec_Roadmap}
 
-\wss{Which safety requirements will be implemented as part of the capstone timeline?
-Which requirements will be implemented in the future?}
+% \wss{Which safety requirements will be implemented as part of the capstone timeline?
+% Which requirements will be implemented in the future?}
+The capstone implementation will prioritize safety and security requirements
+that prevent data loss, restrict unauthorized changes, and reduce the risk of
+incorrect assessment scheduling. Requirements that cannot be completed within
+the capstone timeline will be documented as future work.
 
+During the capstone timeline, the team will implement \ssrref{SSR_ProcessFailure} to handle PDF
+extraction and model processing failures without losing previously entered
+data or automatically creating assessments from an unsuccessfully processed
+outline. \ssrref{SSR_AcceptedFiles} will restrict uploads to PDF files smaller than 5 MB and reject
+unsupported files before processing. The team will also implement \ssrref{SSR_RestrictedDates} to
+prevent assessment date suggestions that conflict with holidays, recess,
+examination periods, or test and examination ban periods defined by the academic
+calendar. \ssrref{SSR_StaleSuggestion} will ensure that suggestions are marked as out of date when
+relevant assessment dates change before instructor review.
+
+The team will also prioritize \ssrref{SSR_CheckCoverage} to identify which compliance rules were
+checked for each course outline and flag courses that are missing from the
+master course sheet. \ssrref{SSR_MasterSheetEdit} will restrict modifications to the master course
+sheet and academic calendar to administrators, complementing the existing
+login and role-based access controls.
+
+If time permits, the team will implement \ssrref{SSR_AuditTrail} to record the user, timestamp,
+ and previous value whenever assessment dates, extracted values, or reference
+ data, including the master course sheet and academic calendar, are changed.
+ Audit records will be retained for the period specified in DR4.
+ If this requirement cannot be completed within the capstone timeline, it
+ will be documented as future work.
 \newpage{}
 
 \bibliographystyle{../SRS-IEEE/IEEEtran}
