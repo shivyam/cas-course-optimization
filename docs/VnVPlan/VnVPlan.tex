@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -140,9 +141,24 @@ how they relate to your VnV efforts.}
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+The team splits the tests into functional, data, non-functional, and AI areas. Each member writes the tests for one area and reviews another member's tests. Matt Vonk and Connie Carrabs share the supervisor role.
+
+\begin{table}[H]
+\centering
+\caption{Verification and Validation Team}
+\label{tab:vnv-team}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.26\textwidth} >{\raggedright\arraybackslash}p{0.16\textwidth} X}
+\toprule
+\textbf{Name} & \textbf{Role} & \textbf{Responsibilities}\\
+\midrule
+Vanessa Lai & Team member & Writes the functional tests and reviews another member's tests.\\
+Harmanpreet Singh Sagar & Team member & Writes the data tests and reviews another member's tests.\\
+Shivya Mehta & Team member & Writes the non-functional tests and reviews another member's tests.\\
+Anindita Bornomala & Team member & Writes the AI tests and reviews another member's tests.\\
+Matt Vonk and Connie Carrabs & Supervisors & Review the verification plan and the test results together.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{SRS Verification}
 
