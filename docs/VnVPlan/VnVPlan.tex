@@ -164,20 +164,20 @@ issue tracker?}
 
 \subsection{Design Verification}
 
-\paragraph{Methods used for design verification.}
+\paragraph{Methods we will use for design verification.}
 
 \begin{itemize}
-\item \textbf{Testing.} We will test against the design and see whether it behaves as planned. We will use the system tests and unit tests in this plan. Tests will include uploading a course outline, checking that extracted values include a source citation, confirming data before it is used, flagging a restricted period or a weight problem without the large language model (LLM), and rejecting a bad file. Each test will name the \href{../SRS-IEEE/SRS.tex}{SRS} requirement or \href{../HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis} requirement it checks, and will state a concrete expected result for that check.
-\item \textbf{Analysis.} We will analyze the design, without running the system. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and determine if the mitigation strategy is still appropriate. If something is deferred, we will point to the Hazard Analysis roadmap.
-\item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components C1 to C11 from the Hazard Analysis. Our supervisors Matt Vonk and Connie Carrabs will do design inspections when needed by looking at the current designs. Our classmate peer reviewers will use the checklist and leave comments as GitHub issues.
-\item \textbf{Similarity.} We will compare the new design to an earlier design that was already accepted. If we reuse a choice from the \href{../DevelopmentPlan/DevelopmentPlan.tex}{Development Plan} or the PoC, such as a replaceable LLM interface, we will compare the new design to that earlier version. If we change it, we will explain why the change still fits the SRS and Hazard Analysis.
+\item \textbf{Testing.} We will run design checks against the planned behaviour. Examples include outline intake, extraction with a source citation, confirmation before use, restricted-period and weight flags without the large language model (LLM), and rejecting a bad file. Each check will name the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS} or \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis} requirement it covers, and will state a concrete expected result.
+\item \textbf{Analysis.} We will review the design on paper. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and ask whether each mitigation still has a place in the design. If something is deferred, we will point to the Hazard Analysis roadmap.
+\item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/HazardAnalysis/HazardAnalysis.tex\#L129}{C1 to C11} from the Hazard Analysis. Our supervisors will inspect the design in a meeting when needed. Classmate peer reviewers will use the same checklist and leave comments as GitHub issues.
+\item \textbf{Similarity.} We will compare a new design to an earlier accepted design choice from the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}, such as a replaceable LLM interface. If we change that choice, we will explain why the change still fits the SRS and Hazard Analysis.
 \end{itemize}
 
 \paragraph{Results and pass/fail data.}
-For each check, we will record which design part we looked at, which SRS or Hazard Analysis requirement we used as the expected result, what we observed, and whether it passed or failed. Tables and checklist notes will record analysis and inspection. PoC and system-test logs will record testing.
+For each design check, we will record which design part we looked at, which SRS or Hazard Analysis requirement we used as the expected result, what we observed, and whether it passed or failed.
 
 \paragraph{Non-conformances and deviations.}
-If a check fails, we will open a GitHub issue that names the design part and what it failed against. The issue will also say how we fixed it, or why we are allowing a deviation for now, before we treat the design as ready to implement.
+If a design check fails, we will open a GitHub issue that names the design part and what it failed against. The issue will also say how we fixed it, or why we are allowing a deviation for now, before we treat the design as ready to implement.
 
 \subsection{Verification and Validation Plan Verification}
 
