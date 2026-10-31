@@ -73,7 +73,6 @@ in.}
   LLM & Large language model\\
   PoC & Proof of Concept\\
   SRS & Software Requirements Specification\\
-  SSR & Safety and Security Requirement\\
   T & Test\\
   \bottomrule
 \end{tabular}\\
@@ -165,22 +164,20 @@ issue tracker?}
 
 \subsection{Design Verification}
 
-The design inputs are the \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/SRS-IEEE/SRS.tex}{Software Requirements Specification (SRS)} and the \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis}. The \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/DevelopmentPlan/DevelopmentPlan.tex}{Development Plan} and its Proof of Concept (PoC) plan give the technology and risk context. Design verification will use the methods below to show that the design meets those inputs.
-
-\paragraph{Methods used.}
+\paragraph{Methods used for design verification.}
 
 \begin{itemize}
-\item \textbf{Testing.} The PoC and the system tests in this plan will exercise the designed paths for outline intake, extraction with source citations, confirmation before use, deterministic policy flags, processing failure, file rejection, and role limits. Each test will have a stated expected result from the SRS or from a Safety and Security Requirement (SSR).
-\item \textbf{Analysis.} Design-to-SRS and design-to-SSR traceability tables will map each design part to its input. Failure Mode and Effect Analysis (FMEA) results from the Hazard Analysis will be checked to confirm that each required mitigation has a design path, or an explicit deferral that matches the Hazard Analysis roadmap.
-\item \textbf{Inspection.} A team member who did not write the design will inspect it against a checklist: Hazard Analysis components C1 to C11 are present, each SSR has a design path, deterministic policy checks are separate from the large language model (LLM), and extracted values require confirmation before use. Matt Vonk and Connie Carrabs will perform a task-based inspection in a meeting by locating those same design paths. The assigned classmate peer-review team will inspect the design through GitHub issues using the same checklist.
-\item \textbf{Similarity.} Where a design choice repeats a decision already accepted in the Development Plan or demonstrated in the PoC, such as a replaceable LLM interface or deterministic restricted-period checks, the design will be compared to that earlier approved choice. Differences will be justified against the current SRS and Hazard Analysis.
+\item \textbf{Testing.} We will test against the design and see whether it behaves as planned. We will use the system tests and unit tests in this plan. Tests will include uploading a course outline, checking that extracted values include a source citation, confirming data before it is used, flagging a restricted period or a weight problem without the large language model (LLM), and rejecting a bad file. Each test will name the \href{../SRS-IEEE/SRS.tex}{SRS} requirement or \href{../HazardAnalysis/HazardAnalysis.tex}{Hazard Analysis} requirement it checks, and will state a concrete expected result for that check.
+\item \textbf{Analysis.} We will analyze the design, without running the system. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and determine if the mitigation strategy is still appropriate. If something is deferred, we will point to the Hazard Analysis roadmap.
+\item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components C1 to C11 from the Hazard Analysis. Our supervisors Matt Vonk and Connie Carrabs will do design inspections when needed by looking at the current designs. Our classmate peer reviewers will use the checklist and leave comments as GitHub issues.
+\item \textbf{Similarity.} We will compare the new design to an earlier design that was already accepted. If we reuse a choice from the \href{../DevelopmentPlan/DevelopmentPlan.tex}{Development Plan} or the PoC, such as a replaceable LLM interface, we will compare the new design to that earlier version. If we change it, we will explain why the change still fits the SRS and Hazard Analysis.
 \end{itemize}
 
 \paragraph{Results and pass/fail data.}
-For each method, the team will record the design part checked, the SRS requirement or SSR used as the acceptance criterion, the observed result, and a pass or fail decision. Traceability tables and checklist sheets are the records for analysis and inspection. PoC and system-test logs are the records for testing.
+For each check, we will record which design part we looked at, which SRS or Hazard Analysis requirement we used as the expected result, what we observed, and whether it passed or failed. Tables and checklist notes will record analysis and inspection. PoC and system-test logs will record testing.
 
 \paragraph{Non-conformances and deviations.}
-Every failed check will be logged as a GitHub issue that names the design part, the failed acceptance criterion, and the required change. Root cause and the fix, or an approved deviation with a reason that matches the Hazard Analysis roadmap, will be recorded on that issue before the design is accepted for implementation.
+If a check fails, we will open a GitHub issue that names the design part and what it failed against. The issue will also say how we fixed it, or why we are allowing a deviation for now, before we treat the design as ready to implement.
 
 \subsection{Verification and Validation Plan Verification}
 
