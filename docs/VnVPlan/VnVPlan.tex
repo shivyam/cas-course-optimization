@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -140,9 +141,24 @@ how they relate to your VnV efforts.}
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+The members will verify the requirements from the SRS \citep{SRS} document including but not limited to functional requirements, nonfunctional requirements, data requirements and AI requirements. Matt Vonk and Connie Carrabs share the supervisor role.
+
+\begin{table}[H]
+\centering
+\caption{Verification and Validation Team}
+\label{tab:vnv-team}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.26\textwidth} >{\raggedright\arraybackslash}p{0.16\textwidth} X}
+\toprule
+\textbf{Name} & \textbf{Role} & \textbf{Responsibilities}\\
+\midrule
+Vanessa Lai & Team member & Verifies the functional requirements. Writes the functional system and unit tests in this document.\\
+Harmanpreet Singh Sagar & Team member & Verifies the data and privacy requirements. Writes the traceability between test cases and requirements in this document.\\
+Shivya Mehta & Team member & Verifies the non functional requirements. Writes the non functional system and unit tests in this document.\\
+Anindita Bornomala & Team member & Verifies the AI and machine learning requirements. Writes the Unit Testing Scope section in this document.\\
+Matt Vonk and Connie Carrabs & Supervisors & Do not author tests or VnV artifacts. Review verification results presented by the team in regular meetings (pass/fail summaries, open issues, and planned fixes). Provides feedback and confirms that stakeholder needs are verified.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{SRS Verification}
 
