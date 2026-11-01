@@ -69,6 +69,10 @@ in.}
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  FMEA & Failure Mode and Effect Analysis\\
+  LLM & Large language model\\
+  PoC & Proof of Concept\\
+  SRS & Software Requirements Specification\\
   T & Test\\
   \bottomrule
 \end{tabular}\\
@@ -160,11 +164,20 @@ issue tracker?}
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+\paragraph{Methods we will use for design verification.}
 
-\wss{The review will include reviews by your classmates}
+\begin{itemize}
+\item \textbf{Testing.} We will run design checks against the planned behaviour. Examples include outline intake, extraction with a source citation, confirmation before use, restricted-period and weight flags without the large language model (LLM), and rejecting a bad file. Each check will name the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS} or \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis} requirement it covers, and will state a concrete expected result.
+\item \textbf{Analysis.} We will review the design on paper. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and ask whether each mitigation still has a place in the design. If something is deferred, we will point to the Hazard Analysis roadmap.
+\item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/HazardAnalysis/HazardAnalysis.tex\#L129}{C1 to C11} from the Hazard Analysis. Our supervisors will inspect the design in a meeting when needed. Classmate peer reviewers will use the same checklist and leave comments as GitHub issues.
+\item \textbf{Similarity.} We will compare a new design to an earlier accepted design choice from the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}, such as a replaceable LLM interface. For example, switching the LLM from Copilot to Gemma. If we change that choice, we will explain why the change still fits the SRS and Hazard Analysis.
+\end{itemize}
 
-\wss{Create a checklists?}
+\paragraph{Results and pass/fail data.}
+For each design check, we will record which design part we looked at, which SRS or Hazard Analysis requirement we used as the expected result, what we observed, and whether it passed or failed.
+
+\paragraph{Non-conformances and deviations.}
+If a design check fails, we will open a GitHub issue that names the design part and what it failed against. The issue will also say how we fixed it, or why we are allowing a deviation for now, before we treat the design as ready to implement.
 
 \subsection{Verification and Validation Plan Verification}
 
