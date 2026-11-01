@@ -2,6 +2,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -10,12 +12,23 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 
 \input{../Comments.text}
 \input{../Common.text}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{System Verification and Validation Plan for \progname{}} 
 \author{\authname}
@@ -345,10 +358,133 @@ How test will be performed:
 
 ...
 
-\subsection{Traceability Between Test Cases and Requirements}
+\subsection{Traceability Between Test Cases and Requirements}\label{sec:TraceSysReq}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+Table~\ref{tab:TraceSysReq} traces every requirement to the system tests that
+verify it and to the non-dynamic techniques that give further evidence. It
+covers the functional (FR), nonfunctional (NFR), data (DR), and AI and machine
+learning (AIR) requirements in the SRS~\citep{TeamBVSH2026SRS}, and the safety
+and security requirements (SSR) in the Hazard Analysis~\citep{TeamBVSH2026HA}.
+Requirements are identified by their numbers in those documents.
+
+\paragraph{New requirements.}
+Three new functional requirements are not yet part of the SRS. They are stated
+below and traced in Table~\ref{tab:TraceSysReq} under these names.
+\begin{description}
+  \item[FR-Dashboard:] The system shall display a dashboard that shows, for each
+  course, the information found in its outline, the information that is
+  missing, and each finding that needs action.
+  \item[FR-Override:] The system shall allow an administrator to mark a finding
+  as accepted, with a reason. The system shall then show the finding as
+  accepted instead of open, and shall record the administrator, the time, and
+  the reason.
+  \item[FR-Completeness:] The system shall report, for each course and for the
+  term as a whole, whether the course is fully planned before classes start.
+  A course is fully planned when every assessment in its outline has a
+  confirmed date and weight.
+\end{description}
+
+\paragraph{Coverage rule.}
+Every requirement is verified by at least two methods: two or more system
+tests, or a system test and a non-dynamic technique. A single faulty or
+skipped test therefore never leaves a requirement unverified. The non-dynamic techniques in Table~\ref{tab:TraceSysReq} are:
+\begin{itemize}
+  \item \textbf{CR (code review):} the pull request reviewer checks the code
+  that implements the requirement against the requirement text.
+  \item \textbf{SA (static analysis):} linters, type checking, and dependency
+  and secret scanning run in continuous integration.
+  \item \textbf{DI (document and configuration inspection):} a team member who
+  did not write the artifact inspects a document, data file, or configuration
+  against the requirement.
+  \item \textbf{WT (walkthrough):} the team walks a supervisor or stakeholder
+  through the feature on sample outlines and records their feedback.
+\end{itemize}
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.22\textwidth}
+  >{\raggedright\arraybackslash}p{0.46\textwidth}
+  >{\raggedright\arraybackslash}p{0.20\textwidth}}
+\caption{Traceability Between System Tests and Requirements}
+\label{tab:TraceSysReq}\\
+\toprule
+\textbf{Requirement} & \textbf{System tests} & \textbf{Non-dynamic}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Requirement} & \textbf{System tests} & \textbf{Non-dynamic}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{3}{l}{\textbf{Functional requirements}}\\
+FR1 & T-INT-1, T-INT-2, T-REL-1 & CR\\
+FR2 & T-EXT-1, T-ACCU-1 & --\\
+FR3 & T-EXT-2, T-EXT-3 & WT\\
+FR4 & T-EXT-4, T-EXT-5, T-ACCU-2 & --\\
+FR5 & T-EXT-7, T-EXT-8 & CR\\
+FR6 & T-EXT-9, T-ACC-2 & --\\
+FR7 & T-CAL-1, T-CAL-2, T-PERF-1 & WT\\
+FR8 & T-CAL-3 & CR\\
+FR9 & T-CAL-4, T-CAL-5 & CR\\
+FR10 & T-CAL-6 & CR\\
+FR11 & T-SUG-1, T-SUG-2 & CR\\
+FR12 & T-SUG-4, T-CAL-6 & CR\\
+FR13 & T-COMP-1, T-COMP-2, T-COMP-3, T-COMP-4, T-ACCU-3 & CR\\
+FR14 & T-COMP-5, T-COMP-6, T-ACCU-3 & WT\\
+FR15 & T-ACC-1, T-SEC-1 & CR\\
+FR16 & T-ACC-2, T-ACC-3, T-DASH-2, T-SEC-1 & CR\\
+FR17 & T-EXP-1, T-EXP-2 & --\\
+FR-Dashboard & T-DASH-1, T-DASH-2, T-USE-1 & WT\\
+FR-Override & T-DASH-4, T-DASH-5, T-ACC-5 & CR\\
+FR-Completeness & T-DASH-3, T-COMP-4 & --\\
+\midrule
+\multicolumn{3}{l}{\textbf{Nonfunctional requirements}}\\
+NFR1 & T-ACCU-1, T-ACCU-2, T-ACCU-3 & DI\\
+NFR2 & T-USE-1, T-USE-2 & WT\\
+NFR3 & T-MAINT-1, T-MAINT-2 & CR, SA\\
+NFR4 & T-PORT-1, T-INST-1 & --\\
+NFR5 & T-INST-1 & DI\\
+NFR6 & T-PERF-1, T-PERF-2 & --\\
+NFR7 & T-REL-1, T-REL-2, T-INT-3 & --\\
+NFR8 & T-SEC-1, T-SEC-2, T-ACC-1 & SA\\
+NFR9 & T-A11Y-1, T-A11Y-2 & --\\
+\midrule
+\multicolumn{3}{l}{\textbf{Data requirements}}\\
+DR1 & T-DATA-1, T-SEC-1 & --\\
+DR2 & T-DATA-2, T-AI-1 & CR, DI\\
+DR3 & T-ACC-2, T-SEC-1 & --\\
+DR4 & T-DATA-3 & DI\\
+\midrule
+\multicolumn{3}{l}{\textbf{AI and machine learning requirements}}\\
+AIR1 & T-AI-1 & CR\\
+AIR2 & T-DATA-2, T-AI-1 & CR\\
+AIR3 & T-EXT-1, T-EXT-2, T-EXT-3 & --\\
+AIR4 & T-EXT-6, T-ACCU-1 & --\\
+AIR5 & T-EXT-4, T-EXT-5, T-ACCU-2 & --\\
+AIR6 & T-EXT-7 & CR\\
+\midrule
+\multicolumn{3}{l}{\textbf{Safety and security requirements (Hazard Analysis)}}\\
+SSR1 & T-INT-3, T-REL-1 & --\\
+SSR2 & T-INT-2 & CR\\
+SSR3 & T-SUG-2 & CR\\
+SSR4 & T-SUG-3 & CR\\
+SSR5 & T-COMP-6, T-COMP-7 & --\\
+SSR6 & T-ACC-5, T-DASH-4 & --\\
+SSR7 & T-ACC-4, T-SEC-1 & --\\
+\end{longtable}
+}
+
+\paragraph{Summary of coverage.}
+Table~\ref{tab:TraceSysReq} traces 46 requirements, and each one meets the
+coverage rule. Of these, 37 are verified by two or more system tests, and the
+other 9 by one system test and one non-dynamic technique. For example, the
+10-year retention period in DR4 cannot be observed within the project, so
+T-DATA-3 checks that no automatic process deletes stored records, and a DI
+inspection confirms the retention setting. Some tests verify more than one
+requirement. T-SEC-1, which checks role-based permissions, supports FR15, FR16,
+NFR8, DR1, DR3, and SSR7. A failure in a shared test affects every requirement
+it traces to, so shared tests are given high priority.
 
 \section{Unit Test Description}
 
@@ -475,7 +611,7 @@ How test will be performed:
 
 \wss{Provide evidence that all modules have been considered.}
 				
-\bibliographystyle{plainnat}
+\bibliographystyle{../SRS-IEEE/IEEEtran}
 
 \bibliography{../../refs/References}
 
