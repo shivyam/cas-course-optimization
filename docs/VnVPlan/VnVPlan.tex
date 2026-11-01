@@ -2,6 +2,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -11,6 +13,13 @@
     urlcolor=blue
 }
 \usepackage[round]{natbib}
+
+% Test IDs (SRS-style): ST-FR\refstepcounter{stnum}\thestnum \label{ST_...}
+% Refs: \stref{ST_Intake_Data} -> ST-FR1 (clickable). Same pattern for UT-FR.
+\newcounter{stnum}
+\newcommand{\stref}[1]{ST-FR\ref{#1}}
+\newcounter{utnum}
+\newcommand{\utref}[1]{UT-FR\ref{#1}}
 
 \input{../Comments.text}
 \input{../Common.text}
@@ -227,65 +236,372 @@ as a Rev 0 demo for the supervisor.}
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section describes the system-level tests for ASSURE. Section~\ref{sec_SysFuncTests} covers the functional requirements in the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS}. Later subsections cover nonfunctional requirements and traceability. There is one system test for each functional requirement. The tests are grouped the same way as the SRS: outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export.
 
-\subsection{Tests for Functional Requirements}
+\subsection{Tests for Functional Requirements} \label{sec_SysFuncTests}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+Each test below checks one functional requirement end to end through the running system. Sample course outlines used as input will be stored in the project repository under a test-data folder. The tests are shown in tables, one table per test.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+\subsubsection{Outline Intake and Extraction}
 
-\subsubsection{Area of Testing1}
+These tests cover SRS requirements FR1 to FR6.
 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Intake_Data}:} Outline intake (FR1).
 
-\begin{enumerate}
+\begin{table}[H]
+\centering
+\small
+\caption{Outline intake (FR1)}
+\label{tab:stfr1}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & A CAS administrator is logged in. No outline is stored for course SFWRENG 2AA4 in the current term.\\
+Input & A valid PDF course outline for SFWRENG 2AA4, smaller than \textit{MAX\_OUTLINE\_SIZE}.\\
+Output & The system accepts the upload and stores the outline against that course. The user sees a success message. A non-PDF file of the same content is rejected before processing.\\
+Test Case Derivation & FR1 requires the system to accept course outlines in PDF format from a CAS administrator or professor.\\
+How test will be performed & The tester uploads the PDF through the web interface, confirms storage, then retries with a \texttt{.docx} file and confirms rejection.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Assessment}:} Extract assessments (FR2).
 
-\item{test-id1\\}
+\begin{table}[H]
+\centering
+\small
+\caption{Extract assessments (FR2)}
+\label{tab:stfr2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & The outline from \stref{ST_Intake_Data} is stored. Extraction has not been confirmed.\\
+Input & The stored PDF, prepared so that Midterm 1 (weight 30\%, dated 2026-02-10), Assignment 1 (weight 20\%, dated 2026-01-20), and Final Exam (weight 50\%, date TBD) appear in the text.\\
+Output & The system shows three assessments with those names, types, dates, and weights. Each value includes a citation to the source passage. The final exam date is empty or marked missing, not invented.\\
+Test Case Derivation & FR2 requires extraction of each assessment's name, type, date, and weight.\\
+How test will be performed & The tester runs extraction and compares the structured result to a hand-written answer key for that PDF.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_LO}:} Extract learning outcomes (FR3).
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+\begin{table}[H]
+\centering
+\small
+\caption{Extract learning outcomes (FR3)}
+\label{tab:stfr3}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Same outline as \stref{ST_Extract_Assessment}, with learning outcomes that list graduate attributes by number and by description.\\
+Input & The stored outline text that contains at least two learning outcomes, one with GA numbers written beside it and one that only describes the attribute.\\
+Output & Both outcomes appear with their text. The system records the graduate attributes each addresses, including attributes identified from description when numbers are not listed. Each value cites its source passage.\\
+Test Case Derivation & FR3 requires extraction of learning outcomes and the graduate attributes each addresses, whether listed by number, name, or description.\\
+How test will be performed & The tester runs extraction and compares outcomes and GA mappings to the answer key.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Flag}:} Flag missing fields (FR4).
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\begin{table}[H]
+\centering
+\small
+\caption{Flag missing fields (FR4)}
+\label{tab:stfr4}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Same as \stref{ST_Extract_Assessment} after extraction.\\
+Input & The extracted assessments, including the final exam with date TBD and one weight left blank in the prepared PDF.\\
+Output & The system flags the TBD date and the missing weight as missing fields. It does not fill them with guessed values.\\
+Test Case Derivation & FR4 requires flagging of any extracted field that is missing, including a date marked TBD.\\
+How test will be performed & The tester inspects the extraction review screen for missing-field flags against the answer key.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Review}:} Confirm extracted data (FR5).
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\begin{table}[H]
+\centering
+\small
+\caption{Confirm extracted data (FR5)}
+\label{tab:stfr5}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Extracted data from \stref{ST_Extract_Assessment} is shown for review but not confirmed.\\
+Input & The reviewer confirms all assessments except the final exam, which remains unconfirmed.\\
+Output & Confirmed assessments may be used for calendar, conflict, and compliance views. The unconfirmed final exam does not appear in those results until confirmed.\\
+Test Case Derivation & FR5 requires user review and confirmation before extracted data is used for calendar, conflict detection, or compliance checking.\\
+How test will be performed & The tester opens the calendar and compliance views before and after confirming subsets of the extracted data.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Dates_Tentative}:} Tentative dates (FR6).
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\begin{table}[H]
+\centering
+\small
+\caption{Tentative dates (FR6)}
+\label{tab:stfr6}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & An instructor for SFWRENG 2AA4 is logged in. An assessment has a missing date.\\
+Input & The instructor enters tentative date 2026-02-17 for that assessment, then updates it to 2026-02-24.\\
+Output & Both dates are stored and shown as tentative. Another instructor for a different course cannot change this date.\\
+Test Case Derivation & FR6 allows an instructor to enter and update tentative assessment dates for their own courses.\\
+How test will be performed & The course instructor sets and updates the date; a second instructor account verifies they cannot edit it.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsubsection{Calendar and Conflict Detection}
 
-How test will be performed: 
+These tests cover SRS requirements FR7 to FR10.
 
-\end{enumerate}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Calendar}:} Shared calendar (FR7).
 
-\subsubsection{Area of Testing2}
+\begin{table}[H]
+\centering
+\small
+\caption{Shared calendar (FR7)}
+\label{tab:stfr7}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Confirmed and tentative dates exist for at least two courses in the same program and year.\\
+Input & The calendar view filtered by program Software Engineering and year level 2.\\
+Output & Confirmed and tentative dates for matching courses appear. Tentative dates are visually marked. Dates from other programs do not appear under that filter.\\
+Test Case Derivation & FR7 requires a shared calendar filtered by course, year, and program, with tentative dates marked.\\
+How test will be performed & The tester applies filters and compares the visible events to the stored assessments.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Work_Cluster}:} Workload cluster (FR8).
 
-...
+\begin{table}[H]
+\centering
+\small
+\caption{Workload cluster (FR8)}
+\label{tab:stfr8}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Automatic\\
+Initial State & Confirmed assessments for one cohort are loaded so that four assessments fall inside one \textit{CLUSTER\_WINDOW}.\\
+Input & Cohort assessments and \textit{CLUSTER\_THRESHOLD} $= 3$.\\
+Output & The system flags that window as a workload cluster. A second cohort with only two assessments in the same window is not flagged.\\
+Test Case Derivation & FR8 requires identifying weeks where a cohort has more assessments than the configurable threshold.\\
+How test will be performed & A scripted system test loads the fixture data and asserts which windows are flagged.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Work_Policy}:} Restricted periods (FR9).
 
+\begin{table}[H]
+\centering
+\small
+\caption{Restricted periods (FR9)}
+\label{tab:stfr9}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Automatic\\
+Initial State & The academic calendar includes a reading week and a test-ban period for the term.\\
+Input & One confirmed assessment dated inside reading week, and one dated outside all restricted periods.\\
+Output & The reading-week assessment is flagged as restricted. The other assessment is not flagged for this check.\\
+Test Case Derivation & FR9 requires identifying assessments scheduled in periods restricted by McMaster policy.\\
+How test will be performed & A scripted system test runs conflict detection and checks the restricted-period findings against the fixture calendar.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Reanalyze}:} Re-analyze conflicts (FR10).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Re-analyze conflicts (FR10)}
+\label{tab:stfr10}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Automatic\\
+Initial State & Conflict results from \stref{ST_Work_Cluster} are stored.\\
+Input & An instructor changes one assessment date so that the cluster no longer exceeds \textit{CLUSTER\_THRESHOLD}.\\
+Output & Conflict detection runs again for the affected courses and cohorts. The previous cluster flag is cleared if the threshold is no longer exceeded.\\
+Test Case Derivation & FR10 requires re-running conflict detection when an assessment date is added or changed.\\
+How test will be performed & A scripted system test updates the date and asserts the refreshed conflict results.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsubsection{Scheduling Suggestions}
+
+These tests cover SRS requirements FR11 and FR12.
+
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Suggest_Generation}:} Suggest alternative dates (FR11).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Suggest alternative dates (FR11)}
+\label{tab:stfr11}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & An assessment is in a detected conflict, and another has a TBD date. The instructor for that course is logged in.\\
+Input & The instructor explicitly requests suggestions for both assessments.\\
+Output & The system offers at least \textit{MIN\_ALTERNATIVES} feasible dates for the conflicted assessment, and suggestions for the TBD assessment. No suggestion falls in a restricted period. Suggestions are not created without the instructor request.\\
+Test Case Derivation & FR11 requires alternative dates on explicit instructor request for conflicted or TBD assessments.\\
+How test will be performed & The tester requests suggestions and records the dates and explanations shown; a second run without requesting confirms none appear automatically.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Suggest_NoAuto}:} No automatic date change (FR12).
+
+\begin{table}[H]
+\centering
+\small
+\caption{No automatic date change (FR12)}
+\label{tab:stfr12}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Suggestions from \stref{ST_Suggest_Generation} are pending.\\
+Input & The instructor rejects all suggestions. A second trial accepts one suggestion.\\
+Output & After rejection, the assessment date is unchanged. After acceptance, only the accepted date is stored, and only because the instructor approved it.\\
+Test Case Derivation & FR12 requires that no assessment date change without the responsible instructor's approval.\\
+How test will be performed & The tester rejects then accepts suggestions and checks the stored date after each action.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsubsection{Compliance Checking}
+
+These tests cover SRS requirements FR13 and FR14.
+
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Comp_Policy}:} Policy compliance (FR13).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Policy compliance (FR13)}
+\label{tab:stfr13}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & A confirmed outline is missing a required policy section and has assessment weights that sum to 90\%.\\
+Input & The outline after confirmation, plus the encoded McMaster course outline policy rules.\\
+Output & The system reports a finding for the missing section and a finding that weights do not total \textit{WEIGHT\_TOTAL}. An outline that meets the checked rules reports no false weight-total failure.\\
+Test Case Derivation & FR13 requires checking outlines against McMaster policy rules, including required sections and weights totalling 100\%.\\
+How test will be performed & The tester runs compliance on the defective outline and on a clean control outline and compares findings to the answer key.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Comp_Grad}:} Graduate attribute check (FR14).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Graduate attribute check (FR14)}
+\label{tab:stfr14}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & The master course sheet expects GAs 1, 2, and 5 for SFWRENG 2AA4. The confirmed outline lists GAs 1 and 2 only.\\
+Input & Confirmed learning-outcome GAs and the master course sheet row for that course code.\\
+Output & The system flags GA 5 as missing or inconsistent. A second course absent from the master sheet is reported as not checked, not as having no findings.\\
+Test Case Derivation & FR14 requires comparing outline GA numbers with the master course sheet and flagging missing or inconsistent values.\\
+How test will be performed & The tester runs the GA check on both courses and records the findings text.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsubsection{Access and Export}
+
+These tests cover SRS requirements FR15 to FR17.
+
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Access_Login}:} Login required (FR15).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Login required (FR15)}
+\label{tab:stfr15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & The tester is logged out.\\
+Input & A request to open the dashboard or a course page without logging in.\\
+Output & The system denies access and prompts for login. After a valid login, the same page is reachable.\\
+Test Case Derivation & FR15 requires users to log in before they can view or change any data.\\
+How test will be performed & The tester opens protected URLs while logged out, then logs in and retries.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Access_Roles}:} Role-based access (FR16).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Role-based access (FR16)}
+\label{tab:stfr16}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & An administrator and an instructor account exist. The instructor owns SFWRENG 2AA4 only.\\
+Input & The instructor attempts to edit another instructor's course. The administrator edits that course.\\
+Output & The instructor's change is denied. The administrator's change succeeds.\\
+Test Case Derivation & FR16 allows administrators to manage all courses and limits instructors to their own courses.\\
+How test will be performed & The tester repeats the edit with each role and records accept or deny.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\noindent\textbf{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Export_CSV}:} CSV export (FR17).
+
+\begin{table}[H]
+\centering
+\small
+\caption{CSV export (FR17)}
+\label{tab:stfr17}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} X}
+\toprule
+\textbf{Field} & \textbf{Description}\\
+\midrule
+Control & Manual\\
+Initial State & Confirmed assessment data exists for at least one course. An administrator is logged in.\\
+Input & The administrator requests a CSV export of extracted assessment data.\\
+Output & A CSV downloads containing the extracted assessment fields for the selected scope. An instructor role cannot run the export.\\
+Test Case Derivation & FR17 allows an administrator to export extracted assessment data as CSV.\\
+How test will be performed & The tester exports as administrator and opens the file; then confirms the export control is unavailable to an instructor.\\
+\bottomrule
+\end{tabularx}
+\end{table}
 \subsection{Tests for Nonfunctional Requirements}
 
 \wss{The nonfunctional requirements for accuracy will likely just reference the
@@ -345,87 +661,295 @@ How test will be performed:
 
 ...
 
-\subsection{Traceability Between Test Cases and Requirements}
-
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
-
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
-
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
-
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
+Detailed module unit tests will be expanded after the detailed design is written. This section gives a high-level unit-test description for each functional requirement. Most unit tests will be automatic. Full input and output fixtures will live with the test code and will use meaningful test names.
 
 \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+External libraries (PDF text extraction, the LLM service, and the constraint solver) are outside unit-test scope except for thin adapter code we own. Those external services are assumed correct; we test our wrapping, validation, and fallback behaviour. Priority unit tests are intake validation, extraction structuring, missing-field flags, confirmation gates, conflict and restricted-period logic, suggestion approval, compliance rules, and access control.
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+The subsections below cover the planned modules for outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export. Detailed design and the Module Interface Specification (MIS) are not complete yet; when the MIS is written, each test below will be tied to the corresponding module access programs. Tests were selected from a black-box view of each SRS functional requirement (FR1--FR17) and from a white-box view of the intended module boundaries (validation before extraction, confirmation gates, pure conflict rules, approval before write, and role checks). There is one automatic unit test description per FR. Most unit tests will be automatic.
 
-\subsubsection{Module 1}
+\subsubsection{Outline Intake and Extraction}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+These tests cover FR1 to FR6 for the intake, extraction, confirmation, and tentative-date modules.
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Intake_Data}:]
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+Type: Functional, Dynamic, Automatic
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Initial State: No outline bytes have been accepted; the intake validator has no stored file for the course.
 
-How test will be performed: 
-					
-\item{test-id2\\}
+Input: (a)~A PDF byte stream under \textit{MAX\_OUTLINE\_SIZE}; (b)~a non-PDF stream; (c)~a PDF larger than \textit{MAX\_OUTLINE\_SIZE}.
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+Output: (a)~Accepted and passed to storage without calling extraction; (b)~and~(c)~rejected with a validation error and no extraction call.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Test Case Derivation: FR1 requires PDF outline intake; invalid type and oversized files must fail before any extraction work.
 
-How test will be performed: 
+How test will be performed: Call the intake validation function with fixture byte streams and assert accept/reject and that the extraction stub is never invoked on reject.
 
-\item{...\\}
-    
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Extract_Assessment}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Extraction module loaded with a stubbed text source; no assessments stored.
+
+Input: Sample outline text containing named assessments with type, date, and weight, plus one assessment with a blank date.
+
+Output: Structured assessment records with name, type, date, weight, and source citation; the blank date remains empty (not invented).
+
+Test Case Derivation: FR2 requires extraction of name, type, date, and weight; missing values must stay missing.
+
+How test will be performed: Feed fixture text into the assessment parser and assert field values and citations against expected fixtures.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Extract_LO}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Learning-outcome parser ready; no outcomes stored.
+
+Input: Outcome text that (a)~lists graduate-attribute numbers, (b)~names attributes, and (c)~only describes them.
+
+Output: Structured outcomes mapped to graduate attributes for (a)--(c); unmapped descriptive text is retained without inventing a GA number.
+
+Test Case Derivation: FR3 requires extraction of learning outcomes and GAs whether listed by number, name, or description.
+
+How test will be performed: Run the outcome parser on three fixtures and compare mapped GA sets to expected results.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Extract_Flag}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Extracted assessment and weight fields available to the missing-field flagger.
+
+Input: Records with TBD dates and blank weights, and records with complete fields.
+
+Output: TBD dates and blank weights marked missing; complete fields not flagged; no guessed values written.
+
+Test Case Derivation: FR4 requires missing fields, including TBD dates, to be flagged rather than filled in.
+
+How test will be performed: Invoke the flagger on fixture records and assert missing flags and unchanged field values.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Extract_Review}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Extracted records exist; confirmation status is false.
+
+Input: Calendar, conflict, and compliance query calls against unconfirmed records; then the same calls after confirmation is set true.
+
+Output: Unconfirmed records excluded from all three query paths; confirmed records included.
+
+Test Case Derivation: FR5 requires review and confirmation before extracted data is used for calendar, conflict, or compliance.
+
+How test will be performed: Unit-test the query filters with confirmation true/false fixtures and assert inclusion rules.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Dates_Tentative}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Instructor record linked to course A only; assessments exist for courses A and B.
+
+Input: Create/update tentative date for an assessment on A; attempt the same for an assessment on B.
+
+Output: Update on A succeeds; update on B is denied.
+
+Test Case Derivation: FR6 allows instructors to enter and update tentative dates only for their own courses.
+
+How test will be performed: Call the tentative-date service with instructor identity fixtures and assert allow/deny.
+
 \end{enumerate}
 
-\subsubsection{Module 2}
+\subsubsection{Calendar and Conflict Detection}
 
-...
+These tests cover FR7 to FR10 for the calendar query and conflict-detection modules.
+
+\begin{enumerate}
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Calendar}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Confirmed and tentative assessment dates stored for several courses, years, and programs.
+
+Input: Calendar queries filtered by course, by year, and by program.
+
+Output: Returned events match the filter; tentative dates are marked tentative in the result structure.
+
+Test Case Derivation: FR7 requires a filterable shared calendar with tentative dates marked as such.
+
+How test will be performed: Call the calendar query function with filter fixtures and assert event sets and tentative markers.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Work_Cluster}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Cohort assessment dates loaded in memory for conflict analysis.
+
+Input: Date sets where the count inside \textit{CLUSTER\_WINDOW} is below, equal to, and above \textit{CLUSTER\_THRESHOLD}.
+
+Output: A cluster finding only when the count in the window exceeds the threshold; otherwise no finding.
+
+Test Case Derivation: FR8 requires identifying weeks where a cohort has more assessments than the configured threshold.
+
+How test will be performed: Run the clustering function on synthetic date lists and assert findings against the symbolic constants.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Work_Policy}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Restricted academic-calendar ranges loaded; assessment dates available.
+
+Input: Assessment dates inside and outside restricted ranges (for example final-exam periods).
+
+Output: Findings only for dates inside restricted ranges; dates outside produce no finding.
+
+Test Case Derivation: FR9 requires identifying assessments scheduled in policy-restricted periods.
+
+How test will be performed: Call the restricted-period checker with fixture dates and ranges and assert findings.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Reanalyze}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Prior conflict findings stored for a cohort; one assessment date is about to change.
+
+Input: An assessment date add or change for a course in that cohort.
+
+Output: Conflict detection re-runs for affected cohorts; stored findings are refreshed to match the new dates.
+
+Test Case Derivation: FR10 requires re-running conflict detection whenever an assessment date is added or changed.
+
+How test will be performed: Apply a date change through the update hook, stub the detector, and assert it is invoked and findings are replaced.
+
+\end{enumerate}
+
+\subsubsection{Scheduling Suggestions}
+
+These tests cover FR11 and FR12 for the suggestion-generation and approval modules.
+
+\begin{enumerate}
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Suggest_Generation}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: A conflicted assessment and a TBD assessment exist; solver stub returns feasible dates.
+
+Input: (a)~Explicit suggestion request for each assessment; (b)~no request.
+
+Output: (a)~At least \textit{MIN\_ALTERNATIVES} feasible dates returned; (b)~no suggestions produced.
+
+Test Case Derivation: FR11 requires alternative dates only on explicit instructor request for conflicted or TBD assessments.
+
+How test will be performed: Call the suggestion service with and without a request flag and assert count and emptiness.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Suggest_NoAuto}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: A suggested date exists for an assessment; stored date is unchanged.
+
+Input: (a)~No accept action; (b)~explicit accept from the responsible instructor; (c)~accept from a non-responsible user.
+
+Output: (a)~and~(c)~stored date unchanged; (b)~stored date updated to the suggestion.
+
+Test Case Derivation: FR12 forbids changing any assessment date without explicit approval of the responsible instructor.
+
+How test will be performed: Invoke the apply-suggestion function under the three action/identity cases and assert storage results.
+
+\end{enumerate}
+
+\subsubsection{Compliance Checking}
+
+These tests cover FR13 and FR14 for the policy and graduate-attribute compliance modules.
+
+\begin{enumerate}
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Comp_Policy}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Outline structure available to the policy checker; required-section list loaded.
+
+Input: Outlines missing a required section; outlines whose assessment weights total other than \textit{WEIGHT\_TOTAL}; a fully compliant outline.
+
+Output: Findings for missing sections and weight totals other than \textit{WEIGHT\_TOTAL}; none for the compliant outline.
+
+Test Case Derivation: FR13 requires checks against outline policy rules, including required sections and weights totalling 100\%.
+
+How test will be performed: Run the policy rules on fixture outline structures and assert finding lists.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Comp_Grad}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Outline GA set and master-sheet rows available to the comparator.
+
+Input: (a)~Outline missing a GA required by the master sheet; (b)~matching GA sets; (c)~no master-sheet row for the course.
+
+Output: (a)~Missing-GA finding; (b)~no finding; (c)~not-checked result (no false missing-GA finding).
+
+Test Case Derivation: FR14 requires comparing outline GAs to the master course sheet and flagging missing or inconsistent GAs.
+
+How test will be performed: Call the GA comparator with the three fixtures and assert findings and not-checked status.
+
+\end{enumerate}
+
+\subsubsection{Access and Export}
+
+These tests cover FR15 to FR17 for authentication, authorization, and export modules.
+
+\begin{enumerate}
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Access_Login}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Auth middleware loaded; no valid session present.
+
+Input: Protected view and change operations with a missing or invalid session token.
+
+Output: Each operation rejected; no data read or write occurs.
+
+Test Case Derivation: FR15 requires users to log in before viewing or changing any data.
+
+How test will be performed: Call protected handlers with null/invalid session fixtures and assert rejection and side-effect-free behaviour.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Access_Roles}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Administrator and instructor principals loaded; instructor taught-course set is \{A\}.
+
+Input: Administrator write on courses A and B; instructor write on A; instructor write on B.
+
+Output: Administrator writes allowed on A and B; instructor write allowed on A and denied on B.
+
+Test Case Derivation: FR16 allows administrators to manage all courses and instructors to change only their own courses.
+
+How test will be performed: Invoke the authorization check with role and course fixtures and assert allow/deny.
+
+\item[UT-FR\refstepcounter{utnum}\theutnum \label{UT_Export_CSV}:]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Extracted assessment rows available; export builder ready.
+
+Input: Export request from an administrator; export request from an instructor.
+
+Output: Administrator receives a CSV of extracted assessment fields; instructor request is denied and no file is produced.
+
+Test Case Derivation: FR17 allows an administrator to export extracted assessment data as CSV.
+
+How test will be performed: Call the export function under both roles and assert CSV content versus denial.
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -487,8 +1011,15 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+The system tests use these constants. Values match the SRS auxiliary constants where applicable.
+
+\begin{itemize}
+\item \textit{CLUSTER\_WINDOW} $= 7$ days
+\item \textit{CLUSTER\_THRESHOLD} $= 3$
+\item \textit{MIN\_ALTERNATIVES} $= 2$
+\item \textit{WEIGHT\_TOTAL} $= 100\%$
+\item \textit{MAX\_OUTLINE\_SIZE} $= 5$ MB
+\end{itemize}
 
 \subsection{Usability Survey Questions?}
 
