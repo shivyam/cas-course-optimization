@@ -65,18 +65,18 @@ in.}
 \section{Symbols, Abbreviations, and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
+\begin{tabularx}{\textwidth}{l X} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
-  T & Test\\
+  ASSURE & Accreditation and Scheduling Support for Undergraduate Review and Evaluation\\
+  CAS & Department of Computing and Software\\
+  LLM & Large language model\\
+  PDF & Portable Document Format\\
+  SRS & Software Requirements Specification \citep{TeamBVSH2026SRS}\\
   \bottomrule
-\end{tabular}\\
+\end{tabularx}\\
 
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -89,8 +89,9 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software under test is ASSURE (Accreditation and Scheduling Support for Undergraduate Review and Evaluation), which is a course-outline review system for the Department of Computing and Software (CAS) at McMaster University.
+
+ASSURE accepts a batch of course outlines in PDF (Word and LaTeX document support will be a future feature). A replaceable (black box) locally hosted open-weight large language model (LLM) extracts each assessment's name, date, weight, and learning outcomes, and it either cites the passage each value came from or reports that it cannot find the value. The system checks the extracted information against McMaster University's Undergraduate Course Management Policy~\citep{McMasterUCMP2025}, academic-calendar restrictions, and the Canadian Engineering Accreditation Board's (CEAB) Accreditation Criteria and Procedures~\citep{CEAB2025}, and flags missing, incomplete, or non-compliant information for review. Its dashboard supports filtering by course, year, and program. It also displays term completeness, workload or scheduling conflicts, and allows users to override or correct extracted values. The system also stores the reviewed data for export, while its shared calendar presents assessment deadlines across CAS courses and highlights items that need attention.
 
 \subsection{Objectives}
 
