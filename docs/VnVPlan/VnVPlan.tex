@@ -169,14 +169,137 @@ issue tracker?}
 
 \wss{Create a checklists?}
 
-\subsection{Verification and Validation Plan Verification}
+\subsection{Verification and Validation Plan Verification}\label{sec:VnVPlanVerif}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+The VnV plan is itself verified before it is submitted, and again before the
+final version, once the unit test sections are complete. Five activities are
+used, summarized in Table~\ref{tab:PlanVerif}. Each one produces a record, so the
+team can show what was checked and what was changed as a result.
 
-\wss{The review will include reviews by your classmates}
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.22\textwidth}
+  >{\raggedright\arraybackslash}p{0.27\textwidth}
+  >{\raggedright\arraybackslash}p{0.39\textwidth}}
+\caption{VnV Plan Verification Activities}
+\label{tab:PlanVerif}\\
+\toprule
+\textbf{Activity} & \textbf{Done by} & \textbf{Evidence recorded}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Activity} & \textbf{Done by} & \textbf{Evidence recorded}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Checklist review & A member who did not write the section & Pull request review comments and approval\\
+Traceability and coverage check & Traceability table owner & Gaps found, opened as GitHub issues\\
+Test dry run & A member who did not write the tests & Tests checked and tests rewritten\\
+Seeded fault review & Whole team & Table~\ref{tab:SeededFaults}, with any test added\\
+External review & Team 22, the TA, and the supervisors & Peer review issues, TA feedback issues, and supervisor meeting notes\\
+\end{longtable}
+}
 
-\wss{Create a checklists?}
+\paragraph{Checklist review of each section.}
+Every section is added through a pull request, and a team member who did not
+write it reviews it against the course
+\href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/Checklists/VnV-Checklist.pdf}{VnV checklist}. The reviewer checks, in
+particular, that each test has specific input, an explicit expected output,
+and a derivation for that output, and that symbolic constants are used
+instead of literal values. Each checklist item that is not met becomes a review
+comment, and the pull request is merged only after every comment is resolved
+or answered with a reason.
+
+\paragraph{Traceability and coverage check.}
+The team member responsible for the traceability tables checks the whole plan
+before it is submitted:
+\begin{itemize}
+  \item every requirement in the SRS~\citep{TeamBVSH2026SRS} and every safety
+  and security requirement in the Hazard Analysis~\citep{TeamBVSH2026HA}
+  appears in Table~\ref{tab:TraceSysReq};
+  \item every requirement meets the coverage rule of at least two verification
+  methods;
+  \item every test identifier in the traceability tables is defined in the
+  system or unit test sections, and every defined test is traced; and
+  \item every module is traced to at least one unit test and one system test.
+\end{itemize}
+Each gap found is opened as a GitHub issue and assigned to the author of the
+affected section.
+
+\paragraph{Test dry run.}
+For each area of system tests, a team member who did not write the tests
+selects three of them and walks through each one using only the information in
+this document. The test passes the dry run if the member can name the input
+files, carry out the steps, and state the expected output without asking the
+author. A test that fails the dry run is rewritten before submission. This
+checks that someone outside the team could run the tests once the product is
+built.
+
+\paragraph{Seeded fault review.}
+This is a form of mutation testing applied to the plan. The team lists faults
+that a plausible implementation could contain, and for each fault identifies
+the planned test that would fail because of it. Table~\ref{tab:SeededFaults}
+gives the initial list. A fault that no planned test would detect shows a
+missing test, and a test is added for it. The review is held in a team meeting,
+and the target is that every seeded fault is detected by at least one planned
+test.
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.57\textwidth}
+  >{\raggedright\arraybackslash}p{0.31\textwidth}}
+\caption{Seeded Faults and the Tests That Detect Them}
+\label{tab:SeededFaults}\\
+\toprule
+\textbf{Seeded fault} & \textbf{Detected by}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Seeded fault} & \textbf{Detected by}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Weights that total 90\% pass the weight check. & ST\_Comp\_Policy\\
+A missing required outline section is not reported. & ST\_Comp\_Policy\\
+A date marked TBD is stored as a date instead of being flagged as missing. & ST\_Extract\_Flag\\
+A blank weight is filled with a guessed value. & ST\_Extract\_Flag\\
+An extracted value is stored without a citation to its source passage. & ST\_Extract\_Assessment\\
+An unconfirmed assessment appears in the calendar. & ST\_Extract\_Review\\
+An assessment dated in reading week is not reported. & ST\_Work\_Policy\\
+A suggested date falls in a restricted period. & ST\_Suggest\_Generation\\
+An assessment date changes without the instructor's approval. & ST\_Suggest\_NoAuto\\
+A course missing from the master course sheet is shown with no findings. & ST\_Comp\_Grad\\
+An instructor can change another instructor's course. & ST\_Access\_Roles\\
+A file of 5~MB or larger is accepted for processing. & ST\_Intake\_Data\\
+A protected page opens without logging in. & ST\_Access\_Login\\
+An instructor can export the CSV file. & ST\_Export\_CSV\\
+A failed upload deletes or changes stored records. & NFR-REL-01\\
+A credential appears in the deployment configuration or logs. & NFR-SEC-01\\
+\end{longtable}
+}
+
+\paragraph{External review.}
+Three groups outside the team review the plan:
+\begin{itemize}
+    \item \textbf{Peer review team:} Team 22, the primary reviewer, reviews the
+    plan and opens GitHub issues using the repository's peer review template.
+    The team answers each issue by fixing it in a linked pull request, or by
+    closing it with a stated reason.
+    \item \textbf{Teaching assistant:} The team asks the TA the following three
+    questions during during the informal presentation, the team asks the TA three
+    questions. Is the set of sample outlines large enough to show that the accuracy
+    targets in NFR1 are met? Are the planned reviews, inspections, and walkthroughs
+    enough to support the dynamic tests? Can the plan be completed in the time
+    available? The TA's answers are recorded as GitHub issues.
+    \item \textbf{Supervisors:} At a supervisor meeting, the team presents the
+    system test areas and the sample outlines used as test input, and asks Matt
+    Vonk and Connie Carrabs whether the outlines represent CAS courses and
+    whether the policy rules being tested are the ones the department applies.
+    Their answers are recorded in the meeting notes, and any change becomes an
+    issue.
+\end{itemize}
 
 \subsection{Implementation Verification}
 
