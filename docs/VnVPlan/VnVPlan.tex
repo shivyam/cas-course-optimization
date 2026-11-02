@@ -78,7 +78,7 @@ in.}
 \section{Symbols, Abbreviations, and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
+\begin{tabularx}{\textwidth}{l X} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule
@@ -87,7 +87,7 @@ in.}
   SRS & Software Requirements Specification\\
   V\&V & Verification and Validation\\
   \bottomrule
-\end{tabular}\\
+\end{tabularx}\\
 
 \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
@@ -387,10 +387,9 @@ below and traced in Table~\ref{tab:TraceSysReq} under these names.
   confirmed date and weight.
 \end{description}
 
-\paragraph{Coverage rule.}
-Every requirement is verified by at least two methods: two or more system
-tests, or a system test and a non-dynamic technique. A single faulty or
-skipped test therefore never leaves a requirement unverified. The non-dynamic techniques in Table~\ref{tab:TraceSysReq} are:
+\paragraph{Non-dynamic techniques.}
+Where a requirement is also checked without running the system, the
+technique is listed in Table~\ref{tab:TraceSysReq}:
 \begin{itemize}
   \item \textbf{CR (code review):} the pull request reviewer checks the code
   that implements the requirement against the requirement text.
@@ -421,73 +420,73 @@ skipped test therefore never leaves a requirement unverified. The non-dynamic te
 \bottomrule
 \endfoot
 \multicolumn{3}{l}{\textbf{Functional requirements}}\\
-FR1 & T-INT-1, T-INT-2, T-REL-1 & CR\\
-FR2 & T-EXT-1, T-ACCU-1 & --\\
-FR3 & T-EXT-2, T-EXT-3 & WT\\
-FR4 & T-EXT-4, T-EXT-5, T-ACCU-2 & --\\
-FR5 & T-EXT-7, T-EXT-8 & CR\\
-FR6 & T-EXT-9, T-ACC-2 & --\\
-FR7 & T-CAL-1, T-CAL-2, T-PERF-1 & WT\\
-FR8 & T-CAL-3 & CR\\
-FR9 & T-CAL-4, T-CAL-5 & CR\\
-FR10 & T-CAL-6 & CR\\
-FR11 & T-SUG-1, T-SUG-2 & CR\\
-FR12 & T-SUG-4, T-CAL-6 & CR\\
-FR13 & T-COMP-1, T-COMP-2, T-COMP-3, T-COMP-4, T-ACCU-3 & CR\\
-FR14 & T-COMP-5, T-COMP-6, T-ACCU-3 & WT\\
-FR15 & T-ACC-1, T-SEC-1 & CR\\
-FR16 & T-ACC-2, T-ACC-3, T-DASH-2, T-SEC-1 & CR\\
-FR17 & T-EXP-1, T-EXP-2 & --\\
-FR-Dashboard & T-DASH-1, T-DASH-2, T-USE-1 & WT\\
-FR-Override & T-DASH-4, T-DASH-5, T-ACC-5 & CR\\
-FR-Completeness & T-DASH-3, T-COMP-4 & --\\
+FR1 & ST\_Intake\_Data & CR\\
+FR2 & ST\_Extract\_Assessment, NFR-ACC-01 & --\\
+FR3 & ST\_Extract\_LO, NFR-ACC-01 & WT\\
+FR4 & ST\_Extract\_Flag, NFR-ACC-01 & --\\
+FR5 & ST\_Extract\_Review & CR\\
+FR6 & ST\_Dates\_Tentative & --\\
+FR7 & ST\_Calendar, NFR-PERF-02 & WT\\
+FR8 & ST\_Work\_Cluster & CR\\
+FR9 & ST\_Work\_Policy & CR\\
+FR10 & ST\_Reanalyze & CR\\
+FR11 & ST\_Suggest\_Generation & CR\\
+FR12 & ST\_Suggest\_NoAuto & CR\\
+FR13 & ST\_Comp\_Policy, NFR-ACC-03 & CR\\
+FR14 & ST\_Comp\_Grad, NFR-ACC-03 & WT\\
+FR15 & ST\_Access\_Login, NFR-SEC-01 & CR\\
+FR16 & ST\_Access\_Roles, ST\_Dates\_Tentative, NFR-SEC-01 & CR\\
+FR17 & ST\_Export\_CSV & --\\
+FR-Dashboard & ST\_Dashboard, NFR-USE-01 & WT\\
+FR-Override & ST\_Override & CR\\
+FR-Completeness & ST\_Completeness & --\\
 \midrule
 \multicolumn{3}{l}{\textbf{Nonfunctional requirements}}\\
-NFR1 & T-ACCU-1, T-ACCU-2, T-ACCU-3 & DI\\
-NFR2 & T-USE-1, T-USE-2 & WT\\
-NFR3 & T-MAINT-1, T-MAINT-2 & CR, SA\\
-NFR4 & T-PORT-1, T-INST-1 & --\\
-NFR5 & T-INST-1 & DI\\
-NFR6 & T-PERF-1, T-PERF-2 & --\\
-NFR7 & T-REL-1, T-REL-2, T-INT-3 & --\\
-NFR8 & T-SEC-1, T-SEC-2, T-ACC-1 & SA\\
-NFR9 & T-A11Y-1, T-A11Y-2 & --\\
+NFR1 & NFR-ACC-01, NFR-ACC-03 & DI\\
+NFR2 & NFR-USE-01 & WT\\
+NFR3 & NFR-DEP-01 & CR, SA\\
+NFR4 & NFR-ACC-02 & --\\
+NFR5 & NFR-DEP-01 & DI\\
+NFR6 & NFR-PERF-01, NFR-PERF-02 & --\\
+NFR7 & NFR-REL-01 & --\\
+NFR8 & NFR-SEC-01 & SA\\
+NFR9 & NFR-ACC-02 & --\\
 \midrule
 \multicolumn{3}{l}{\textbf{Data requirements}}\\
-DR1 & T-DATA-1, T-SEC-1 & --\\
-DR2 & T-DATA-2, T-AI-1 & CR, DI\\
-DR3 & T-ACC-2, T-SEC-1 & --\\
-DR4 & T-DATA-3 & DI\\
+DR1 & NFR-SEC-01 & --\\
+DR2 & ST\_Hosting & CR, DI\\
+DR3 & ST\_Access\_Roles, NFR-SEC-01 & --\\
+DR4 & ST\_Retention & DI\\
 \midrule
 \multicolumn{3}{l}{\textbf{AI and machine learning requirements}}\\
-AIR1 & T-AI-1 & CR\\
-AIR2 & T-DATA-2, T-AI-1 & CR\\
-AIR3 & T-EXT-1, T-EXT-2, T-EXT-3 & --\\
-AIR4 & T-EXT-6, T-ACCU-1 & --\\
-AIR5 & T-EXT-4, T-EXT-5, T-ACCU-2 & --\\
-AIR6 & T-EXT-7 & CR\\
+AIR1 & ST\_Input\_Text & CR\\
+AIR2 & ST\_Input\_Privacy & CR\\
+AIR3 & ST\_Extract\_Assessment, ST\_Extract\_LO & --\\
+AIR4 & ST\_Extract\_Assessment, ST\_Extract\_LO & --\\
+AIR5 & ST\_Extract\_Flag, NFR-ACC-01 & --\\
+AIR6 & ST\_Extract\_Review & CR\\
 \midrule
 \multicolumn{3}{l}{\textbf{Safety and security requirements (Hazard Analysis)}}\\
-SSR1 & T-INT-3, T-REL-1 & --\\
-SSR2 & T-INT-2 & CR\\
-SSR3 & T-SUG-2 & CR\\
-SSR4 & T-SUG-3 & CR\\
-SSR5 & T-COMP-6, T-COMP-7 & --\\
-SSR6 & T-ACC-5, T-DASH-4 & --\\
-SSR7 & T-ACC-4, T-SEC-1 & --\\
+SSR1 & NFR-REL-01 & --\\
+SSR2 & ST\_Intake\_Data & CR\\
+SSR3 & ST\_Suggest\_Generation & CR\\
+SSR4 & ST\_StaleSuggestion & CR\\
+SSR5 & ST\_Comp\_Policy, ST\_Comp\_Grad & --\\
+SSR6 & ST\_AuditTrail & --\\
+SSR7 & ST\_MasterSheetEdit & --\\
 \end{longtable}
 }
 
 \paragraph{Summary of coverage.}
-Table~\ref{tab:TraceSysReq} traces 46 requirements, and each one meets the
-coverage rule. Of these, 37 are verified by two or more system tests, and the
-other 9 by one system test and one non-dynamic technique. For example, the
-10-year retention period in DR4 cannot be observed within the project, so
-T-DATA-3 checks that no automatic process deletes stored records, and a DI
-inspection confirms the retention setting. Some tests verify more than one
-requirement. T-SEC-1, which checks role-based permissions, supports FR15, FR16,
-NFR8, DR1, DR3, and SSR7. A failure in a shared test affects every requirement
-it traces to, so shared tests are given high priority.
+Table~\ref{tab:TraceSysReq} traces 46 requirements, and every requirement is
+verified by at least one system test. Where a single test is the only dynamic
+check, a non-dynamic technique is often added. For example, the 10-year
+retention period in DR4 cannot be observed within the project, so
+ST\_Retention checks that no automatic process deletes stored records, and a
+DI inspection confirms the retention setting. Some tests verify more than one
+requirement. NFR-SEC-01, which checks access control and data protection,
+supports FR15, FR16, NFR8, DR1, and DR3. A failure in a shared test affects
+every requirement it traces to, so shared tests are given high priority.
 
 \section{Unit Test Description}
 
