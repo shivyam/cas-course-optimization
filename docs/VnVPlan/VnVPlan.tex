@@ -288,153 +288,12 @@ How test will be performed:
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
-
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Area of Testing2}
-
-...
-
-\subsection{Traceability Between Test Cases and Requirements}
-
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
-
-\section{Unit Test Description}
-
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
-
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
-
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
-
-\subsection{Unit Testing Scope}
-
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
-
-\subsection{Tests for Functional Requirements}
-
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
-
-\subsubsection{Module 1}
-
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\item{...\\}
-    
-\end{enumerate}
-
-\subsubsection{Module 2}
-
-...
-
-\subsection{Tests for Nonfunctional Requirements}
-
 \noindent The following tests assess the system-wide nonfunctional
 requirements. Accuracy measurements use a manually prepared answer key for a
 representative set of course outlines. Performance measurements will record
 the test environment, document characteristics, workload, and response times.
 
-\subsubsection{Course Outline Processing Module}
+\subsubsection{Course Outline Processing}
 		
 \begin{enumerate}
 
@@ -487,10 +346,10 @@ Initial State: The processing service is available and the test environment
 has been recorded. A supported PDF course outline of no more than 30 pages is
 available.
 					
-Input: Submit a representative set of supported outlines, including documents
+Input/Condition: Submit a representative set of supported outlines, including documents
 with different layouts and extraction sizes.
 					
-Output: At least 90\% of successful processing runs complete within 60
+Output/Result: At least 90\% of successful processing runs complete within 60
 seconds. Failures and delays caused by unavailable external dependencies are
 recorded separately.
 					
@@ -501,7 +360,7 @@ results against the 60-second target in the Performance NFR.
 
 \end{enumerate}
 
-\subsubsection{Calendar and Web Application Module}
+\subsubsection{Calendar and Web Application}
 
 \begin{enumerate}
 
@@ -529,49 +388,55 @@ and report the response-time distribution and the percentage meeting the
 Type: Dynamic, manual
 
 Initial State: Representative CAS administrators and course instructors who
-were not involved in implementation are provided with access to the deployed
-system and the task scenarios.
+were not involved in implementation and do not have programming or machine
+learning knowledge are provided with access to the deployed system and the
+task scenarios.
 
 Input/Condition: Each participant attempts the designated core tasks:
 uploading an outline, reviewing extracted information, viewing and filtering
-the calendar, interpreting a flagged issue, and exporting available data.
+the calendar, interpreting a flagged issue, and exporting available data,
+without programming or machine learning assistance.
 
 Output/Result: At least 80\% of participants complete each designated core
-task without assistance. Any usability issues, errors, or requests for help
+task without assistance or technical knowledge. Any usability issues, errors,
+requests for help, or evidence of programming or machine learning assistance
 are recorded.
 
 How test will be performed: Observe each participant using the system without
-providing task-specific assistance, record task completion and time, and
-collect post-task feedback. Calculate the completion rate for every task and
-compare it with the Usability NFR.
+providing task-specific or technical assistance, record task completion and
+time, and collect post-task feedback about ease of use. Calculate the
+completion rate for every task and verify that the results demonstrate use by
+non-technical participants. Compare the results with the Usability NFR.
 
-\item{\textbf{NFR-ACC-02: Accessibility and browser compatibility}\\}
+\item{\textbf{NFR-PORT-01: Hosting and browser portability}\\}
 
-Type: Static and dynamic, automatic and manual
+Type: Dynamic, automatic and manual
 
-Initial State: The deployed web application and its core workflows are
-available in Google Chrome 120 or later, Mozilla Firefox 121 or later, and
-Safari 17 or later.
+Initial State: The system is deployed in the designated McMaster University
+hosting environment. The deployed web application and its core workflows are
+available on supported desktop operating systems in Google Chrome 120 or
+later, Mozilla Firefox 121 or later, and Safari 17 or later.
 
 Input/Condition: Run the authentication, outline submission, information
-review, calendar viewing, and export workflows.
+review, calendar viewing, and export workflows in each supported browser and
+on the designated hosting environment.
 
-Output/Result: Automated accessibility checks report no unresolved
+Output/Result: The system is usable in the designated McMaster University
+hosting environment and the core workflows complete successfully in each
+supported browser. Automated accessibility checks report no unresolved
 high-severity issues against the applicable AODA and WCAG 2.0 Level AA
-criteria. The core workflows are operable with keyboard navigation and
-provide accessible labels, headings, focus indicators, and error messages in
-each supported browser.
+criteria.
 
 How test will be performed: Run an automated accessibility scan, then
-manually complete the core workflows using keyboard navigation and a
-screen-reader check. Repeat the workflow and deployment checks in every
-supported browser and record the applicable AODA and WCAG 2.0 Level AA
-criteria, results, and any deviations against the Portability and
-Accessibility NFRs.
+manually complete the core workflows in every supported browser and on the
+designated hosting environment. Use keyboard navigation and a screen-reader
+check, and record the browser, operating system, hosting environment,
+applicable WCAG success criteria, results, and any deviations against the
+Portability and Accessibility NFRs.
 
 \end{enumerate}
 
-\subsubsection{Security, Reliability, and Deployment Module}
+\subsubsection{Security, Reliability, and Deployment}
 
 \begin{enumerate}
 
@@ -622,25 +487,157 @@ predefined case meets the Reliability NFR.
 
 Type: Static and dynamic, manual
 
-Initial State: A clean supported hosting environment and the documented
-installation instructions are available to a maintainer who did not perform
-the original setup.
+Initial State: A clean designated McMaster University hosting environment and
+the documented installation and deployment instructions are available to a
+maintainer who did not perform the original setup.
 
-Input/Condition: Deploy the system by following the documentation, then
-implement representative isolated changes to document processing, scheduling,
-or compliance rules.
+Input/Condition: Deploy the system by following the documentation. Verify
+that the documentation identifies the required software, configuration
+values, environment variables, database setup, and service startup steps.
+Then implement representative isolated changes to document processing,
+scheduling, or compliance rules.
 
-Output/Result: The maintainer can deploy the system and complete the core
-workflow without undocumented steps. The representative changes do not
-require unrelated components to be rewritten, and the effort for each change
-is recorded relative to the original component effort.
+Output/Result: The maintainer can deploy the system to the designated
+McMaster University hosting environment and complete the core workflow
+without undocumented steps. The documentation contains all required setup
+information. The representative changes do not require unrelated components
+to be rewritten, and the effort for each change is recorded relative to the
+original implementation effort for the affected component.
 
-How test will be performed: Have the maintainer follow the installation and
-deployment instructions on the clean environment, execute the core workflow,
-and review the change diffs and effort records with the team. Document the
-results against the Installability and Maintainability NFRs.
+How test will be performed: Give the documentation and clean hosting
+environment to a new maintainer without providing undocumented guidance.
+Observe the maintainer follow the installation and deployment instructions,
+execute the core workflow, and record any missing or ambiguous steps. Review
+the change diffs and effort records with the team, then document the results
+against the Installability, Deployability, and Maintainability NFRs.
 
 \end{enumerate}
+
+\subsection{Traceability Between Test Cases and Requirements}
+
+\wss{Provide a table that shows which test cases are supporting which
+  requirements.}
+
+\section{Unit Test Description}
+
+\wss{This section should not be filled in until after the MIS (detailed design
+  document) has been completed.}
+
+\wss{Reference your MIS (detailed design document) and explain your overall
+philosophy for test case selection.}
+
+\wss{To save space and time, it may be an option to provide less detail in this section.
+For the unit tests you can potentially layout your testing strategy here.  That is, you
+can explain how tests will be selected for each module.  For instance, your test building
+approach could be test cases for each access program, including one test for normal behaviour
+and as many tests as needed for edge cases.  Rather than create the details of the input
+and output here, you could point to the unit testing code.  For this to work, you code
+needs to be well-documented, with meaningful names for all of the tests.}
+
+\subsection{Unit Testing Scope}
+
+\wss{What modules are outside of the scope.  If there are modules that are
+  developed by someone else, then you would say here if you aren't planning on
+  verifying them.  There may also be modules that are part of your software, but
+  have a lower priority for verification than others.  If this is the case,
+  explain your rationale for the ranking of module importance.}
+
+\subsection{Tests for Functional Requirements}
+
+\wss{Most of the verification will be through automated unit testing.  If
+  appropriate specific modules can be verified by a non-testing based
+  technique.  That can also be documented in this section.}
+
+\subsubsection{Module 1}
+
+\wss{Include a blurb here to explain why the subsections below cover the module.
+  References to the MIS would be good.  You will want tests from a black box
+  perspective and from a white box perspective.  Explain to the reader how the
+  tests were selected.}
+
+\begin{enumerate}
+
+\item{test-id1\\}
+
+Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+  be automatic}
+
+Initial State:
+
+Input:
+
+Output: \wss{The expected result for the given inputs}
+
+Test Case Derivation: \wss{Justify the expected value given in the Output field}
+
+How test will be performed:
+
+\item{test-id2\\}
+
+Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+  be automatic}
+
+Initial State:
+
+Input:
+
+Output: \wss{The expected result for the given inputs}
+
+Test Case Derivation: \wss{Justify the expected value given in the Output field}
+
+How test will be performed:
+
+\item{...\\}
+
+\end{enumerate}
+
+\subsubsection{Module 2}
+
+...
+
+\subsection{Tests for Nonfunctional Requirements}
+
+\wss{If there is a module that needs to be independently assessed for
+  performance, those test cases can go here.  In some projects, planning for
+  nonfunctional tests of units will not be that relevant.}
+
+\wss{These tests may involve collecting performance data from previously
+  mentioned functional tests.}
+
+\subsubsection{Module ?}
+
+\begin{enumerate}
+
+\item{test-id1\\}
+
+Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+  be automatic}
+
+Initial State:
+
+Input/Condition:
+
+Output/Result:
+
+How test will be performed:
+
+\item{test-id2\\}
+
+Type: Functional, Dynamic, Manual, Static etc.
+
+Initial State:
+
+Input:
+
+Output:
+
+How test will be performed:
+
+\end{enumerate}
+
+\subsubsection{Module ?}
+
+...
 
 \subsection{Traceability Between Test Cases and Modules}
 
