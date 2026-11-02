@@ -1,4 +1,4 @@
-"""Tests for the POST /api/outlines stub."""
+"""Tests for the POST /api/outlines endpoint."""
 
 from fastapi.testclient import TestClient
 
@@ -8,8 +8,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_upload_outline_returns_mock_response():
-    # Fake PDF bytes; the stub never reads the content, only the filename.
+def test_upload_outline_accepts_pdf():
     files = {"file": ("outline.pdf", b"%PDF-1.4 fake content", "application/pdf")}
 
     response = client.post("/api/outlines", files=files)
@@ -18,7 +17,23 @@ def test_upload_outline_returns_mock_response():
     body = response.json()
     assert body["filename"] == "outline.pdf"
     assert body["status"] == "received"
-    assert len(body["course"]["assessments"]) > 0
+    assert body["text_extraction"] == "not_configured"
+
+
+def test_upload_outline_rejects_non_pdf():
+    files = {"file": ("outline.txt", b"course outline", "text/plain")}
+
+    response = client.post("/api/outlines", files=files)
+
+    assert response.status_code == 415
+
+
+def test_upload_outline_rejects_invalid_pdf_content():
+    files = {"file": ("outline.pdf", b"not a pdf", "application/pdf")}
+
+    response = client.post("/api/outlines", files=files)
+
+    assert response.status_code == 400
 
 
 def test_upload_outline_without_file_is_rejected():
