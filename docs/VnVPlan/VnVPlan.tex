@@ -429,47 +429,218 @@ How test will be performed:
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+\noindent The following tests assess the system-wide nonfunctional
+requirements. Accuracy measurements use a manually prepared answer key for a
+representative set of course outlines. Performance measurements will record
+the test environment, document characteristics, workload, and response times.
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
+\subsubsection{Course Outline Processing Module}
 		
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{\textbf{NFR-ACC-01: Extraction accuracy}\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Dynamic, automatic
 
-Type: Functional, Dynamic, Manual, Static etc.
+Initial State: The course-outline processing service is available and the
+representative test dataset and manually prepared answer key are stored.
 					
-Initial State: 
+Input/Condition: Submit each test outline for processing.
 					
-Input: 
+Output/Result: The final structured output contains the expected assessment
+dates, assessment weights, and learning outcomes with at least 95\% accuracy
+for each field type. At least 95\% of predefined missing, unclear, or
+incomplete fields are flagged for human review.
 					
-Output: 
+How test will be performed: Run the extraction pipeline on every outline,
+compare the confirmed structured output with the answer key, and calculate
+precision/recall or an equivalent field-level accuracy for each field type.
+Calculate missing-field recall as the proportion of known missing or
+incomplete fields that were flagged. Record the results and compare them with
+the targets in the Accuracy NFR.
+
+\item{\textbf{NFR-ACC-03: Policy and CEAB compliance accuracy}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The compliance-checking service is available and the
+representative test dataset has a manually prepared answer key identifying
+all predefined policy and CEAB compliance issues.
+
+Input/Condition: Submit each test outline for compliance checking.
+
+Output/Result: The system identifies at least 95\% of the predefined policy
+and CEAB compliance issues and reports each identified issue in the
+verification results.
+
+How test will be performed: Run the compliance checker on every outline,
+compare the reported issues with the answer key, and calculate recall as the
+number of correctly identified predefined issues divided by the total number
+of predefined issues. Record false positives separately and compare the
+recall with the 95\% target in the Accuracy NFR.
 					
-How test will be performed: 
+\item{\textbf{NFR-PERF-01: Outline processing time}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The processing service is available and the test environment
+has been recorded. A supported PDF course outline of no more than 30 pages is
+available.
+					
+Input: Submit a representative set of supported outlines, including documents
+with different layouts and extraction sizes.
+					
+Output: At least 90\% of successful processing runs complete within 60
+seconds. Failures and delays caused by unavailable external dependencies are
+recorded separately.
+					
+How test will be performed: Run each outline through the complete document
+processing and information-extraction workflow, measure elapsed time from
+submission to structured output, and report the percentile and individual
+results against the 60-second target in the Performance NFR.
 
 \end{enumerate}
 
-\subsubsection{Module ?}
+\subsubsection{Calendar and Web Application Module}
 
-...
+\begin{enumerate}
+
+\item{\textbf{NFR-PERF-02: Calendar response time}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The database contains the representative processed assessment
+dataset, the web application is running in the recorded test environment, and
+the user is authenticated.
+
+Input/Condition: Issue calendar-load requests using representative filters
+for course, year, and program under the expected concurrent workload.
+
+Output/Result: At least 95\% of requests display the previously processed
+calendar data within 3 seconds.
+
+How test will be performed: Generate repeated calendar-load requests with the
+defined filters, measure the elapsed time until the calendar data is displayed,
+and report the response-time distribution and the percentage meeting the
+3-second target in the Performance NFR.
+
+\item{\textbf{NFR-USE-01: Core task completion}\\}
+
+Type: Dynamic, manual
+
+Initial State: Representative CAS administrators and course instructors who
+were not involved in implementation are provided with access to the deployed
+system and the task scenarios.
+
+Input/Condition: Each participant attempts the designated core tasks:
+uploading an outline, reviewing extracted information, viewing and filtering
+the calendar, interpreting a flagged issue, and exporting available data.
+
+Output/Result: At least 80\% of participants complete each designated core
+task without assistance. Any usability issues, errors, or requests for help
+are recorded.
+
+How test will be performed: Observe each participant using the system without
+providing task-specific assistance, record task completion and time, and
+collect post-task feedback. Calculate the completion rate for every task and
+compare it with the Usability NFR.
+
+\item{\textbf{NFR-ACC-02: Accessibility and browser compatibility}\\}
+
+Type: Static and dynamic, automatic and manual
+
+Initial State: The deployed web application and its core workflows are
+available in Google Chrome 120 or later, Mozilla Firefox 121 or later, and
+Safari 17 or later.
+
+Input/Condition: Run the authentication, outline submission, information
+review, calendar viewing, and export workflows.
+
+Output/Result: Automated accessibility checks report no unresolved
+high-severity issues against the applicable AODA and WCAG 2.0 Level AA
+criteria. The core workflows are operable with keyboard navigation and
+provide accessible labels, headings, focus indicators, and error messages in
+each supported browser.
+
+How test will be performed: Run an automated accessibility scan, then
+manually complete the core workflows using keyboard navigation and a
+screen-reader check. Repeat the workflow and deployment checks in every
+supported browser and record the applicable AODA and WCAG 2.0 Level AA
+criteria, results, and any deviations against the Portability and
+Accessibility NFRs.
+
+\end{enumerate}
+
+\subsubsection{Security, Reliability, and Deployment Module}
+
+\begin{enumerate}
+
+\item{\textbf{NFR-SEC-01: Access control and data protection}\\}
+
+Type: Dynamic, automatic and manual
+
+Initial State: Test accounts exist for each supported role, including an
+unauthenticated user, a professor, and a CAS administrator. Test data
+includes records that each role should and should not be able to access.
+
+Input/Condition: Attempt to access protected pages and API endpoints without
+authentication, with the wrong role, and with valid permissions. Inspect
+deployment configuration and logs for exposed credentials or sensitive
+configuration values.
+
+Output/Result: Unauthenticated and unauthorized requests are rejected.
+Permitted users can perform only the actions assigned to their roles, and
+credentials and sensitive configuration values are not exposed.
+
+How test will be performed: Execute the access-control test cases for each
+role, verify both the user interface and direct endpoint responses, and
+inspect configuration handling. Record every unexpected access or exposure
+and compare the results with the Security NFR.
+
+\item{\textbf{NFR-REL-01: Invalid input and dependency failure recovery}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The database contains valid course, assessment, and calendar
+records. A submitted outline is retained by the system.
+
+Input/Condition: Submit an unsupported, malformed, oversized, incomplete, or
+unreadable outline, and separately make the extraction or recommendation
+service unavailable during processing.
+
+Output/Result: The system reports an actionable error without crashing,
+corrupting or deleting existing records, and retains the submitted outline
+for retry. While the external service is unavailable, users can still view
+and edit stored information, view the calendar, and export available data.
+
+How test will be performed: Run each invalid-input and dependency-failure
+scenario, verify the response and stored data before and after the failure,
+and retry processing after restoring the dependency. Record whether each
+predefined case meets the Reliability NFR.
+
+\item{\textbf{NFR-DEP-01: Deployment and maintainability}\\}
+
+Type: Static and dynamic, manual
+
+Initial State: A clean supported hosting environment and the documented
+installation instructions are available to a maintainer who did not perform
+the original setup.
+
+Input/Condition: Deploy the system by following the documentation, then
+implement representative isolated changes to document processing, scheduling,
+or compliance rules.
+
+Output/Result: The maintainer can deploy the system and complete the core
+workflow without undocumented steps. The representative changes do not
+require unrelated components to be rewritten, and the effort for each change
+is recorded relative to the original component effort.
+
+How test will be performed: Have the maintainer follow the installation and
+deployment instructions on the clean environment, execute the core workflow,
+and review the change diffs and effort records with the team. Document the
+results against the Installability and Maintainability NFRs.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Modules}
 
