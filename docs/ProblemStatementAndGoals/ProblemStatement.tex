@@ -171,16 +171,6 @@ as Mosaic timetables and important academic calendar dates like exam periods,
 will also be used. Once the information is extracted, it will be stored in a
 central database that CAS administrators can review, correct, and export.
 
-\bigskip
-The scheduling component will use the CP-SAT solver from Google OR-Tools to
-generate possible assessment dates based on the system's constraints. An LLM
-will be used to provide short explanations for these scheduling suggestions.
-During development, the team plans to use a hosted LLM API and will only send
-publicly available course outline information to it. Since the system may
-eventually handle confidential information, the team will also explore hosting
-the LLM directly on CAS servers. The LLM will be kept as a separate part of the
-system so that the hosted model can later be replaced with a locally hosted one
-without requiring major changes to the rest of the application.
 
 \section{Goals}
 
