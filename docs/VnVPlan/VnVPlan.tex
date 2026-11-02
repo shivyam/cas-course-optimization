@@ -368,11 +368,29 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+%\wss{What modules are outside of the scope.  If there are modules that are
+%  developed by someone else, then you would say here if you aren't planning on
+%  verifying them.  There may also be modules that are part of your software, but
+%  have a lower priority for verification than others.  If this is the case,
+%  explain your rationale for the ranking of module importance.}
+
+Unit testing will mainly focus on team-developed modules, with priority given to components 
+that directly affect the accuracy, reliability, and traceability of the system's 
+outputs. This would include modules responsible for core functions such as document processing 
+and text extraction (including information extraction through the external LLM), data validation 
+and transformation, and the management of extracted information. Other modules, such as user 
+interface components and data representation, are also within the unit testing scope but are 
+lower in priority, as errors in these areas pose less risk to the core functionality and 
+accuracy of the overall system.\\
+
+
+\noindent It is important to note that unit testing the LLM itself will be outside the scope of this plan, 
+as it is an external dependency not developed or maintained by the team. Instead, the team's 
+integration with the LLM will be tested and verified, including the accuracy and traceability 
+of its outputs. Other external dependencies, such as third-party PDF and LaTeX processing 
+libraries, will similarly be outside the scope of unit testing, but will be evaluated through 
+integration and system testing to ensure they function reliably within the overall system.
+
 
 \subsection{Tests for Functional Requirements}
 
