@@ -190,20 +190,37 @@ CAS741) for a partial usability survey.}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+%\wss{What tools are you using for automated testing.  Likely a unit testing
+%  framework and maybe a profiling tool, like ValGrind.  Other possible tools
+%  include a static analyzer, make, continuous integration tools, test coverage
+%  tools, etc.  Explain your plans for summarizing code coverage metrics.
+%  Linters are another important class of tools.  For the programming language
+%  you select, you should look at the available linters.  There may also be tools
+%  that verify that coding standards have been respected, like flake9 for
+%  Python.}
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+%\wss{If you have already done this in the development plan, you can point to
+%that document.}
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+%\wss{The details of this section will likely evolve as you get closer to the implementation.}
+
+
+The primary coding language for the system will be Python, so the team will use the following 
+automated testing and verification tools to support code quality, identify potential defects, 
+and evaluate test coverage throughout development:
+
+\begin{itemize}
+  \item Pytest: A Python testing framework that will be used to develop and execute automated unit tests for individual functions and modules.
+  \item Pytest-cov: A code coverage tool that will be used alongside Pytest to measure the proportion of source code executed during testing. Coverage reports will be reviewed to identify parts of code that may require additional testing.
+  \item GitHub Actions: A continuous integration tool that will automatically run the project's test suite and code quality checks when changes are pushed to the repository.
+\end{itemize}
+
+\noindent Special attention will be paid to the components responsible for the fundamental functions of 
+the system, such as document processing, information extraction, and data validation. The team 
+will review automated test results to identify and resolve issues before integrating changes 
+into the main codebase. The specific configuration and use of these tools may be adjusted as 
+development and implementation progresses.
+
 
 \subsection{Software Validation}
 
