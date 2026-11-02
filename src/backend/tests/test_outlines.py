@@ -1,5 +1,6 @@
 """Tests for the POST /api/outlines endpoint."""
 
+import pymupdf
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -8,8 +9,22 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_upload_outline_accepts_pdf():
-    files = {"file": ("outline.pdf", b"%PDF-1.4 fake content", "application/pdf")}
+def make_pdf(text: str) -> bytes:
+    # Generate a real in-memory PDF so this test exercises extraction rather
+    # than only checking the upload filename or MIME type.
+    document = pymupdf.open()
+    page = document.new_page()
+    page.insert_text((72, 72), text)
+    contents = document.tobytes()
+    document.close()
+    return contents
+
+
+def test_upload_outline_extracts_text():
+    # The endpoint should return the text that was embedded in the PDF page.
+    files = {
+        "file": ("outline.pdf", make_pdf("Course outline text"), "application/pdf")
+    }
 
     response = client.post("/api/outlines", files=files)
 
@@ -17,7 +32,8 @@ def test_upload_outline_accepts_pdf():
     body = response.json()
     assert body["filename"] == "outline.pdf"
     assert body["status"] == "received"
-    assert body["text_extraction"] == "not_configured"
+    assert body["text_extraction"] == "pymupdf"
+    assert body["text"] == "Course outline text"
 
 
 def test_upload_outline_rejects_non_pdf():

@@ -1,16 +1,26 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 
+// Use the Vite proxy in development, while allowing deployments to provide
+// the backend URL through the VITE_API_BASE_URL environment variable.
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
 type UploadState = 'idle' | 'uploading' | 'success' | 'error'
 
 function AdminPage() {
+  // These states keep the selected file and user feedback synchronized with
+  // the upload request lifecycle.
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploadState, setUploadState] = useState<UploadState>('idle')
   const [message, setMessage] = useState('')
   const [isDragging, setIsDragging] = useState(false)
+  // Router navigation carries the extraction result to the preview page
+  // without requiring a second request immediately after uploading.
+  const navigate = useNavigate()
 
+  // Centralize file selection so picker, drag-and-drop, and removal all reset
+  // stale status messages consistently.
   function selectFile(file: File | null) {
     setSelectedFile(file)
     setUploadState('idle')
@@ -21,6 +31,8 @@ function AdminPage() {
     selectFile(event.target.files?.[0] ?? null)
   }
 
+  // Prevent the browser's default file-opening behavior and use the dropped
+  // file as the current upload selection instead.
   function handleDrop(event: DragEvent<HTMLLabelElement>) {
     event.preventDefault()
     setIsDragging(false)
@@ -31,6 +43,8 @@ function AdminPage() {
     return `${(bytes / 1024 / 1024).toFixed(2)} MB`
   }
 
+  // Upload the selected PDF and pass the backend's extracted text to the
+  // preview route after a successful response.
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -43,15 +57,25 @@ function AdminPage() {
     setUploadState('uploading')
     setMessage('')
 
+    // FormData is required because the API expects multipart/form-data.
     const formData = new FormData()
     formData.append('file', selectedFile)
 
     try {
+      // Do not set Content-Type manually; the browser adds the multipart
+      // boundary required by the backend when sending FormData.
       const response = await fetch(`${apiBaseUrl}/outlines`, {
         method: 'POST',
         body: formData,
       })
-      const body = (await response.json()) as { detail?: string; filename?: string }
+      // The response contains either extraction data or a detail message for
+      // an error response.
+      const body = (await response.json()) as {
+        detail?: string
+        filename?: string
+        size_bytes?: number
+        text?: string
+      }
 
       if (!response.ok) {
         throw new Error(body.detail ?? 'The course outline could not be uploaded.')
@@ -59,6 +83,15 @@ function AdminPage() {
 
       setUploadState('success')
       setMessage(`${body.filename ?? selectedFile.name} uploaded successfully.`)
+      // Keep the extracted text in navigation state so the preview can render
+      // it immediately after a successful upload.
+      navigate('/admin/outline-preview', {
+        state: {
+          filename: body.filename ?? selectedFile.name,
+          sizeBytes: body.size_bytes ?? selectedFile.size,
+          text: body.text ?? '',
+        },
+      })
     } catch (error) {
       setUploadState('error')
       setMessage(
@@ -97,6 +130,7 @@ function AdminPage() {
             </span>
           </div>
 
+          {/* The label makes the entire drop zone clickable. */}
           <label
             htmlFor="outline-file"
             onDragEnter={(event) => {
@@ -189,7 +223,11 @@ function AdminPage() {
             {[
               ['01', 'Upload', 'Add a current course outline as a PDF.'],
               ['02', 'Validate', 'We check the file type and size.'],
-              ['03', 'Extract', 'The outline will then be converted into usable text and compared against university guildelines.'],
+              [
+                '03',
+                'Extract & Compare',
+                'The outline will be converted into usable text and compared against university guidelines.',
+              ],
             ].map(([number, title, description]) => (
               <li key={number} className="flex gap-3">
                 <span className="text-sm font-bold text-mcmaster-gold">{number}</span>
