@@ -94,22 +94,43 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+%\wss{State what is intended to be accomplished.  The objective will be around
+%  the qualities that are most important for your project.  You might have
+%  something like: ``build confidence in the software correctness,''
+%  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
+%  just those that are most important.}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
+%\wss{You should also list the objectives that are out of scope.  You don't have 
+%  the resources to do everything, so what will you be leaving out.  For instance, 
+%  if you are not going to verify the quality of usability, state this.  It is also 
+%  worthwhile to justify why the objectives are left out.}
 
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+%\wss{The objectives are important because they highlight that you are aware of 
+%  limitations in your resources for verification and validation.  You can't do everything, 
+%  so what are you going to prioritize?  As an example, if your system depends on an 
+%  external library, you can explicitly state that you will assume that external library 
+%  has already been verified by its implementation team.}
+
+The primary objective of the Verification and Validation (V\&V) process is to build confidence 
+that the CAS system functions correctly and reliably, as well as ensuring that the information 
+it produces is accurate and traceable to the original course outlines. Emphasis will be placed 
+on verifying the accuracy of document processing and information extraction, including outputs 
+generated through the external LLM. The system must also reliably support its core functionality, 
+including the management and presentation of extracted information, to ensure that CAS 
+administrators and the associate chairs can use the results to review course outlines against 
+CEAB requirements and McMaster policies.\\
+
+
+\noindent Given resource and time constraints, certain attributes will receive less attention during the 
+V\&V process. For example, usability studies involving a large group of users and performance 
+testing under high workloads will be outside the scope of this project. Basic usability and 
+performance checks will still be conducted, but testing efforts will prioritize correctness, 
+reliability, and traceability due to their greater impact and importance on the system's core 
+purpose. Additionally, the internal implementation of external dependencies, such as third-party 
+document processing libraries and the LLM, will not be independently verified by the team. 
+Instead, these will be treated as externally maintained components, with a focus on integration 
+testing and evaluating the accuracy of their outputs.
+
 
 \subsection{Custom Documents}
 
