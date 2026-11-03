@@ -14,6 +14,15 @@
 }
 \usepackage[round]{natbib}
 
+% Test IDs (SRS-style): ST-FR\refstepcounter{stnum}\thestnum \label{ST_...}
+% Refs: \stref{ST_Intake_Data} -> whole ``ST-FR1'' clickable (not only the number).
+\newcounter{stnum}
+\newcommand{\stref}[1]{\hyperref[#1]{ST-FR\ref*{#1}}}
+% Link Hazard Analysis IDs to the HA PDF (put the link on the ID text, not on ``Hazard Analysis'').
+\newcommand{\halink}[1]{\href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{#1}}
+% Link FR numbers to the SRS PDF (FRs are defined there, not in this document).
+\newcommand{\frlink}[1]{\href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{FR#1}}
+
 \input{../Comments.text}
 \input{../Common.text}
 
@@ -67,21 +76,23 @@ in.}
 \section{Symbols, Abbreviations, and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
+\begin{tabularx}{\textwidth}{l X} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
-  \midrule
+  \midrule 
+  ASSURE & Accreditation and Scheduling Support for Undergraduate Review and Evaluation\\
+  CAS & Department of Computing and Software\\
   CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
+  FMEA & Failure Mode and Effect Analysis\\
   LLM & Large Language Model\\
-  SRS & Software Requirements Specification\\
+  PDF & Portable Document Format\\
+  PoC & Proof of Concept\\
+  SRS & Software Requirements Specification \citep{TeamBVSH2026SRS}\\
+  T & Test\\
   V\&V & Verification and Validation\\
   \bottomrule
-\end{tabular}\\
+\end{tabularx}\\
 
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -94,36 +105,74 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software under test is ASSURE (Accreditation and Scheduling Support for Undergraduate Review and Evaluation), which is a course-outline review system for the Department of Computing and Software (CAS) at McMaster University.
+
+ASSURE accepts a batch of course outlines in PDF (Word and LaTeX document support will be a future feature). A replaceable (black box) locally hosted open-weight large language model (LLM) extracts each assessment's name, date, weight, and learning outcomes, and it either cites the passage each value came from or reports that it cannot find the value. The system checks the extracted information against McMaster University's Undergraduate Course Management Policy~\citep{McMasterUCMP2025}, academic-calendar restrictions, and the Canadian Engineering Accreditation Board's (CEAB) Accreditation Criteria and Procedures~\citep{CEAB2025}, and flags missing, incomplete, or non-compliant information for review. Its dashboard supports filtering by course, year, and program. It also displays term completeness, workload or scheduling conflicts, and allows users to override or correct extracted values. The system also stores the reviewed data for export, while its shared calendar presents assessment deadlines across CAS courses and highlights items that need attention.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+%\wss{State what is intended to be accomplished.  The objective will be around
+%  the qualities that are most important for your project.  You might have
+%  something like: ``build confidence in the software correctness,''
+%  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
+%  just those that are most important.}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
+%\wss{You should also list the objectives that are out of scope.  You don't have 
+%  the resources to do everything, so what will you be leaving out.  For instance, 
+%  if you are not going to verify the quality of usability, state this.  It is also 
+%  worthwhile to justify why the objectives are left out.}
 
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+%\wss{The objectives are important because they highlight that you are aware of 
+%  limitations in your resources for verification and validation.  You can't do everything, 
+%  so what are you going to prioritize?  As an example, if your system depends on an 
+%  external library, you can explicitly state that you will assume that external library 
+%  has already been verified by its implementation team.}
+
+The primary objective of the Verification and Validation (V\&V) process is to build confidence 
+that the CAS system functions correctly and reliably, as well as ensuring that the information 
+it produces is accurate and traceable to the original course outlines. Emphasis will be placed 
+on verifying the accuracy of document processing and information extraction, including outputs 
+generated through the external LLM. The system must also reliably support its core functionality, 
+including the management and presentation of extracted information, to ensure that CAS 
+administrators and the associate chairs can use the results to review course outlines against 
+CEAB requirements and McMaster policies.\\
+
+
+\noindent Given resource and time constraints, certain attributes will receive less attention during the 
+V\&V process. For example, usability studies involving a large group of users and performance 
+testing under high workloads will be outside the scope of this project. Basic usability and 
+performance checks will still be conducted, but testing efforts will prioritize correctness, 
+reliability, and traceability due to their greater impact and importance on the system's core 
+purpose. Additionally, the internal implementation of external dependencies, such as third-party 
+document processing libraries and the LLM, will not be independently verified by the team. 
+Instead, these will be treated as externally maintained components, with a focus on integration 
+testing and evaluating the accuracy of their outputs.
+
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The project includes two approved Custom Documents that support the design
+process and end-user adoption:
+
+\begin{enumerate}
+    \item \textbf{Fall Term CD: Wireframe Report.}
+    The wireframe report will document the proposed administrative dashboard,
+    including the shared assessment calendar, course filtering tools, and
+    scheduling recommendation displays. The wireframes will be reviewed with
+    the project clients and stakeholders to confirm that the navigation,
+    component interactions, and workflows reflect their needs before
+    front-end implementation begins. Feedback from this review will be used
+    to revise the interface design.
+
+    \item \textbf{Winter Term CD: User Manual.}
+    The user manual will provide instructors and CAS administrative staff with
+    step-by-step instructions for uploading course outlines, filtering the
+    centralized assessment calendar, exporting database records, and reviewing
+    policy compliance flags and scheduling recommendations. The manual will
+    be checked against the implemented system and reviewed for completeness,
+    clarity, and whether users can follow its procedures to complete the
+    documented tasks.
+\end{enumerate}
 
 \subsection{Relevant Documentation}
 
@@ -151,25 +200,58 @@ how they relate to your VnV efforts.}
 
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+%\wss{List any approaches you intend to use for SRS verification.  This may
+%  include ad hoc feedback from reviewers, like your classmates (like your
+%  primary reviewer), or you may plan for something more rigorous/systematic.}
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
+%\wss{If you have a supervisor for the project, you shouldn't just say they will
+%read over the SRS.  You should explain your structured approach to the review.
+%Will you have a meeting?  What will you present?  What questions will you ask?
+%Will you give them instructions for a task-based inspection?  Will you use your
+%issue tracker?}
 
-\wss{Maybe create an SRS checklist?}
+%\wss{Maybe create an SRS checklist?}
+
+The SRS will be verified through a combination of structured internal reviews, as well as receiving 
+feedback from primary stakeholders (CAS administrators, associate chairs). Team members will 
+review the SRS to assess the completeness, clarity, consistency, feasibility, and verifiability 
+of the requirements. To ensure a systematic review, the team will use the following checklist for 
+verification:
+
+\begin{itemize}
+  \item Completeness: Verify that all required system functions and relevant constraints are documented.
+  \item Clarity: Ensure that each requirement is clearly stated and free of ambiguity.
+  \item Consistency: Verify that the requirements do not conflict with one another and use consistent terminology.
+  \item Feasibility: Ensure that each requirement can realistically be implemented within the project's technical constraints.
+  \item Verifiability: Ensure that each requirement can be tested or verified using defined criteria.
+  \item Traceability: Verify that each requirement can be linked to its relevant stakeholder needs, as well as identified risks in the Hazard Analysis.
+\end{itemize}
+
+\noindent The SRS will be reviewed with the project's TA (Lucas Dutton) and primary stakeholders (Matt 
+Vonk, Connie Carrabs, Spencer Smith, Sebastien Mosser) during the scheduled biweekly meetings. 
+Feedback on the requirements will be to determine whether the functionality accurately reflects 
+stakeholder needs and project expectations. The team will encourage reviewers to identify any 
+missing requirements or unclear descriptions, and any issues identified during reviews will be 
+documented and tracked using GitHub Issues. The team will then address the feedback, update the 
+SRS as needed, and review the changes to ensure that identified issues have been resolved.
+
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+\paragraph{Methods we will use for design verification.}
 
-\wss{The review will include reviews by your classmates}
+\begin{itemize}
+\item \textbf{Testing.} We will run design checks against the planned behaviour. Examples include outline intake, extraction with a source citation, confirmation before use, restricted-period and weight flags without the large language model (LLM), and rejecting a bad file. Each check will name the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS} or \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis} requirement it covers, and will state a concrete expected result.
+\item \textbf{Analysis.} We will review the design on paper. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and ask whether each mitigation still has a place in the design. If something is deferred, we will point to the Hazard Analysis roadmap.
+\item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/HazardAnalysis/HazardAnalysis.tex\#L129}{C1 to C11} from the Hazard Analysis. Our supervisors will inspect the design in a meeting when needed. Classmate peer reviewers will use the same checklist and leave comments as GitHub issues.
+\item \textbf{Similarity.} We will compare a new design to an earlier accepted design choice from the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}, such as a replaceable LLM interface. For example, switching the LLM from Copilot to Gemma. If we change that choice, we will explain why the change still fits the SRS and Hazard Analysis.
+\end{itemize}
 
-\wss{Create a checklists?}
+\paragraph{Results and pass/fail data.}
+For each design check, we will record which design part we looked at, which SRS or Hazard Analysis requirement we used as the expected result, what we observed, and whether it passed or failed.
+
+\paragraph{Non-conformances and deviations.}
+If a design check fails, we will open a GitHub issue that names the design part and what it failed against. The issue will also say how we fixed it, or why we are allowing a deviation for now, before we treat the design as ready to implement.
 
 \subsection{Verification and Validation Plan Verification}\label{sec:VnVPlanVerif}
 
@@ -318,20 +400,38 @@ CAS741) for a partial usability survey.}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+%\wss{What tools are you using for automated testing.  Likely a unit testing
+%  framework and maybe a profiling tool, like ValGrind.  Other possible tools
+%  include a static analyzer, make, continuous integration tools, test coverage
+%  tools, etc.  Explain your plans for summarizing code coverage metrics.
+%  Linters are another important class of tools.  For the programming language
+%  you select, you should look at the available linters.  There may also be tools
+%  that verify that coding standards have been respected, like flake9 for
+%  Python.}
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+%\wss{If you have already done this in the development plan, you can point to
+%that document.}
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+%\wss{The details of this section will likely evolve as you get closer to the implementation.}
+
+
+The primary coding language for the system will be Python, so the team will use the following 
+automated testing and verification tools to support code quality, identify potential defects, 
+and evaluate test coverage throughout development:
+
+\begin{itemize}
+  \item Pytest: A Python testing framework that will be used to develop and execute automated unit tests for individual functions and modules.
+  \item Pytest-cov: A code coverage tool that will be used alongside Pytest to measure the proportion of source code executed during testing. Coverage reports will be reviewed to identify parts of code that may require additional testing.
+  \item Ruff: A Python linter and static analysis tool that will be used to identify potential errors, enforce consistent coding standards, and improve code quality.
+  \item GitHub Actions: A continuous integration tool that will automatically run the project's test suite and code quality checks when changes are pushed to the repository.
+\end{itemize}
+
+\noindent Special attention will be paid to the components responsible for the fundamental functions of 
+the system, such as document processing, information extraction, and data validation. The team 
+will review automated test results to identify and resolve issues before integrating changes 
+into the main codebase. The specific configuration and use of these tools may be adjusted as 
+development and implementation progresses.
+
 
 \subsection{Software Validation}
 
@@ -355,128 +455,532 @@ as a Rev 0 demo for the supervisor.}
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section describes the system-level tests for ASSURE. Section~\ref{sec_SysFuncTests} covers the functional requirements in the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS}. There is one system test for each functional requirement, labeled ST-FR1 through ST-FR17. The tests are grouped the same way as the SRS: outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export.
 
-\subsection{Tests for Functional Requirements}
+\subsection{Tests for Functional Requirements} \label{sec_SysFuncTests}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+Each test below checks one functional requirement end to end through the running system. The inputs (files, dates, accounts, and expected values) are stated in each test.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+There is one system test for each functional requirement (\frlink{1}--\frlink{17}). Some tests check more than one input case (for example, valid and invalid uploads in ST-FR1).
 
-\subsubsection{Area of Testing1}
+For this document version, outline intake is \textbf{PDF only}, and other formats will be supported later. For additional formats, new intake tests will be added. The max outline size is 5~MB, as defined in \halink{\texttt{SSR\_AcceptedFiles}}. Symbolic constants used in the tests below (cluster window, cluster threshold, min alternatives, weight total) are from \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS Appendix~C}. 
 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
+\subsubsection{Outline Intake and Extraction}
+
+These tests cover SRS requirements \frlink{1} to \frlink{6}.
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Intake_Data}: Outline intake (\frlink{1})\\}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+Type: Functional, Dynamic, Manual
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Initial State: A CAS administrator is logged in. No outline is stored for the selected course in the current term.
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+Input/Condition: (a)~A valid PDF course outline for that course, smaller than the max outline size (5~MB); (b)~the same outline content saved in a non-PDF file format; (c)~a PDF of the same outline larger than 5~MB.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Output/Result: (a)~The system accepts the upload, stores the outline for that course, and shows a success message. (b)~and~(c)~The system rejects the file before processing and does not store an outline.
 
-How test will be performed: 
+Test Case Derivation: \frlink{1} requires PDF outline intake from a CAS administrator or instructor. \halink{\texttt{SSR\_AcceptedFiles}} requires rejecting non-PDF and oversized files before processing.
+
+How test will be performed: The tester uploads (a)--(c) through the web interface and records whether each file is accepted or rejected. A second pass with an instructor account confirms that the same valid PDF upload path is available to instructors.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Assessment}: Extract assessments (\frlink{2})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A valid PDF course outline for the selected course is stored. Extraction has not been confirmed.
+
+Input/Condition: The stored PDF, which contains Midterm~1 (weight 30\%, dated 2026-02-10), Assignment~1 (blank weight, dated 2026-01-20), and Final Exam (weight 50\%, date TBD).
+
+Output/Result: The system shows three assessments with those names, types, dates, and weights. Each extracted value includes a citation to its source passage in the outline. The Final Exam date and Assignment~1 weight remain empty or marked missing; the system does not invent values for them.
+
+Test Case Derivation: \frlink{2} requires extraction of each assessment's name, type, date, and weight. The blank weight and TBD date also set up \frlink{4}.
+
+How test will be performed: The tester runs extraction and compares the structured result to a handwritten answer key for that PDF.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_LO}: Extract learning outcomes (\frlink{3})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A valid PDF course outline for the selected course is stored. The outline includes at least three learning outcomes that identify graduate attributes by number, by name, and by description only.
+
+Input/Condition: The stored outline, which contains those three learning outcomes: one with GA numbers beside it, one that names the attribute in words, and one that only describes the attribute.
+
+Output/Result: All three outcomes appear with their text. The system records the graduate attributes addressed in each of the number, name, and description cases. Each extracted value cites its source passage.
+
+Test Case Derivation: \frlink{3} requires extraction of learning outcomes and the graduate attributes each addresses, whether listed by number, name, or description.
+
+How test will be performed: The tester runs extraction and compares the outcomes and GA mappings to the handwritten answer key.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Flag}: Flag missing fields (\frlink{4})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A valid PDF course outline has been extracted into structured assessments, including Final Exam with date TBD and Assignment~1 with a blank weight.
+
+Input/Condition: The extracted assessment list that includes Final Exam (date TBD) and Assignment~1 (blank weight).
+
+Output/Result: The system flags the TBD date and the blank weight as missing fields. It does not fill either field with a guessed value.
+
+Test Case Derivation: \frlink{4} requires flagging of any extracted field that is missing, including a date marked TBD.
+
+How test will be performed: The tester inspects the extraction review screen and compares the missing-field flags to the handwritten answer key.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Extract_Review}: Confirm extracted data (\frlink{5})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Extracted assessment data for the selected course is shown on the review screen and has not been confirmed.
+
+Input/Condition: The reviewer confirms all assessments except the Final Exam, which remains unconfirmed.
+
+Output/Result: Confirmed assessments appear in calendar, conflict, and compliance views. The unconfirmed Final Exam does not appear in those views until it is confirmed.
+
+Test Case Derivation: \frlink{5} requires user review and confirmation before extracted data is used for calendar, conflict detection, or compliance checking.
+
+How test will be performed: The tester opens the calendar and compliance views before confirmation, after confirming all assessments except the Final Exam, and after confirming the Final Exam.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Dates_Tentative}: Tentative dates (\frlink{6})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: An instructor for a course is logged in. An assessment for that course has a missing date.
+
+Input/Condition: The instructor enters the tentative date 2026-02-17 for that assessment, then updates it to 2026-02-24.
+
+Output/Result: After each change, the stored date is shown as tentative. The final stored date is 2026-02-24. An instructor for a different course cannot change this date.
+
+Test Case Derivation: \frlink{6} allows an instructor to enter and update tentative assessment dates for their own courses.
+
+How test will be performed: The course instructor sets and updates the date. A second instructor account for a different course is used to verify that the date cannot be edited.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Calendar and Conflict Detection}
 
-...
+These tests cover SRS requirements \frlink{7} to \frlink{10}.
+
+\begin{enumerate}
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Calendar}: Shared calendar (\frlink{7})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Confirmed and tentative dates exist for at least two courses in the same program and year level.
+
+Input/Condition: (a)~Filter the shared calendar by a selected program and year level; (b)~then filter by one selected course alone.
+
+Output/Result: Under (a), confirmed and tentative dates for matching courses appear, tentative dates are visually marked, and courses from other programs do not appear. Under (b), only that course's events appear.
+
+Test Case Derivation: \frlink{7} requires a shared calendar filtered by course, year, and program, with tentative dates marked.
+
+How test will be performed: The tester applies each filter and compares the visible events to the stored assessments.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Work_Cluster}: Workload cluster (\frlink{8})\\}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Confirmed assessments for one cohort are loaded so that four assessments fall inside one 7-day cluster window. A second cohort has only two assessments in that same window. The cluster threshold is set to 3.
+
+Input/Condition: The loaded cohort assessments and the cluster threshold of 3.
+
+Output/Result: The system flags the first cohort's window as a workload cluster. The second cohort is not flagged for that window.
+
+Test Case Derivation: \frlink{8} requires identifying cluster windows where a cohort has more assessments than the configurable threshold.
+
+How test will be performed: A scripted system test loads the fixture data and asserts which windows are flagged.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Work_Policy}: Restricted periods (\frlink{9})\\}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: The academic calendar for the term includes a reading week (recess) and a final examination or test-ban period (\halink{\texttt{SSR\_RestrictedDates}}).
+
+Input/Condition: One confirmed assessment dated inside reading week, one dated inside the exam or test-ban period, and one dated outside all restricted periods.
+
+Output/Result: The reading-week and exam or test-ban assessments are flagged as restricted. The unrestricted assessment is not flagged for this check.
+
+Test Case Derivation: \frlink{9} requires identifying assessments scheduled in periods restricted by McMaster policy (for example, final exam periods). \halink{H6-4} calls for covering each restricted-period type used in the calendar.
+
+How test will be performed: A scripted system test runs conflict detection and checks the restricted-period findings against the loaded academic calendar.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Reanalyze}: Re-analyze conflicts (\frlink{10})\\}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Conflict results are stored that flag a workload cluster for one cohort (four assessments inside a 7-day window with a cluster threshold of 3).
+
+Input/Condition: An instructor changes one assessment date so that the cluster no longer exceeds the cluster threshold of 3.
+
+Output/Result: Conflict detection runs again for the affected courses and cohorts. The previous cluster flag is cleared.
+
+Test Case Derivation: \frlink{10} requires re-running conflict detection when an assessment date is added or changed.
+
+How test will be performed: A scripted system test updates the date and asserts the refreshed conflict results.
+
+\end{enumerate}
+
+\subsubsection{Scheduling Suggestions}
+
+These tests cover SRS requirements \frlink{11} and \frlink{12}.
+
+\begin{enumerate}
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Suggest_Generation}: Suggest alternative dates (\frlink{11})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: One assessment is in a detected conflict, and another has a TBD date. The instructor for that course is logged in.
+
+Input/Condition: (a)~The instructor explicitly requests suggestions for both assessments; (b)~the instructor does not request suggestions.
+
+Output/Result: Under (a), the system offers at least two feasible dates for the conflicted assessment and suggestions for the TBD assessment, and no suggested date falls in a restricted period. Under (b), no suggestions are created.
+
+Test Case Derivation: \frlink{11} requires alternative dates on explicit instructor request for conflicted or TBD assessments.
+
+How test will be performed: The tester requests suggestions and records the dates and explanations shown. A second run without a request confirms that no suggestions appear automatically.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Suggest_NoAuto}: No automatic date change (\frlink{12})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Alternative date suggestions for a conflicted or TBD assessment are pending. The responsible instructor is logged in.
+
+Input/Condition: (a)~The instructor rejects all suggestions; (b)~in a second trial, the instructor accepts one suggestion.
+
+Output/Result: After (a), the assessment date is unchanged. After (b), the stored date is the accepted suggestion and changes only because the instructor approved it.
+
+Test Case Derivation: \frlink{12} requires that an assessment date does not change without the responsible instructor's approval.
+
+How test will be performed: The tester rejects all suggestions, then accepts one suggestion in a second trial, and checks the stored date after each action.
+
+\end{enumerate}
+
+\subsubsection{Compliance Checking}
+
+These tests cover SRS requirements \frlink{13} and \frlink{14}.
+
+\begin{enumerate}
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Comp_Policy}: Policy compliance (\frlink{13})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A confirmed outline has assessment weights that sum to 90\% and omits one required outline element named in the answer key (from the Undergraduate Course Management Policy rules encoded for \frlink{13}). A second confirmed outline that satisfies the same rules is available as a clean control.
+
+Input/Condition: (a)~The defective confirmed outline and the encoded McMaster course-outline policy rules; (b)~the clean control outline and the same rules.
+
+Output/Result: Under (a), the system reports a finding for the omitted required element and a finding that weights do not total 100\%, and it lists which rules were checked (\halink{\texttt{SSR\_CheckCoverage}}). Under (b), the clean control produces no false weight-total failure.
+
+Test Case Derivation: \frlink{13} requires checking outlines against McMaster policy rules, including required sections and weights totalling 100\%. Related encoded rules include a maximum single weight of 75\% and early-feedback minima.
+
+How test will be performed: The tester runs compliance on the defective outline and on the clean control outline and compares the findings to the answer key.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Comp_Grad}: Graduate attribute check (\frlink{14})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: The master course sheet expects GAs 1, 2, and 5 for the selected course. The confirmed outline for that course lists GAs 1 and 2 only. A second course code has no master-sheet row.
+
+Input/Condition: (a)~The confirmed learning-outcome GAs and the master course sheet row for the selected course; (b)~the second course code with no master-sheet row.
+
+Output/Result: Under (a), the system flags GA~5 as missing or inconsistent. Under (b), the course absent from the master sheet is reported as not checked, not as having no findings.
+
+Test Case Derivation: \frlink{14} requires comparing outline GA numbers with the master course sheet and flagging missing or inconsistent values. \halink{\texttt{SSR\_CheckCoverage}} / \halink{H5-5} require the not-checked wording.
+
+How test will be performed: The tester runs the GA check on both courses and records the findings text.
+
+\end{enumerate}
+
+\subsubsection{Access and Export}
+
+These tests cover SRS requirements \frlink{15} to \frlink{17}.
+
+\begin{enumerate}
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Access_Login}: Login required (\frlink{15})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: The tester is logged out.
+
+Input/Condition: A request to open the dashboard or a course page while logged out.
+
+Output/Result: The system denies access and prompts for login. After a valid login, the same page is reachable.
+
+Test Case Derivation: \frlink{15} requires users to log in before they can view or change any data.
+
+How test will be performed: The tester opens protected URLs while logged out, then logs in and retries the same URLs.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Access_Roles}: Role-based access (\frlink{16})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: An administrator account and an instructor account exist. The instructor owns only one course.
+
+Input/Condition: (a)~The instructor attempts to edit another instructor's course; (b)~the administrator edits that same course.
+
+Output/Result: Under (a), the instructor's change is denied. Under (b), the administrator's change succeeds.
+
+Test Case Derivation: \frlink{16} allows administrators to manage all courses and limits instructors to their own courses.
+
+How test will be performed: The tester repeats the edit attempt with each role and records whether the change is accepted or denied.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Export_CSV}: CSV export (\frlink{17})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Confirmed assessment data exists for at least one course. An administrator account and an instructor account exist.
+
+Input/Condition: (a)~The administrator requests a CSV export of extracted assessment data; (b)~the instructor attempts the same export.
+
+Output/Result: Under (a), a CSV downloads that contains the extracted assessment fields for the selected scope. Under (b), the instructor cannot run the export.
+
+Test Case Derivation: \frlink{17} allows an administrator to export extracted assessment data as CSV.
+
+How test will be performed: The tester exports as administrator and opens the file, then confirms that the export control is unavailable to an instructor.
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+\noindent The following tests assess the system-wide nonfunctional
+requirements. Accuracy measurements use a manually prepared answer key for a
+representative set of course outlines. Performance measurements will record
+the test environment, document characteristics, workload, and response times.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
+\subsubsection{Course Outline Processing}
 		
-\paragraph{Title for Test}
-
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{\textbf{NFR-ACC-01: Extraction accuracy}\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Dynamic, automatic
 
-Type: Functional, Dynamic, Manual, Static etc.
+Initial State: The course-outline processing service is available and the
+representative test dataset and manually prepared answer key are stored.
 					
-Initial State: 
+Input/Condition: Submit each test outline for processing.
 					
-Input: 
+Output/Result: The final structured output contains the expected assessment
+dates, assessment weights, and learning outcomes with at least 95\% accuracy
+for each field type. At least 95\% of predefined missing, unclear, or
+incomplete fields are flagged for human review.
 					
-Output: 
+How test will be performed: Run the extraction pipeline on every outline,
+compare the confirmed structured output with the answer key, and calculate
+precision/recall or an equivalent field-level accuracy for each field type.
+Calculate missing-field recall as the proportion of known missing or
+incomplete fields that were flagged. Record the results and compare them with
+the targets in the Accuracy NFR.
+
+\item{\textbf{NFR-ACC-03: Policy and CEAB compliance accuracy}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The compliance-checking service is available and the
+representative test dataset has a manually prepared answer key identifying
+all predefined policy and CEAB compliance issues.
+
+Input/Condition: Submit each test outline for compliance checking.
+
+Output/Result: The system identifies at least 95\% of the predefined policy
+and CEAB compliance issues and reports each identified issue in the
+verification results.
+
+How test will be performed: Run the compliance checker on every outline,
+compare the reported issues with the answer key, and calculate recall as the
+number of correctly identified predefined issues divided by the total number
+of predefined issues. Record false positives separately and compare the
+recall with the 95\% target in the Accuracy NFR.
 					
-How test will be performed: 
+\item{\textbf{NFR-PERF-01: Outline processing time}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The processing service is available and the test environment
+has been recorded. A supported PDF course outline of no more than 30 pages is
+available.
+					
+Input/Condition: Submit a representative set of supported outlines, including documents
+with different layouts and extraction sizes.
+					
+Output/Result: At least 90\% of successful processing runs complete within 60
+seconds. Failures and delays caused by unavailable external dependencies are
+recorded separately.
+					
+How test will be performed: Run each outline through the complete document
+processing and information-extraction workflow, measure elapsed time from
+submission to structured output, and report the percentile and individual
+results against the 60-second target in the Performance NFR.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Calendar and Web Application}
 
-...
+\begin{enumerate}
 
-\subsection{Traceability Between Test Cases and Requirements}
+\item{\textbf{NFR-PERF-02: Calendar response time}\\}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+Type: Dynamic, automatic
+
+Initial State: The database contains the representative processed assessment
+dataset, the web application is running in the recorded test environment, and
+the user is authenticated.
+
+Input/Condition: Issue calendar-load requests using representative filters
+for course, year, and program under the expected concurrent workload.
+
+Output/Result: At least 95\% of requests display the previously processed
+calendar data within 3 seconds.
+
+How test will be performed: Generate repeated calendar-load requests with the
+defined filters, measure the elapsed time until the calendar data is displayed,
+and report the response-time distribution and the percentage meeting the
+3-second target in the Performance NFR.
+
+\item{\textbf{NFR-USE-01: Core task completion}\\}
+
+Type: Dynamic, manual
+
+Initial State: Representative CAS administrators and course instructors who
+were not involved in implementation and do not have programming or machine
+learning knowledge are provided with access to the deployed system and the
+task scenarios.
+
+Input/Condition: Each participant attempts the designated core tasks:
+uploading an outline, reviewing extracted information, viewing and filtering
+the calendar, interpreting a flagged issue, and exporting available data,
+without programming or machine learning assistance.
+
+Output/Result: At least 80\% of participants complete each designated core
+task without assistance or technical knowledge. Any usability issues, errors,
+requests for help, or evidence of programming or machine learning assistance
+are recorded.
+
+How test will be performed: Observe each participant using the system without
+providing task-specific or technical assistance, record task completion and
+time, and collect post-task feedback about ease of use. Calculate the
+completion rate for every task and verify that the results demonstrate use by
+non-technical participants. Compare the results with the Usability NFR.
+
+\item{\textbf{NFR-PORT-01: Hosting and browser portability}\\}
+
+Type: Dynamic, automatic and manual
+
+Initial State: The system is deployed in the designated McMaster University
+hosting environment. The deployed web application and its core workflows are
+available on supported desktop operating systems in Google Chrome 120 or
+later, Mozilla Firefox 121 or later, and Safari 17 or later.
+
+Input/Condition: Run the authentication, outline submission, information
+review, calendar viewing, and export workflows in each supported browser and
+on the designated hosting environment.
+
+Output/Result: The system is usable in the designated McMaster University
+hosting environment and the core workflows complete successfully in each
+supported browser. Automated accessibility checks report no unresolved
+high-severity issues against the applicable AODA and WCAG 2.0 Level AA
+criteria.
+
+How test will be performed: Run an automated accessibility scan, then
+manually complete the core workflows in every supported browser and on the
+designated hosting environment. Use keyboard navigation and a screen-reader
+check, and record the browser, operating system, hosting environment,
+applicable WCAG success criteria, results, and any deviations against the
+Portability and Accessibility NFRs.
+
+\end{enumerate}
+
+\subsubsection{Security, Reliability, and Deployment}
+
+\begin{enumerate}
+
+\item{\textbf{NFR-SEC-01: Access control and data protection}\\}
+
+Type: Dynamic, automatic and manual
+
+Initial State: Test accounts exist for each supported role, including an
+unauthenticated user, a professor, and a CAS administrator. Test data
+includes records that each role should and should not be able to access.
+
+Input/Condition: Attempt to access protected pages and API endpoints without
+authentication, with the wrong role, and with valid permissions. Inspect
+deployment configuration and logs for exposed credentials or sensitive
+configuration values.
+
+Output/Result: Unauthenticated and unauthorized requests are rejected.
+Permitted users can perform only the actions assigned to their roles, and
+credentials and sensitive configuration values are not exposed.
+
+How test will be performed: Execute the access-control test cases for each
+role, verify both the user interface and direct endpoint responses, and
+inspect configuration handling. Record every unexpected access or exposure
+and compare the results with the Security NFR.
+
+\item{\textbf{NFR-REL-01: Invalid input and dependency failure recovery}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The database contains valid course, assessment, and calendar
+records. A submitted outline is retained by the system.
+
+Input/Condition: Submit an unsupported, malformed, oversized, incomplete, or
+unreadable outline, and separately make the extraction or recommendation
+service unavailable during processing.
+
+Output/Result: The system reports an actionable error without crashing,
+corrupting or deleting existing records, and retains the submitted outline
+for retry. While the external service is unavailable, users can still view
+and edit stored information, view the calendar, and export available data.
+
+How test will be performed: Run each invalid-input and dependency-failure
+scenario, verify the response and stored data before and after the failure,
+and retry processing after restoring the dependency. Record whether each
+predefined case meets the Reliability NFR.
+
+\item{\textbf{NFR-DEP-01: Deployment and maintainability}\\}
+
+Type: Static and dynamic, manual
+
+Initial State: A clean designated McMaster University hosting environment and
+the documented installation and deployment instructions are available to a
+maintainer who did not perform the original setup.
+
+Input/Condition: Deploy the system by following the documentation. Verify
+that the documentation identifies the required software, configuration
+values, environment variables, database setup, and service startup steps.
+Then implement representative isolated changes to document processing,
+scheduling, or compliance rules.
+
+Output/Result: The maintainer can deploy the system to the designated
+McMaster University hosting environment and complete the core workflow
+without undocumented steps. The documentation contains all required setup
+information. The representative changes do not require unrelated components
+to be rewritten, and the effort for each change is recorded relative to the
+original implementation effort for the affected component.
+
+How test will be performed: Give the documentation and clean hosting
+environment to a new maintainer without providing undocumented guidance.
+Observe the maintainer follow the installation and deployment instructions,
+execute the core workflow, and record any missing or ambiguous steps. Review
+the change diffs and effort records with the team, then document the results
+against the Installability, Deployability, and Maintainability NFRs.
+
+\end{enumerate}
 
 \section{Unit Test Description}
 
@@ -484,31 +988,25 @@ How test will be performed:
   document) has been completed.}
 
 \wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
+philosophy for test case selection.}
 
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
+\wss{To save space and time, it may be an option to provide less detail in this section.
+For the unit tests you can potentially layout your testing strategy here.  That is, you
+can explain how tests will be selected for each module.  For instance, your test building
+approach could be test cases for each access program, including one test for normal behaviour
+and as many tests as needed for edge cases.  Rather than create the details of the input
+and output here, you could point to the unit testing code.  For this to work, you code
 needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+\wss{Explain what is and is not in unit-test scope once the design is available.}
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+\wss{Add module unit tests here after MIS.}
 
-\subsubsection{Module 1}
+\subsubsection{Module ?}
 
 \wss{Include a blurb here to explain why the subsections below cover the module.
   References to the MIS would be good.  You will want tests from a black box
@@ -521,37 +1019,37 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input: 
-					
+
+Initial State:
+
+Input:
+
 Output: \wss{The expected result for the given inputs}
 
 Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
-					
+How test will be performed:
+
 \item{test-id2\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input: 
-					
+
+Initial State:
+
+Input:
+
 Output: \wss{The expected result for the given inputs}
 
 Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+How test will be performed:
 
 \item{...\\}
-    
+
 \end{enumerate}
 
-\subsubsection{Module 2}
+\subsubsection{Module ?}
 
 ...
 
@@ -565,33 +1063,33 @@ How test will be performed:
   mentioned functional tests.}
 
 \subsubsection{Module ?}
-		
+
 \begin{enumerate}
 
 \item{test-id1\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
+
+Initial State:
+
+Input/Condition:
+
+Output/Result:
+
+How test will be performed:
+
 \item{test-id2\\}
 
 Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+
+Initial State:
+
+Input:
+
+Output:
+
+How test will be performed:
 
 \end{enumerate}
 
@@ -615,8 +1113,15 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+The system tests use these constants. Values match the SRS auxiliary constants where applicable.
+
+\begin{itemize}
+\item Cluster window $= 7$ days
+\item Cluster threshold $= 3$
+\item Min alternatives $= 2$
+\item Weight total $= 100\%$
+\item Max outline size $= 5$~MB (\halink{\texttt{SSR\_AcceptedFiles}})
+\end{itemize}
 
 \subsection{Usability Survey Questions?}
 
