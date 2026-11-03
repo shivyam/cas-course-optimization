@@ -52,38 +52,39 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 02, 2026 & 1.0 & Initial version \\
+% Date 1 & 1.0 & Notes\\
+% Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
-~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-However, this does not mean listing every verification and validation technique
-that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-plan. Execution of the plan should be possible with the time and team available.
-If the full plan cannot be completed during the time available, it can either be
-modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
+% ~\\
+% \wss{The intention of the VnV plan is to increase confidence in the software.
+% However, this does not mean listing every verification and validation technique
+% that has ever been devised.  The VnV plan should also be a \textbf{feasible}
+% plan. Execution of the plan should be possible with the time and team available.
+% If the full plan cannot be completed during the time available, it can either be
+% modified to ``fake it'', or a better solution is to add a section describing
+% what work has been completed and what work is still planned for the future.}
 
-\wss{The VnV plan is typically started after the requirements stage, but before
-the design stage.  This means that the sections related to unit testing cannot
-initially be completed.  The sections will be filled in after the design stage
-is complete.  the final version of the VnV plan should have all sections filled
-in.}
+% \wss{The VnV plan is typically started after the requirements stage, but before
+% the design stage.  This means that the sections related to unit testing cannot
+% initially be completed.  The sections will be filled in after the design stage
+% is complete.  the final version of the VnV plan should have all sections filled
+% in.}
 
 \newpage
 
 \tableofcontents
 
 \listoftables
-\wss{Remove this section if it isn't needed}
+% \wss{Remove this section if it isn't needed}
 
-\listoffigures
-\wss{Remove this section if it isn't needed}
+% \listoffigures
+% \wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -188,27 +189,75 @@ process and end-user adoption:
     documented tasks.
 \end{enumerate}
 
-\subsection{Relevant Documentation}
+\subsection{Relevant Documentation} \label{sec:RelevantDocs}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
+This plan verifies the requirements and design recorded in the team's other
+project documents, and it checks the system against external policies and
+standards. Each document below is listed with the part of this plan that
+depends on it.
 
-\citet{SRS}
+\paragraph{Project documents}
+\begin{description}
+  \item[Software Requirements Specification (SRS)~\citep{TeamBVSH2026SRS}:]\mbox{}\\
+  defines the functional (FR), nonfunctional (NFR), data (DR), and AI and
+  machine learning (AIR) requirements that the system tests in
+  Section~\ref{sec_SystemTests} verify. Its Appendix~C gives the values of the
+  symbolic constants used in the tests, and its evaluation metrics set the
+  accuracy targets that the nonfunctional tests measure.
+  \item[Hazard Analysis~\citep{TeamBVSH2026HA}:]\mbox{}\\
+  defines the safety and
+  security requirements (SSR) that are tested alongside the SRS requirements.
+  Its Failure Mode and Effect Analysis identifies the failures, such as
+  unreadable outlines and restricted dates, that the tests are designed to
+  expose.
+  \item[Problem Statement and Goals~\citep{TeamBVSH2026PS}:]\mbox{}\\
+  states the
+  project goals and their success measures. Software validation checks the
+  system against these goals with the supervisors.
+  \item[Development Plan~\citep{TeamBVSH2026DP}:]\mbox{}\\
+  specifies the team's
+  workflow, coding standards, and tools, including Pytest, Vitest, Ruff,
+  ESLint, and GitHub Actions. The automated testing, implementation
+  verification, and plan verification activities in this document use that
+  workflow and those tools.
+  \item[Module Guide~\citep{TeamBVSH2026MG} and Module Interface
+  Specification~\citep{TeamBVSH2026MIS}:]\mbox{}\\
+  define the modules and their
+  interfaces. Design verification reviews these documents, and the unit tests
+  in Section~\ref{sec_UnitTests} are organized by their modules.
+  \item[Verification and Validation Report~\citep{TeamBVSH2026VnVR}:]\mbox{}\\
+  records
+  the results of carrying out this plan, including test results, review
+  findings, and any changes made because of them.
+\end{description}
 
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+\paragraph{External policies and standards.}
+\begin{description}
+  \item[Undergraduate Course Management Policy~\citep{McMasterUCMP2025}:]\mbox{}\\
+  defines the course outline rules and restricted periods that the
+  compliance and restricted-period tests check against.
+  \item[CEAB Accreditation Criteria and Procedures~\citep{CEAB2025}:]\mbox{}\\
+  defines
+  the graduate attributes used in the learning outcome and graduate attribute
+  tests.
+  \item[WCAG 2.0~\citep{WCAG20} and the AODA~\citep{AODA2005, IASR2011}:]\mbox{}\\
+  define the accessibility criteria that the accessibility checks in the
+  nonfunctional tests apply.
+\end{description}
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section describes how the team will verify and validate the system and
+its documents. It first names who is responsible for each verification
+activity, then describes how the SRS, the design, and this plan itself are
+reviewed. It then covers verification of the implementation, the automated
+testing and verification tools that support it, and the validation of the
+system with its supervisors and users. The individual tests are given in
+Sections~\ref{sec_SystemTests} and~\ref{sec_UnitTests}.
 
 \subsection{Verification and Validation Team}
 
-The members will verify the requirements from the SRS \citep{SRS} document including but not limited to functional requirements, nonfunctional requirements, data requirements and AI requirements. Matt Vonk and Connie Carrabs share the supervisor role.
+The members will verify the requirements from the SRS~\citep{TeamBVSH2026SRS} including but not limited to functional requirements, nonfunctional requirements, data requirements and AI requirements. Matt Vonk and Connie Carrabs share the supervisor role.
 
 \begin{table}[H]
 \centering
@@ -270,10 +319,10 @@ SRS as needed, and review the changes to ensure that identified issues have been
 \paragraph{Methods we will use for design verification.}
 
 \begin{itemize}
-\item \textbf{Testing.} We will run design checks against the planned behaviour. Examples include outline intake, extraction with a source citation, confirmation before use, restricted-period and weight flags without the large language model (LLM), and rejecting a bad file. Each check will name the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS} or \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis} requirement it covers, and will state a concrete expected result.
+\item \textbf{Testing.} We will run design checks against the planned behaviour. Examples include outline intake, extraction with a source citation, confirmation before use, restricted-period and weight flags without the large language model (LLM), and rejecting a bad file. Each check will name SRS~\citep{TeamBVSH2026SRS} or Hazard Analysis~\citep{TeamBVSH2026HA} requirement it covers, and will state a concrete expected result.
 \item \textbf{Analysis.} We will review the design on paper. We will revisit the Failure Mode and Effect Analysis (FMEA) in the Hazard Analysis and ask whether each mitigation still has a place in the design. If something is deferred, we will point to the Hazard Analysis roadmap.
 \item \textbf{Inspection.} A teammate who did not write the design will use a checklist covering the system components \href{https://github.com/shivyam/cas-course-optimization/blob/main/docs/HazardAnalysis/HazardAnalysis.tex\#L129}{C1 to C11} from the Hazard Analysis. Our supervisors will inspect the design in a meeting when needed. Classmate peer reviewers will use the same checklist and leave comments as GitHub issues.
-\item \textbf{Similarity.} We will compare a new design to an earlier accepted design choice from the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}, such as a replaceable LLM interface. For example, switching the LLM from Copilot to Gemma. If we change that choice, we will explain why the change still fits the SRS and Hazard Analysis.
+\item \textbf{Similarity.} We will compare a new design to an earlier accepted design choice from the Development Plan~\citep{TeamBVSH2026DP}, such as a replaceable LLM interface. For example, switching the LLM from Copilot to Gemma. If we change that choice, we will explain why the change still fits the SRS and Hazard Analysis.
 \end{itemize}
 
 \paragraph{Results and pass/fail data.}
@@ -330,9 +379,8 @@ before it is submitted:
 \begin{itemize}
   \item every requirement in the SRS~\citep{TeamBVSH2026SRS} and every safety
   and security requirement in the Hazard Analysis~\citep{TeamBVSH2026HA}
-  appears in the traceability table in Section~4.3;
-  \item every requirement meets the coverage rule of at least two verification
-  methods;
+  appears in Table~\ref{tab:TraceSysReq};
+  \item every requirement is verified by at least one system test;
   \item every test identifier in the traceability tables is defined in the
   system or unit test sections, and every defined test is traced; and
   \item every module is traced to at least one unit test and one system test.
@@ -374,22 +422,22 @@ test.
 \endhead
 \bottomrule
 \endfoot
-Weights that total 90\% pass the weight check. & ST\_Comp\_Policy\\
-A missing required outline section is not reported. & ST\_Comp\_Policy\\
-A date marked TBD is stored as a date instead of being flagged as missing. & ST\_Extract\_Flag\\
-A blank weight is filled with a guessed value. & ST\_Extract\_Flag\\
-An extracted value is stored without a citation to its source passage. & ST\_Extract\_Assessment\\
-An unconfirmed assessment appears in the calendar. & ST\_Extract\_Review\\
-An assessment dated in reading week is not reported. & ST\_Work\_Policy\\
-A suggested date falls in a restricted period. & ST\_Suggest\_Generation\\
-An assessment date changes without the instructor's approval. & ST\_Suggest\_NoAuto\\
-A course missing from the master course sheet is shown with no findings. & ST\_Comp\_Grad\\
-An instructor can change another instructor's course. & ST\_Access\_Roles\\
-A file of 5~MB or larger is accepted for processing. & ST\_Intake\_Data\\
-A protected page opens without logging in. & ST\_Access\_Login\\
-An instructor can export the CSV file. & ST\_Export\_CSV\\
-A failed upload deletes or changes stored records. & NFR-REL-01\\
-A credential appears in the deployment configuration or logs. & NFR-SEC-01\\
+Weights that total 90\% pass the weight check. & \stref{ST_Comp_Policy}\\
+A missing required outline section is not reported. & \stref{ST_Comp_Policy}\\
+A date marked TBD is stored as a date instead of being flagged as missing. & \stref{ST_Extract_Flag}\\
+A blank weight is filled with a guessed value. & \stref{ST_Extract_Flag}\\
+An extracted value is stored without a citation to its source passage. & \stref{ST_Extract_Assessment}\\
+An unconfirmed assessment appears in the calendar. & \stref{ST_Extract_Review}\\
+An assessment dated in reading week is not reported. & \stref{ST_Work_Policy}\\
+A suggested date falls in a restricted period. & \stref{ST_Suggest_Generation}\\
+An assessment date changes without the instructor's approval. & \stref{ST_Suggest_NoAuto}\\
+A course missing from the master course sheet is shown with no findings. & \stref{ST_Comp_Grad}\\
+An instructor can change another instructor's course. & \stref{ST_Access_Roles}\\
+A file of 5~MB or larger is accepted for processing. & \stref{ST_Intake_Data}\\
+A protected page opens without logging in. & \stref{ST_Access_Login}\\
+An instructor can export the CSV file. & \stref{ST_Export_CSV}\\
+A failed upload deletes or changes stored records. & \nfrref{NFR-REL-01}\\
+A credential appears in the deployment configuration or logs. & \nfrref{NFR-SEC-01}\\
 \end{longtable}
 }
 
@@ -524,7 +572,7 @@ understandable and useful to their intended users.
 
 \section{System Tests} \label{sec_SystemTests}
 
-This section describes the system-level tests for ASSURE. Section~\ref{sec_SysFuncTests} covers the functional requirements in the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS}. There is one system test for each functional requirement, labeled ST-FR1 through ST-FR17. The tests are grouped the same way as the SRS: outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export.
+This section describes the system-level tests for ASSURE. Section~\ref{sec_SysFuncTests} covers the functional requirements in the SRS~\citep{TeamBVSH2026SRS}. There is one system test for each functional requirement, labeled \stref{ST_Intake_Data} through \stref{ST_Export_CSV}, followed by \stref{ST_Dashboard} through \stref{ST_MasterSheetEdit} for the new requirements and the safety and security requirements. The tests are grouped the same way as the SRS: outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export.
 
 \subsection{Tests for Functional Requirements} \label{sec_SysFuncTests}
 
@@ -532,7 +580,7 @@ Each test below checks one functional requirement end to end through the running
 
 There is one system test for each functional requirement (\frlink{1}--\frlink{17}). Some tests check more than one input case (for example, valid and invalid uploads in ST-FR1).
 
-For this document version, outline intake is \textbf{PDF only}, and other formats will be supported later. For additional formats, new intake tests will be added. The max outline size is 5~MB, as defined in \halink{\texttt{SSR\_AcceptedFiles}}. Symbolic constants used in the tests below (cluster window, cluster threshold, min alternatives, weight total) are from \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS Appendix~C}. 
+For this document version, outline intake is \textbf{PDF only}, and other formats will be supported later. For additional formats, new intake tests will be added. The max outline size is 5~MB, as defined in \halink{\texttt{SSR\_AcceptedFiles}}. Symbolic constants used in the tests below (cluster window, cluster threshold, min alternatives, weight total) are from Appendix~C of the SRS~\citep{TeamBVSH2026SRS}. 
 
 \subsubsection{Outline Intake and Extraction}
 
@@ -1342,7 +1390,7 @@ requirement. \nfrref{NFR-SEC-01}, which checks access control and data protectio
 supports FR15, FR16, NFR8, DR1, and DR3. A failure in a shared test affects
 every requirement it traces to, so shared tests are given high priority.
 
-\section{Unit Test Description}
+\section{Unit Test Description} \label{sec_UnitTests}
 
 \wss{This section should not be filled in until after the MIS (detailed design
   document) has been completed.}
@@ -1547,36 +1595,61 @@ and used to prioritize interface, workflow, and documentation changes.
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
+% \wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+% \wss{Give the name of the AI tool(s) used and the version.}
+
+The following AI tools were used:
+\begin{itemize}
+    \item Grok (version 4.7)
+    \item Claude (Anthropic), Claude Opus 5.5 model
+    \item ChatGPT (OpenAI), GPT-4-turbo model
+    \item GitHub Copilot (version 1.79.0)
+\end{itemize}
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
+% \wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
+% explaining a technical concept, reviewing the document, generating or modifying
+% text, generating or modifying diagrams, identifying errors or omissions or
+% inconsistencies.}
 
-\wss{For each of the uses, identify which parts of the document were affected.}
+% \wss{For each of the uses, identify which parts of the document were affected.}
 
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+% \wss{You do not need to report every interaction, but you should disclose the 
+% uses that materially contributed to your work}
+
+The tools were used in the following manner:
+\begin{itemize}
+    \item Grok was used to fix formatting issues and address pull request comments
+    in Sections 2.1, 3.1, 3.3, and 4.1.
+    \item Claude was used to review and refine the document, suggesting
+    improvements to structure and clarity, and assisting with grammar and style. It
+    was used to primarily refine the Sections 3.4, 4.1, and 4.3.
+    \item ChatGPT and Copilot were used for formatting and grammar suggestions, and
+    to assist with the writing of the Sections 2.2, 2.3, 3.2, 3.6, 4.2, and 6.2.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+% \wss{\begin{itemize}
+%     \item Describe how the team checked AI-generated or AI-assisted material
+%     before including it in the document.
+%     \item In particular, verify factual claims, technical assertions,
+%     requirements, calculations, references, and other information for which an
+%     AI system may produce incorrect or fabricated results.
+%     \item \textbf{The team is responsible for the accuracy, completeness,
+% consistency, and appropriateness of the submitted document, regardless of
+% whether material was generated by a human or an AI system.}
+% \end{itemize}}
+
+Any output by LLM models was reviewed thoroughly and modified before its
+suggestions were added to the document. Course materials and deliverable
+requirements were manually reviewed to ensure that all technical assertions,
+requirements, and references were accurate and complete.
+
 
 \newpage{}
 
