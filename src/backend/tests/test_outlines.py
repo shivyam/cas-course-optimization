@@ -10,8 +10,7 @@ client = TestClient(app)
 
 
 def make_pdf(text: str) -> bytes:
-    # Generate a real in-memory PDF so this test exercises extraction rather
-    # than only checking the upload filename or MIME type.
+    # Generate a real in-memory PDF
     document = pymupdf.open()
     page = document.new_page()
     page.insert_text((72, 72), text)
