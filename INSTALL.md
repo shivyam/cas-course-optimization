@@ -79,6 +79,14 @@ This installs the app's dependencies (FastAPI, uvicorn, python-multipart) plus t
 
 To install only what is needed to run the app, without the dev tools, use `pip install -e .` instead.
 
+After installation, extract a local course outline PDF with:
+
+```bash
+extract path/to/course-outline.pdf
+```
+
+The extracted text is saved to `data/extracted_text/course-outline.txt`.
+
 > **Using Anaconda?** Conda's `base` environment can stay active alongside the venv. If `python --version` still shows Anaconda's Python after activating, call the venv directly instead, e.g. `.venv/Scripts/python -m pip install -e ".[dev]"`. Otherwise pip installs into Anaconda.
 
 ## 4. Install the Frontend Dependencies
