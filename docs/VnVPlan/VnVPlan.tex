@@ -212,17 +212,41 @@ how they relate to your VnV efforts.}
 
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+%\wss{List any approaches you intend to use for SRS verification.  This may
+%  include ad hoc feedback from reviewers, like your classmates (like your
+%  primary reviewer), or you may plan for something more rigorous/systematic.}
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
+%\wss{If you have a supervisor for the project, you shouldn't just say they will
+%read over the SRS.  You should explain your structured approach to the review.
+%Will you have a meeting?  What will you present?  What questions will you ask?
+%Will you give them instructions for a task-based inspection?  Will you use your
+%issue tracker?}
 
-\wss{Maybe create an SRS checklist?}
+%\wss{Maybe create an SRS checklist?}
+
+The SRS will be verified through a combination of structured internal reviews, as well as receiving 
+feedback from primary stakeholders (CAS administrators, associate chairs). Team members will 
+review the SRS to assess the completeness, clarity, consistency, feasibility, and verifiability 
+of the requirements. To ensure a systematic review, the team will use the following checklist for 
+verification:
+
+\begin{itemize}
+  \item Completeness: Verify that all required system functions and relevant constraints are documented.
+  \item Clarity: Ensure that each requirement is clearly stated and free of ambiguity.
+  \item Consistency: Verify that the requirements do not conflict with one another and use consistent terminology.
+  \item Feasibility: Ensure that each requirement can realistically be implemented within the project's technical constraints.
+  \item Verifiability: Ensure that each requirement can be tested or verified using defined criteria.
+  \item Traceability: Verify that each requirement can be linked to its relevant stakeholder needs, as well as identified risks in the Hazard Analysis.
+\end{itemize}
+
+\noindent The SRS will be reviewed with the project's TA (Lucas Dutton) and primary stakeholders (Matt 
+Vonk, Connie Carrabs, Spencer Smith, Sebastien Mosser) during the scheduled biweekly meetings. 
+Feedback on the requirements will be to determine whether the functionality accurately reflects 
+stakeholder needs and project expectations. The team will encourage reviewers to identify any 
+missing requirements or unclear descriptions, and any issues identified during reviews will be 
+documented and tracked using GitHub Issues. The team will then address the feedback, update the 
+SRS as needed, and review the changes to ensure that identified issues have been resolved.
+
 
 \subsection{Design Verification}
 
@@ -265,20 +289,38 @@ CAS741) for a partial usability survey.}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+%\wss{What tools are you using for automated testing.  Likely a unit testing
+%  framework and maybe a profiling tool, like ValGrind.  Other possible tools
+%  include a static analyzer, make, continuous integration tools, test coverage
+%  tools, etc.  Explain your plans for summarizing code coverage metrics.
+%  Linters are another important class of tools.  For the programming language
+%  you select, you should look at the available linters.  There may also be tools
+%  that verify that coding standards have been respected, like flake9 for
+%  Python.}
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+%\wss{If you have already done this in the development plan, you can point to
+%that document.}
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+%\wss{The details of this section will likely evolve as you get closer to the implementation.}
+
+
+The primary coding language for the system will be Python, so the team will use the following 
+automated testing and verification tools to support code quality, identify potential defects, 
+and evaluate test coverage throughout development:
+
+\begin{itemize}
+  \item Pytest: A Python testing framework that will be used to develop and execute automated unit tests for individual functions and modules.
+  \item Pytest-cov: A code coverage tool that will be used alongside Pytest to measure the proportion of source code executed during testing. Coverage reports will be reviewed to identify parts of code that may require additional testing.
+  \item Ruff: A Python linter and static analysis tool that will be used to identify potential errors, enforce consistent coding standards, and improve code quality.
+  \item GitHub Actions: A continuous integration tool that will automatically run the project's test suite and code quality checks when changes are pushed to the repository.
+\end{itemize}
+
+\noindent Special attention will be paid to the components responsible for the fundamental functions of 
+the system, such as document processing, information extraction, and data validation. The team 
+will review automated test results to identify and resolve issues before integrating changes 
+into the main codebase. The specific configuration and use of these tools may be adjusted as 
+development and implementation progresses.
+
 
 \subsection{Software Validation}
 
