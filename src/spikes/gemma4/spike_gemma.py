@@ -236,7 +236,10 @@ def call_ollama(model: str, system: str, user: str, schema: dict, num_ctx: int) 
 
 
 def norm(name: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", name.lower())
+    """Lowercase, drop plural 's' on words ("Assignments 1" == "Assignment 1"), strip symbols."""
+    words = re.findall(r"[a-z]+|[0-9]+", name.lower())
+    words = [w[:-1] if len(w) > 3 and w.endswith("s") and not w.endswith("ss") else w for w in words]
+    return "".join(words)
 
 
 def match_assessment(key_item: dict, predicted: list[dict]) -> dict | None:
@@ -325,6 +328,61 @@ def check_schema(parsed: object, task: str) -> list[str]:
     return problems
 
 
+def fmt(v) -> str:
+    return "-" if v is None else str(v)
+
+
+def print_report(r: dict, key: dict | None) -> None:
+    """Show what the model extracted and how it lines up with the answer key."""
+    parsed = r.get("parsed_output") or {}
+    print(f"  course_code: {fmt(parsed.get('course_code'))}   term: {fmt(parsed.get('term'))}")
+
+    if r["task"] == "ga":
+        for m in parsed.get("mappings", []):
+            print(f"  GA {m.get('graduate_attributes')}  <- {m.get('learning_outcome')}")
+            print(f"       reason: {m.get('reason')}")
+        return
+
+    predicted = parsed.get("assessments", []) or []
+    print(f"\n  MODEL FOUND ({len(predicted)} items)")
+    print(f"  {'name':<34}{'type':<14}{'due_date':<12}{'tbd':<7}{'weight':<8}source_text")
+    for p in predicted:
+        src = (p.get("source_text") or "").replace("\n", " ")[:60]
+        print(
+            f"  {fmt(p.get('name'))[:33]:<34}{fmt(p.get('type'))[:13]:<14}"
+            f"{fmt(p.get('due_date'))[:11]:<12}{fmt(p.get('date_tbd')):<7}"
+            f"{fmt(p.get('weight_percent')):<8}{src}"
+        )
+
+    if key:
+        print("\n  KEY vs MODEL  (OK = match, XX = wrong, -- = not found)")
+        print(f"  {'key item':<26}{'matched as':<26}{'date (key / model)':<28}{'tbd':<6}{'weight (key / model)':<22}")
+        matched_ids = set()
+        for item in key.get("assessments", []):
+            p = match_assessment(item, predicted)
+            if not p:
+                print(f"  {item['name'][:25]:<26}{'--':<26}{fmt(item.get('due_date')):<28}{'--':<6}{fmt(item.get('weight_percent'))}")
+                continue
+            matched_ids.add(id(p))
+            d_ok = p.get("due_date") == item.get("due_date")
+            t_ok = bool(p.get("date_tbd")) == bool(item.get("date_tbd"))
+            kw, pw = item.get("weight_percent"), p.get("weight_percent")
+            w_ok = (kw is None and pw is None) or (
+                kw is not None and pw is not None and abs(float(kw) - float(pw)) < 0.01
+            )
+            mark = lambda ok: "OK" if ok else "XX"
+            dates = f"{mark(d_ok)} {fmt(item.get('due_date'))} / {fmt(p.get('due_date'))}"
+            weights = f"{mark(w_ok)} {fmt(kw)} / {fmt(pw)}"
+            print(f"  {item['name'][:25]:<26}{fmt(p.get('name'))[:25]:<26}{dates[:27]:<28}{mark(t_ok):<6}{weights}")
+        extras = [p for p in predicted if id(p) not in matched_ids]
+        if extras:
+            print(f"\n  EXTRA (model found, not in key): " + ", ".join(fmt(p.get("name")) for p in extras))
+
+    missing = parsed.get("missing_fields") or []
+    if missing:
+        print(f"\n  model says missing: {', '.join(missing)}")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -354,9 +412,11 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
     out_tokens = resp.get("eval_count")
     eval_ns = resp.get("eval_duration") or 0
     tok_per_s = round(out_tokens / (eval_ns / 1e9), 1) if out_tokens and eval_ns else None
-    # Ollama silently drops the start of a prompt that does not fit the context.
-    likely_truncated = bool(prompt_tokens and prompt_tokens >= args.num_ctx - 64) or (
-        est_tokens > args.num_ctx
+    # Ollama silently drops the start of a prompt that does not fit the context,
+    # so compare what the model actually read with what we sent.
+    expected_tokens = (len(system) + len(user)) // 4
+    likely_truncated = bool(prompt_tokens) and (
+        prompt_tokens < 0.8 * expected_tokens or prompt_tokens >= args.num_ctx - 64
     )
 
     result = {
@@ -369,6 +429,7 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "text_chars": len(text),
         "est_prompt_tokens": est_tokens,
+        "expected_prompt_tokens": expected_tokens,
         "prompt_tokens": prompt_tokens,
         "output_tokens": out_tokens,
         "tokens_per_second": tok_per_s,
@@ -396,6 +457,7 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
     tag = f"{pdf.stem}_{args.model.replace(':', '-')}_{args.task}_ctx{args.num_ctx}_r{run_no}"
     if args.inject:
         tag += "_inject"
+    (out_dir / f"{tag}_{stamp}_input.txt").write_text(text, encoding="utf-8")
     (out_dir / f"{tag}_{stamp}.json").write_text(
         json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8"
     )
@@ -436,7 +498,9 @@ def append_summary(result: dict, out_dir: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Spike #38: test a local Ollama model on course outlines.")
-    ap.add_argument("pdfs", nargs="+", help="Course outline PDF(s)")
+    ap.add_argument("pdfs", nargs="*", help="Course outline PDF(s)")
+    ap.add_argument("--rescore", nargs="+", metavar="RESULT_JSON",
+                    help="Re-score saved result JSON file(s) against current keys (no model call)")
     ap.add_argument("--model", default="gemma4:e2b")
     ap.add_argument("--task", choices=["assessments", "ga"], default="assessments")
     ap.add_argument("--num-ctx", type=int, default=4096, help="Context window (Ollama default is 4096)")
@@ -450,6 +514,27 @@ def main() -> None:
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.rescore:
+        for rp in args.rescore:
+            r = json.loads(Path(rp).read_text(encoding="utf-8"))
+            stem = re.split(r"[\\/]", r["pdf"])[-1].rsplit(".", 1)[0]  # works for Windows or POSIX paths
+            kp = Path(args.key) if args.key else Path(args.key_dir or "keys") / f"{stem}.json"
+            key_data = json.loads(kp.read_text(encoding="utf-8")) if kp.exists() else None
+            print(f"[rescore] {Path(rp).name}")
+            print_report(r, key_data)
+            if key_data and r.get("json_valid") and r["task"] == "assessments":
+                sc = score_assessments(r["parsed_output"], key_data)
+                r["score"] = sc
+                Path(rp).write_text(json.dumps(r, indent=2, ensure_ascii=False), encoding="utf-8")
+                print(
+                    f"\n  SCORE\n  found {sc['found']}/{sc['key_assessments']}, dates {sc['date_accuracy']}, "
+                    f"TBD {sc['tbd_accuracy']}, weights {sc['weight_accuracy']}, "
+                    f"weight sum {sc['predicted_weight_sum']}\n"
+                )
+        return
+    if not args.pdfs:
+        ap.error("give at least one PDF, or use --rescore")
+
     for pdf_arg in args.pdfs:
         pdf = Path(pdf_arg)
         if not pdf.exists():
@@ -461,22 +546,33 @@ def main() -> None:
             append_summary(r, out_dir)
             line = (
                 f"  {r['wall_seconds']}s, {r['tokens_per_second']} tok/s, "
-                f"prompt {r['prompt_tokens']} tokens, JSON valid: {r['json_valid']}"
+                f"model read {r['prompt_tokens']} of ~{r['expected_prompt_tokens']} tokens sent, "
+                f"JSON valid: {r['json_valid']}"
             )
             if r["likely_truncated"]:
-                line += "  WARNING: prompt probably did not fit the context window"
+                line += "\n  WARNING: input was cut to fit the context window; the model did not see the whole outline"
             if r["schema_problems"]:
                 line += f"  schema problems: {len(r['schema_problems'])}"
             print(line)
+            key_data = None
+            kp = Path(args.key) if args.key else (Path(args.key_dir) / f"{pdf.stem}.json" if args.key_dir else None)
+            if kp and kp.exists():
+                key_data = json.loads(kp.read_text(encoding="utf-8"))
+            if r["json_valid"]:
+                print_report(r, key_data)
+            else:
+                print("  Model output was not valid JSON. Raw output starts with:")
+                print("  " + r["raw_output"][:500])
             if "score" in r:
                 s = r["score"]
+                print("\n  SCORE")
                 print(
                     f"  found {s['found']}/{s['key_assessments']}, dates {s['date_accuracy']}, "
                     f"TBD {s['tbd_accuracy']}, weights {s['weight_accuracy']}, "
                     f"weight sum {s['predicted_weight_sum']}"
                 )
 
-    print(f"\nDone. Per-run JSON and summary.csv are in {out_dir.resolve()}")
+    print(f"\nDone. Per-run JSON, the text the model was given (*_input.txt) and summary.csv are in {out_dir.resolve()}")
 
 
 if __name__ == "__main__":
