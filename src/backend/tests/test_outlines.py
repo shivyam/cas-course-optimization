@@ -4,6 +4,7 @@ import pymupdf
 from fastapi.testclient import TestClient
 
 from app.api import outlines
+from app.cli import main as extract_course_outline
 from app.main import app
 
 # TestClient calls the app in-process, so no server needs to be running.
@@ -65,3 +66,17 @@ def test_upload_outline_without_file_is_rejected():
     response = client.post("/api/outlines")
 
     assert response.status_code == 422
+
+
+def test_cli_extracts_local_outline(tmp_path, monkeypatch, capsys):
+    pdf_path = tmp_path / "course outline.pdf"
+    pdf_path.write_bytes(make_pdf("CLI outline text"))
+    output_dir = tmp_path / "extracted_text"
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", output_dir)
+    monkeypatch.setattr("sys.argv", ["extract", str(pdf_path)])
+
+    assert extract_course_outline() == 0
+
+    output_path = output_dir / "course_outline.txt"
+    assert output_path.read_text(encoding="utf-8") == "CLI outline text"
+    assert capsys.readouterr().out.strip() == "data/extracted_text/course_outline.txt"

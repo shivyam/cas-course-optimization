@@ -14,6 +14,9 @@ dependencies = [
     "pymupdf==1.27.2.2",
 ]
 
+[project.scripts]
+extract = "app.cli:main"
+
 # Tools only needed for development and CI, not for running the app.
 [project.optional-dependencies]
 dev = [

@@ -10,25 +10,31 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 router = APIRouter(tags=["outlines"])
 
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
-EXTRACTED_TEXT_DIR = (
-    Path(__file__).resolve().parents[4] / "data" / "extracted_text"
-)
+EXTRACTED_TEXT_DIR = Path(__file__).resolve().parents[4] / "data" / "extracted_text"
 EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
 
-# FOR TESTING PURPOSES
+
+def extract_pdf_text(contents: bytes) -> str:
+    """Extract text from a PDF's contents."""
+    try:
+        document = pymupdf.open(stream=contents, filetype="pdf")
+        text = "\n\n".join(page.get_text() for page in document).strip()
+    except pymupdf.FileDataError as error:
+        raise ValueError("The uploaded file is not a valid PDF.") from error
+    finally:
+        if "document" in locals():
+            document.close()
+    return text
+
+
 def save_extracted_text(filename: str, text: str) -> Path:
     """Save extracted text and return its path relative to the repository."""
     safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", Path(filename).stem).strip("._")
     safe_stem = safe_stem or "outline"
     output_path = EXTRACTED_TEXT_DIR / f"{safe_stem}.txt"
 
-    try:
-        EXTRACTED_TEXT_DIR.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(text, encoding="utf-8")
-    except OSError as error:
-        raise HTTPException(
-            status_code=500, detail="Unable to save extracted outline text."
-        ) from error
+    EXTRACTED_TEXT_DIR.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(text, encoding="utf-8")
 
     return EXTRACTED_TEXT_REPO_PATH / output_path.name
 
@@ -57,18 +63,18 @@ async def upload_outline(file: Annotated[UploadFile, File()]) -> dict:
     try:
         # PyMuPDF extracts text page by page and preserves page boundaries in
         # the response, which makes the preview easier to read.
-        document = pymupdf.open(stream=contents, filetype="pdf")
-        text = "\n\n".join(page.get_text() for page in document).strip()
-    except pymupdf.FileDataError as error:
+        text = extract_pdf_text(contents)
+    except ValueError as error:
         raise HTTPException(
             status_code=400, detail="The uploaded file is not a valid PDF."
         ) from error
-    finally:
-        # Always release PyMuPDF's document resources, including on parse errors.
-        if "document" in locals():
-            document.close()
 
-    text_file = save_extracted_text(filename, text)
+    try:
+        text_file = save_extracted_text(filename, text)
+    except OSError as error:
+        raise HTTPException(
+            status_code=500, detail="Unable to save extracted outline text."
+        ) from error
 
     return {
         "filename": filename,
