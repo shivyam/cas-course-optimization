@@ -308,7 +308,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \haz{H2-1}\newline \textit{DI, H} & Stored data is lost or corrupted & Confirmed data and decisions are lost and review must be repeated & \fmi{a}{Hardware or software failure}\par \fmi{b}{Failed update} & \fmi{a}{Back up data regularly and test that it can be restored}\par \fmi{b}{Keep records for the retention period} & \fmi{a}{New: backup and restore}\par \fmi{b}{DR4}\\
 \addlinespace
-\haz{H2-2}\newline \textit{DI, M} & Uploading an outline again replaces confirmed values & Reviewed values are replaced by unreviewed ones & New upload overwrites existing records & \fmi{a}{Keep confirmed values until the user chooses to replace them}\par \fmi{b}{Review the new values first} & \fmi{a}{New: confirm before replace}\par \fmi{b}{FR5}\\
+\haz{H2-2}\newline \textit{DI, M} & Uploading an outline again replaces confirmed values & Reviewed values are replaced by unreviewed ones & New upload overwrites existing records & \fmi{a}{Preserve confirmed values until replacement is explicitly approved by the user}\par \fmi{b}{Review newly extracted values before replacement} & \fmi{a}{New: confirm before replace}\par \fmi{b}{FR5}\\
 \addlinespace
 \haz{H2-3}\newline \textit{DI, M} & An outline is attached to the wrong course or term & Assessments are counted in the wrong cohort or term & \fmi{a}{Course code misread}\par \fmi{b}{Wrong course selected} & Show the course code and term on the review screen for confirmation & FR5\\
 \addlinespace
@@ -366,7 +366,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \multicolumn{6}{l}{\textbf{C7: Scheduling Suggestions}}\\*
 \midrule
-\haz{H7-1}\newline \textit{DQ, H} & A suggested date falls on a holiday or in a restricted period & An instructor moves an assessment to a date that breaks policy & Restricted periods not passed to the solver & Exclude restricted periods from the dates the solver may choose & \ssrref{SSR_RestrictedDates}\\
+\haz{H7-1}\newline \textit{DQ, H} & A suggested date falls on a holiday or in a restricted period & An instructor moves an assessment to a date that breaks policy & Restricted periods not passed to the solver & Apply the applicable policy restrictions when determining eligible assessment dates, considering assessment type, weight, and restricted periods & \ssrref{SSR_RestrictedDates}\\
 \addlinespace
 \haz{H7-2}\newline \textit{DQ, M} & A suggestion is based on data that has since changed & The accepted date creates a new conflict & Other dates change before the instructor decides & Mark the suggestion as out of date and offer to recompute & \ssrref{SSR_StaleSuggestion}\\
 \addlinespace
@@ -452,11 +452,12 @@ compared with the sheet by the system's own code.
 \midrule
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ProcessFailure} & \hazref{H3-1}, \hazref{H11-1}: outline processing failure resulting in an invalid or incomplete schedule or lost data & The system shall display an actionable error when a course outline PDF cannot be read or the model fails to process it, shall not create assessments for that outline automatically, and shall keep all data already entered.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AcceptedFiles} & \hazref{H3-3}: unsupported or malicious input file & The system shall accept only PDF files smaller than 5 MB, and shall reject any other file before processing it.\\ \addlinespace
-\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_RestrictedDates} & \hazref{H7-1}, \hazref{H7-4}: assessment scheduled during a restricted period & The system shall use the academic calendar and shall not suggest an assessment date that falls on a holiday, recess, examination period, or test and examination ban period.\\ \addlinespace
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_RestrictedDates} & \hazref{H7-1}, \hazref{H7-4}: assessment scheduled during a restricted period & The system shall use the academic calendar and McMaster scheduling policies to prevent invalid date recommendations. During the test and examination ban period, tests and examinations worth more than 10\% of the course grade shall not be suggested. Assessments shall also not be scheduled during recesses or other policy-restricted periods.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_StaleSuggestion} & \hazref{H7-2}: out-of-date scheduling suggestion & The system shall mark a date suggestion as out of date if the assessment's date, or the other assessments in the affected weeks, change before the instructor decides on it.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_CheckCoverage} & \hazref{H5-1}, \hazref{H5-3}, \hazref{H5-5}: incomplete compliance check or falsely reported absence of findings & The system shall show which compliance rules were checked for each outline, and shall state that a course was not checked when it is missing from the master course sheet, rather than reporting no findings.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & \hazref{H2-5}, \hazref{H9-2}, \hazref{H9-4}: unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date, an extracted value, or reference data (the master course sheet or the academic calendar) is changed, and shall retain that record for the retention period in DR4.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & \hazref{H5-4}, \hazref{H6-5}, \hazref{H9-4}: unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet and the academic calendar.\\
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ConfirmedDataPreservation} & \hazref{H2-2}: overwriting previously confirmed course information & The system shall preserve previously confirmed course information when an outline is re-uploaded until newly extracted values have been reviewed and explicitly approved by the user for replacement.\\
 \bottomrule
 \end{tabularx}
 \end{table}
