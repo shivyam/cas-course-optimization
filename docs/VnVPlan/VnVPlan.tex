@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -12,8 +13,7 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
-\usepackage{float}
+\usepackage[numbers,sort&compress]{natbib}
 
 % Test IDs (SRS-style): ST-FR\refstepcounter{stnum}\thestnum \label{ST_...}
 % Refs: \stref{ST_Intake_Data} -> whole ``ST-FR1'' clickable (not only the number).
@@ -23,11 +23,24 @@
 \newcommand{\halink}[1]{\href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{#1}}
 % Link FR numbers to the SRS PDF (FRs are defined there, not in this document).
 \newcommand{\frlink}[1]{\href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{FR#1}}
+% Link nonfunctional system test IDs to the test in Section 4.2.
+\newcommand{\nfrref}[1]{\hyperref[#1]{#1}}
 
 \input{../Comments.text}
 \input{../Common.text}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{System Verification and Validation Plan for \progname{}} 
 \author{\authname}
@@ -811,6 +824,104 @@ How test will be performed: The tester exports as administrator and opens the fi
 
 \end{enumerate}
 
+\subsubsection{Dashboard and Safety Requirements}
+
+These tests cover the new functional requirements FR-Dashboard, FR-Override, and FR-Completeness stated in Section~\ref{sec:TraceSysReq}, and the safety and security requirements \halink{\texttt{SSR\_StaleSuggestion}}, \halink{\texttt{SSR\_AuditTrail}}, and \halink{\texttt{SSR\_MasterSheetEdit}} from the Hazard Analysis.
+
+\begin{enumerate}
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Dashboard}: Course status dashboard (FR-Dashboard)\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A CAS administrator is logged in. Two confirmed outlines exist for the term. Course~A has every assessment date and weight and no findings. Course~B has Final Exam with date TBD and assessment weights that sum to 90\%.
+
+Input/Condition: The administrator opens the dashboard for the term.
+
+Output/Result: Both courses are listed. Course~A shows its extracted information, no missing fields, and no findings. Course~B shows the Final Exam date as missing and a finding that weights do not total 100\%, and each item names the course and assessment it applies to.
+
+Test Case Derivation: FR-Dashboard requires the dashboard to show, for each course, the information found, the information missing, and each finding that needs action.
+
+How test will be performed: The tester opens the dashboard and compares each course's entries to the handwritten answer key for both outlines.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Override}: Accept a finding (FR-Override)\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Course~B has two open findings: weights do not total 100\%, and a required outline section is missing. An administrator account and an instructor account for Course~B exist.
+
+Input/Condition: (a)~The administrator accepts the weight finding with the reason ``Weighting approved by the Chair''; (b)~the administrator tries to accept the missing-section finding with no reason; (c)~the instructor tries to accept the missing-section finding.
+
+Output/Result: Under (a), the weight finding is shown as accepted instead of open, and a record holds the administrator, the time, and the reason. Under (b), the system asks for a reason and the finding stays open. Under (c), the instructor cannot accept the finding, and it stays open.
+
+Test Case Derivation: FR-Override allows an administrator to accept a finding with a reason, and requires the administrator, time, and reason to be recorded. \frlink{16} limits instructors to their own course data, which does not include findings.
+
+How test will be performed: The tester performs (a) to (c) through the web interface, then checks the dashboard status of both findings and the stored record for (a).
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_Completeness}: Term planning status (FR-Completeness)\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: A term has three courses with confirmed outlines, and classes have not started. Course~A has a confirmed date and weight for every assessment. Course~B has Final Exam with date TBD. Course~C has Assignment~1 with a blank weight.
+
+Input/Condition: (a)~The administrator views the planning status for the term; (b)~the Final Exam date for Course~B is set to 2026-04-20 and Assignment~1 in Course~C is given a weight of 10\%, and both values are confirmed; (c)~the administrator views the planning status again.
+
+Output/Result: Under (a), Course~A is reported as fully planned, Courses~B and~C are reported as not fully planned with the missing date and weight named, and the term is reported as not fully planned. Under (c), all three courses and the term are reported as fully planned.
+
+Test Case Derivation: FR-Completeness defines a course as fully planned when every assessment has a confirmed date and weight, and requires the status to be reported for each course and for the term.
+
+How test will be performed: The tester records the status shown under (a), enters and confirms the two missing values, and records the status shown under (c).
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_StaleSuggestion}: Out-of-date suggestion (\halink{\texttt{SSR\_StaleSuggestion}})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: The instructor of Course~A has requested date suggestions for Midterm~1, which is in a detected conflict, and the suggestions are pending. Course~D, taken by the same cohort, has an assessment dated 2026-02-12 in the same week.
+
+Input/Condition: Before the instructor of Course~A decides, the instructor of Course~D changes that assessment to 2026-03-05.
+
+Output/Result: The pending suggestions for Midterm~1 are marked as out of date, and the instructor of Course~A can request new suggestions.
+
+Test Case Derivation: \halink{\texttt{SSR\_StaleSuggestion}} requires a suggestion to be marked out of date if the other assessments in the affected weeks change before the instructor decides on it.
+
+How test will be performed: The tester requests suggestions as the instructor of Course~A, changes the Course~D date as its instructor, and returns to the pending suggestions as the instructor of Course~A.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_AuditTrail}: Audit trail (\halink{\texttt{SSR\_AuditTrail}})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: Course~A has Midterm~1 dated 2026-02-10 with an extracted weight of 30\%. The master course sheet expects GAs 1, 2, and 5 for Course~A. An administrator account and the instructor account for Course~A exist.
+
+Input/Condition: (a)~The instructor changes the Midterm~1 date to 2026-02-12; (b)~the administrator corrects the extracted weight from 30\% to 25\%; (c)~the administrator changes the master course sheet row for Course~A to expect GAs 1, 2, and 4.
+
+Output/Result: A record exists for each change that holds the user who made it, the time, and the previous value: 2026-02-10 for (a), 30\% for (b), and GAs 1, 2, and 5 for (c).
+
+Test Case Derivation: \halink{\texttt{SSR\_AuditTrail}} requires the user, the time, and the previous value to be recorded whenever an assessment date, an extracted value, or reference data is changed.
+
+How test will be performed: The tester makes each change with the stated account, then opens the stored change records and compares each one to the expected values.
+
+
+\item{ST-FR\refstepcounter{stnum}\thestnum \label{ST_MasterSheetEdit}: Reference data editing (\halink{\texttt{SSR\_MasterSheetEdit}})\\}
+
+Type: Functional, Dynamic, Manual
+
+Initial State: The master course sheet and the academic calendar for the term are loaded. The academic calendar lists reading week as 2026-02-16 to 2026-02-20. An administrator account and an instructor account exist.
+
+Input/Condition: (a)~The instructor tries to change a master course sheet row; (b)~the instructor tries to change the reading week dates; (c)~the administrator makes both changes.
+
+Output/Result: Under (a) and (b), the change is denied and the stored values are unchanged. Under (c), both changes are saved.
+
+Test Case Derivation: \halink{\texttt{SSR\_MasterSheetEdit}} allows only administrators to change the master course sheet and the academic calendar.
+
+How test will be performed: The tester attempts each change through the web interface and directly through the endpoints, then checks the stored master course sheet and academic calendar.
+
+\end{enumerate}
+
+
 \subsection{Tests for Nonfunctional Requirements}
 
 \noindent The following tests assess the system-wide nonfunctional
@@ -822,7 +933,7 @@ the test environment, document characteristics, workload, and response times.
 		
 \begin{enumerate}
 
-\item{\textbf{NFR-ACC-01: Extraction accuracy}\\}
+\item{\label{NFR-ACC-01}\textbf{NFR-ACC-01: Extraction accuracy}\\}
 
 Type: Dynamic, automatic
 
@@ -843,7 +954,7 @@ Calculate missing-field recall as the proportion of known missing or
 incomplete fields that were flagged. Record the results and compare them with
 the targets in the Accuracy NFR.
 
-\item{\textbf{NFR-ACC-03: Policy and CEAB compliance accuracy}\\}
+\item{\label{NFR-ACC-03}\textbf{NFR-ACC-03: Policy and CEAB compliance accuracy}\\}
 
 Type: Dynamic, automatic
 
@@ -863,7 +974,7 @@ number of correctly identified predefined issues divided by the total number
 of predefined issues. Record false positives separately and compare the
 recall with the 95\% target in the Accuracy NFR.
 					
-\item{\textbf{NFR-PERF-01: Outline processing time}\\}
+\item{\label{NFR-PERF-01}\textbf{NFR-PERF-01: Outline processing time}\\}
 
 Type: Dynamic, automatic
 
@@ -883,13 +994,34 @@ processing and information-extraction workflow, measure elapsed time from
 submission to structured output, and report the percentile and individual
 results against the 60-second target in the Performance NFR.
 
+\item{\label{NFR-AI-01}\textbf{NFR-AI-01: Model input content}\\}
+
+Type: Dynamic and static, automatic
+
+Initial State: The test environment logs every request sent to the language
+model. The master course sheet is loaded, and the test outline's course has a
+row in it.
+
+Input/Condition: Submit a representative test outline for processing.
+
+Output/Result: Each logged model request contains only the text produced by
+the PDF extraction library and the CEAB graduate attribute definitions. No
+request contains the PDF file itself or any value from the master course
+sheet.
+
+How test will be performed: Process the outline, then compare each logged
+request with the extracted text, the CEAB definitions, and the master course
+sheet row for that course. Record any content that does not come from the
+extracted text or the CEAB definitions, and compare the results with the
+model input requirements in the SRS.
+
 \end{enumerate}
 
 \subsubsection{Calendar and Web Application}
 
 \begin{enumerate}
 
-\item{\textbf{NFR-PERF-02: Calendar response time}\\}
+\item{\label{NFR-PERF-02}\textbf{NFR-PERF-02: Calendar response time}\\}
 
 Type: Dynamic, automatic
 
@@ -908,7 +1040,7 @@ defined filters, measure the elapsed time until the calendar data is displayed,
 and report the response-time distribution and the percentage meeting the
 3-second target in the Performance NFR.
 
-\item{\textbf{NFR-USE-01: Core task completion}\\}
+\item{\label{NFR-USE-01}\textbf{NFR-USE-01: Core task completion}\\}
 
 Type: Dynamic, manual
 
@@ -933,7 +1065,7 @@ time, and collect post-task feedback about ease of use. Calculate the
 completion rate for every task and verify that the results demonstrate use by
 non-technical participants. Compare the results with the Usability NFR.
 
-\item{\textbf{NFR-PORT-01: Hosting and browser portability}\\}
+\item{\label{NFR-PORT-01}\textbf{NFR-PORT-01: Hosting and browser portability}\\}
 
 Type: Dynamic, automatic and manual
 
@@ -965,7 +1097,7 @@ Portability and Accessibility NFRs.
 
 \begin{enumerate}
 
-\item{\textbf{NFR-SEC-01: Access control and data protection}\\}
+\item{\label{NFR-SEC-01}\textbf{NFR-SEC-01: Access control and data protection}\\}
 
 Type: Dynamic, automatic and manual
 
@@ -987,7 +1119,32 @@ role, verify both the user interface and direct endpoint responses, and
 inspect configuration handling. Record every unexpected access or exposure
 and compare the results with the Security NFR.
 
-\item{\textbf{NFR-REL-01: Invalid input and dependency failure recovery}\\}
+\item{\label{NFR-SEC-02}\textbf{NFR-SEC-02: Model hosting and input privacy}\\}
+
+Type: Dynamic and static, automatic and manual
+
+Initial State: The system is deployed in the designated McMaster University
+hosting environment with its configured language model endpoint. Outbound
+network connections from the application server are logged. The database
+contains user accounts and the master course sheet.
+
+Input/Condition: Process a batch of representative test outlines from upload
+to confirmed structured data.
+
+Output/Result: Every model request is sent only to the configured model
+endpoint, and the application makes no other outbound connection while
+processing. No model request contains confidential department data or
+personal information about any user or student. Course and department data
+are stored only on CAS-hosted infrastructure.
+
+How test will be performed: Process the batch while capturing outbound
+connections, then compare every destination with the configured model
+endpoint. Search the logged model requests for master course sheet values and
+user account details. Inspect the deployment configuration for any external
+model endpoint or storage location, and compare the results with the hosting
+and model input privacy requirements in the SRS.
+
+\item{\label{NFR-REL-01}\textbf{NFR-REL-01: Invalid input and dependency failure recovery}\\}
 
 Type: Dynamic, automatic
 
@@ -1008,7 +1165,7 @@ scenario, verify the response and stored data before and after the failure,
 and retry processing after restoring the dependency. Record whether each
 predefined case meets the Reliability NFR.
 
-\item{\textbf{NFR-DEP-01: Deployment and maintainability}\\}
+\item{\label{NFR-DEP-01}\textbf{NFR-DEP-01: Deployment and maintainability}\\}
 
 Type: Static and dynamic, manual
 
@@ -1036,9 +1193,156 @@ execute the core workflow, and record any missing or ambiguous steps. Review
 the change diffs and effort records with the team, then document the results
 against the Installability, Deployability, and Maintainability NFRs.
 
+\item{\label{NFR-DATA-01}\textbf{NFR-DATA-01: Data retention}\\}
+
+Type: Static and dynamic, manual
+
+Initial State: The test database contains outlines, extracted data, findings,
+and change records, including fixture records dated 9 years before the test
+date.
+
+Input/Condition: Run every scheduled maintenance and cleanup job that the
+system defines. Inspect the configured retention period.
+
+Output/Result: No record dated less than 10 years before the test date is
+deleted by an automatic process, and the configured retention period is 10
+years.
+
+How test will be performed: Count the records of each type before and after
+running the jobs, and check that the 9-year-old fixture records remain.
+Inspect the retention configuration and the code paths that delete stored
+records, and compare the results with the retention requirement in the SRS.
+
 \end{enumerate}
 
-\section{Unit Test Description} \label{sec_UnitTests}
+\subsection{Traceability Between Test Cases and Requirements}\label{sec:TraceSysReq}
+
+Table~\ref{tab:TraceSysReq} traces every requirement to the system tests that
+verify it and to the non-dynamic techniques that give further evidence. It
+covers the functional (FR), nonfunctional (NFR), data (DR), and AI and machine
+learning (AIR) requirements in the SRS~\citep{TeamBVSH2026SRS}, and the safety
+and security requirements (SSR) in the Hazard Analysis~\citep{TeamBVSH2026HA}.
+Requirements are identified by their numbers in those documents.
+
+\paragraph{New requirements.}
+Three new functional requirements are not yet part of the SRS. They are stated
+below and traced in Table~\ref{tab:TraceSysReq} under these names.
+\begin{description}
+  \item[FR-Dashboard:] The system shall display a dashboard that shows, for each
+  course, the information found in its outline, the information that is
+  missing, and each finding that needs action.
+  \item[FR-Override:] The system shall allow an administrator to mark a finding
+  as accepted, with a reason. The system shall then show the finding as
+  accepted instead of open, and shall record the administrator, the time, and
+  the reason.
+  \item[FR-Completeness:] The system shall report, for each course and for the
+  term as a whole, whether the course is fully planned before classes start.
+  A course is fully planned when every assessment in its outline has a
+  confirmed date and weight.
+\end{description}
+
+\paragraph{Non-dynamic techniques.}
+Where a requirement is also checked without running the system, the
+technique is listed in Table~\ref{tab:TraceSysReq}:
+\begin{itemize}
+  \item \textbf{CR (code review):} the pull request reviewer checks the code
+  that implements the requirement against the requirement text.
+  \item \textbf{SA (static analysis):} linters, type checking, and dependency
+  and secret scanning run in continuous integration.
+  \item \textbf{DI (document and configuration inspection):} a team member who
+  did not write the artifact inspects a document, data file, or configuration
+  against the requirement.
+  \item \textbf{WT (walkthrough):} the team walks a supervisor or stakeholder
+  through the feature on sample outlines and records their feedback.
+\end{itemize}
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.22\textwidth}
+  >{\raggedright\arraybackslash}p{0.46\textwidth}
+  >{\raggedright\arraybackslash}p{0.20\textwidth}}
+\caption{Traceability Between System Tests and Requirements}
+\label{tab:TraceSysReq}\\
+\toprule
+\textbf{Requirement} & \textbf{System tests} & \textbf{Non-dynamic}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Requirement} & \textbf{System tests} & \textbf{Non-dynamic}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{3}{l}{\textbf{Functional requirements}}\\
+FR1 & \stref{ST_Intake_Data} & CR\\
+FR2 & \stref{ST_Extract_Assessment}, \nfrref{NFR-ACC-01} & --\\
+FR3 & \stref{ST_Extract_LO}, \nfrref{NFR-ACC-01} & WT\\
+FR4 & \stref{ST_Extract_Flag}, \nfrref{NFR-ACC-01} & --\\
+FR5 & \stref{ST_Extract_Review} & CR\\
+FR6 & \stref{ST_Dates_Tentative} & --\\
+FR7 & \stref{ST_Calendar}, \nfrref{NFR-PERF-02} & WT\\
+FR8 & \stref{ST_Work_Cluster} & CR\\
+FR9 & \stref{ST_Work_Policy} & CR\\
+FR10 & \stref{ST_Reanalyze} & CR\\
+FR11 & \stref{ST_Suggest_Generation} & CR\\
+FR12 & \stref{ST_Suggest_NoAuto} & CR\\
+FR13 & \stref{ST_Comp_Policy}, \nfrref{NFR-ACC-03} & CR\\
+FR14 & \stref{ST_Comp_Grad}, \nfrref{NFR-ACC-03} & WT\\
+FR15 & \stref{ST_Access_Login}, \nfrref{NFR-SEC-01} & CR\\
+FR16 & \stref{ST_Access_Roles}, \stref{ST_Dates_Tentative}, \nfrref{NFR-SEC-01} & CR\\
+FR17 & \stref{ST_Export_CSV} & --\\
+FR-Dashboard & \stref{ST_Dashboard}, \nfrref{NFR-USE-01} & WT\\
+FR-Override & \stref{ST_Override} & CR\\
+FR-Completeness & \stref{ST_Completeness} & --\\
+\midrule
+\multicolumn{3}{l}{\textbf{Nonfunctional requirements}}\\
+NFR1 & \nfrref{NFR-ACC-01}, \nfrref{NFR-ACC-03} & DI\\
+NFR2 & \nfrref{NFR-USE-01} & WT\\
+NFR3 & \nfrref{NFR-DEP-01} & CR, SA\\
+NFR4 & \nfrref{NFR-PORT-01} & --\\
+NFR5 & \nfrref{NFR-DEP-01} & DI\\
+NFR6 & \nfrref{NFR-PERF-01}, \nfrref{NFR-PERF-02} & --\\
+NFR7 & \nfrref{NFR-REL-01} & --\\
+NFR8 & \nfrref{NFR-SEC-01} & SA\\
+NFR9 & \nfrref{NFR-PORT-01} & --\\
+\midrule
+\multicolumn{3}{l}{\textbf{Data requirements}}\\
+DR1 & \nfrref{NFR-SEC-01} & --\\
+DR2 & \nfrref{NFR-SEC-02} & CR, DI\\
+DR3 & \stref{ST_Access_Roles}, \nfrref{NFR-SEC-01} & --\\
+DR4 & \nfrref{NFR-DATA-01} & DI\\
+\midrule
+\multicolumn{3}{l}{\textbf{AI and machine learning requirements}}\\
+AIR1 & \nfrref{NFR-AI-01} & CR\\
+AIR2 & \nfrref{NFR-SEC-02} & CR\\
+AIR3 & \stref{ST_Extract_Assessment}, \stref{ST_Extract_LO} & --\\
+AIR4 & \stref{ST_Extract_Assessment}, \stref{ST_Extract_LO} & --\\
+AIR5 & \stref{ST_Extract_Flag}, \nfrref{NFR-ACC-01} & --\\
+AIR6 & \stref{ST_Extract_Review} & CR\\
+\midrule
+\multicolumn{3}{l}{\textbf{Safety and security requirements (Hazard Analysis)}}\\
+SSR1 & \nfrref{NFR-REL-01} & --\\
+SSR2 & \stref{ST_Intake_Data} & CR\\
+SSR3 & \stref{ST_Suggest_Generation} & CR\\
+SSR4 & \stref{ST_StaleSuggestion} & CR\\
+SSR5 & \stref{ST_Comp_Policy}, \stref{ST_Comp_Grad} & --\\
+SSR6 & \stref{ST_AuditTrail} & --\\
+SSR7 & \stref{ST_MasterSheetEdit} & --\\
+\end{longtable}
+}
+
+\paragraph{Summary of coverage.}
+Table~\ref{tab:TraceSysReq} traces 46 requirements, and every requirement is
+verified by at least one system test. Where a single test is the only dynamic
+check, a non-dynamic technique is often added. For example, the 10-year
+retention period in DR4 cannot be observed within the project, so
+\nfrref{NFR-DATA-01} checks that no automatic process deletes stored records, and a
+DI inspection confirms the retention setting. Some tests verify more than one
+requirement. \nfrref{NFR-SEC-01}, which checks access control and data protection,
+supports FR15, FR16, NFR8, DR1, and DR3. A failure in a shared test affects
+every requirement it traces to, so shared tests are given high priority.
+
+\section{Unit Test Description}
 
 \wss{This section should not be filled in until after the MIS (detailed design
   document) has been completed.}
@@ -1157,7 +1461,7 @@ How test will be performed:
 
 \wss{Provide evidence that all modules have been considered.}
 				
-\bibliographystyle{plainnat}
+\bibliographystyle{../SRS-IEEE/IEEEtran}
 
 \bibliography{../../refs/References}
 
