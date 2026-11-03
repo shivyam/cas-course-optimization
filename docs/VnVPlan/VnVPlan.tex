@@ -403,16 +403,29 @@ Three groups outside the team review the plan:
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+Implementation verification asks whether ASSURE was built to match its requirements and design. The plan combines dynamic tests with a small set of static techniques aimed at those risks.
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
+\begin{itemize}
+\item \textbf{System testing (dynamic).}
+  Black-box, end-to-end checks of FR behaviour on the running system, using the inputs and expected results in Section~\ref{sec_SystemTests}. These tests catch integration failures that unit tests miss (upload through export, role boundaries, conflict results after a date change).
 
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\item \textbf{Unit testing (dynamic).}
+  Module-level tests against the MIS. Most will be automatic. Priority modules are extraction parsing, conflict and cluster detection, compliance rules, and access control.
+
+\item \textbf{Pull-request code review (static).}
+  Every change merged to \texttt{main} needs at least one teammate who did not author it. The reviewer checks it with the related requirement or issue, that tests cover the change, and for good code quality.
+
+\item \textbf{Code walkthroughs (static).}
+  For large features (extraction, conflict detection, compliance, and access control), the team will hold a bug-checking meeting to walk through the code together and note issues. Checklist:
+  \begin{itemize}
+  \item Does the code match the MIS?
+  \item Are missing or TBD fields flagged, not invented?
+  \item Are restricted periods, cluster rules, and role checks enforced?
+  \item Are failure paths explicit (reject, deny, not-checked)?
+  \item Is the code clean and readable?
+  \end{itemize}
+  Findings are logged as GitHub issues.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
@@ -469,7 +482,7 @@ as a Rev 0 demo for the supervisor.}
 
 \wss{This section might reference back to the SRS verification section.}
 
-\section{System Tests}
+\section{System Tests} \label{sec_SystemTests}
 
 This section describes the system-level tests for ASSURE. Section~\ref{sec_SysFuncTests} covers the functional requirements in the \href{https://github.com/shivyam/cas-course-optimization/blob/main/pdfs/SRS-IEEE/SRS.pdf}{SRS}. There is one system test for each functional requirement, labeled ST-FR1 through ST-FR17. The tests are grouped the same way as the SRS: outline intake and extraction, calendar and conflict detection, scheduling suggestions, compliance checking, and access and export.
 
@@ -998,7 +1011,7 @@ against the Installability, Deployability, and Maintainability NFRs.
 
 \end{enumerate}
 
-\section{Unit Test Description}
+\section{Unit Test Description} \label{sec_UnitTests}
 
 \wss{This section should not be filled in until after the MIS (detailed design
   document) has been completed.}
