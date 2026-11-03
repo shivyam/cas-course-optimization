@@ -1,0 +1,10 @@
+{
+  "course_code": "SFWRENG 2AA4",
+  "term": "Winter 2026",
+  "assessments": [
+    { "name": "Assignment 1", "due_date": "2026-01-30", "date_tbd": false, "weight_percent": 10 },
+    { "name": "Assignment 2", "due_date": "2026-02-27", "date_tbd": false, "weight_percent": 10 },
+    { "name": "Midterm",      "due_date": null,         "date_tbd": true,  "weight_percent": 25 },
+    { "name": "Final Exam",   "due_date": null,         "date_tbd": true,  "weight_percent": 55 }
+  ]
+}

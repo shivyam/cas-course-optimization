@@ -1,0 +1,6 @@
+# Keep test outlines, answer keys and model output out of the repo
+outlines/
+keys/
+results/
+.venv/
+__pycache__/
