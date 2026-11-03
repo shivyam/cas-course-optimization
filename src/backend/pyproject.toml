@@ -12,9 +12,6 @@ dependencies = [
     # Needed by FastAPI to accept file uploads (multipart/form-data).
     "python-multipart>=0.0.9",
     "pymupdf==1.27.2.2",
-    "pdfplumber==0.11.10",
-    "pdfminer.six==20260107",
-    "pdf-inspector==1.14.2",
 ]
 
 # Tools only needed for development and CI, not for running the app.
