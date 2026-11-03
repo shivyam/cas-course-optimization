@@ -3,6 +3,7 @@
 import pymupdf
 from fastapi.testclient import TestClient
 
+from app.api import outlines
 from app.main import app
 
 # TestClient calls the app in-process, so no server needs to be running.
@@ -19,8 +20,9 @@ def make_pdf(text: str) -> bytes:
     return contents
 
 
-def test_upload_outline_extracts_text():
+def test_upload_outline_extracts_text(tmp_path, monkeypatch):
     # The endpoint should return the text that was embedded in the PDF page.
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
     files = {
         "file": ("outline.pdf", make_pdf("Course outline text"), "application/pdf")
     }
@@ -33,6 +35,13 @@ def test_upload_outline_extracts_text():
     assert body["status"] == "received"
     assert body["text_extraction"] == "pymupdf"
     assert body["text"] == "Course outline text"
+
+    # Save text to local files for testing purposes
+    saved_files = list(tmp_path.glob("*.txt"))
+    assert len(saved_files) == 1
+    assert saved_files[0].name == "outline.txt"
+    assert body["text_file"] == "data/extracted_text/outline.txt"
+    assert saved_files[0].read_text(encoding="utf-8") == "Course outline text"
 
 
 def test_upload_outline_rejects_non_pdf():

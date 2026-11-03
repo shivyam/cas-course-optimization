@@ -1,5 +1,7 @@
 """Course outline upload endpoint."""
 
+import re
+from pathlib import Path
 from typing import Annotated
 
 import pymupdf
@@ -8,6 +10,27 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 router = APIRouter(tags=["outlines"])
 
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+EXTRACTED_TEXT_DIR = (
+    Path(__file__).resolve().parents[4] / "data" / "extracted_text"
+)
+EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
+
+# FOR TESTING PURPOSES
+def save_extracted_text(filename: str, text: str) -> Path:
+    """Save extracted text and return its path relative to the repository."""
+    safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", Path(filename).stem).strip("._")
+    safe_stem = safe_stem or "outline"
+    output_path = EXTRACTED_TEXT_DIR / f"{safe_stem}.txt"
+
+    try:
+        EXTRACTED_TEXT_DIR.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(text, encoding="utf-8")
+    except OSError as error:
+        raise HTTPException(
+            status_code=500, detail="Unable to save extracted outline text."
+        ) from error
+
+    return EXTRACTED_TEXT_REPO_PATH / output_path.name
 
 
 @router.post("/outlines")
@@ -45,10 +68,13 @@ async def upload_outline(file: Annotated[UploadFile, File()]) -> dict:
         if "document" in locals():
             document.close()
 
+    text_file = save_extracted_text(filename, text)
+
     return {
         "filename": filename,
         "status": "received",
         "size_bytes": len(contents),
         "text_extraction": "pymupdf",
         "text": text,
+        "text_file": str(text_file),
     }
