@@ -76,18 +76,20 @@ in.}
 \section{Symbols, Abbreviations, and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
+\begin{tabularx}{\textwidth}{l X} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
-  T & Test\\
+  ASSURE & Accreditation and Scheduling Support for Undergraduate Review and Evaluation\\
+  CAS & Department of Computing and Software\\
+  CEAB & Canadian Engineering Accreditation Board, the organization responsible for accrediting undergraduate engineering programs in Canada.\\
+  LLM & Large Language Model\\
+  PDF & Portable Document Format\\
+  SRS & Software Requirements Specification \citep{TeamBVSH2026SRS}\\
+  V\&V & Verification and Validation\\
   \bottomrule
-\end{tabular}\\
+\end{tabularx}\\
 
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -100,8 +102,9 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software under test is ASSURE (Accreditation and Scheduling Support for Undergraduate Review and Evaluation), which is a course-outline review system for the Department of Computing and Software (CAS) at McMaster University.
+
+ASSURE accepts a batch of course outlines in PDF (Word and LaTeX document support will be a future feature). A replaceable (black box) locally hosted open-weight large language model (LLM) extracts each assessment's name, date, weight, and learning outcomes, and it either cites the passage each value came from or reports that it cannot find the value. The system checks the extracted information against McMaster University's Undergraduate Course Management Policy~\citep{McMasterUCMP2025}, academic-calendar restrictions, and the Canadian Engineering Accreditation Board's (CEAB) Accreditation Criteria and Procedures~\citep{CEAB2025}, and flags missing, incomplete, or non-compliant information for review. Its dashboard supports filtering by course, year, and program. It also displays term completeness, workload or scheduling conflicts, and allows users to override or correct extracted values. The system also stores the reviewed data for export, while its shared calendar presents assessment deadlines across CAS courses and highlights items that need attention.
 
 \subsection{Objectives}
 
@@ -124,12 +127,28 @@ has already been verified by its implementation team.}
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The project includes two approved Custom Documents that support the design
+process and end-user adoption:
+
+\begin{enumerate}
+    \item \textbf{Fall Term CD: Wireframe Report.}
+    The wireframe report will document the proposed administrative dashboard,
+    including the shared assessment calendar, course filtering tools, and
+    scheduling recommendation displays. The wireframes will be reviewed with
+    the project clients and stakeholders to confirm that the navigation,
+    component interactions, and workflows reflect their needs before
+    front-end implementation begins. Feedback from this review will be used
+    to revise the interface design.
+
+    \item \textbf{Winter Term CD: User Manual.}
+    The user manual will provide instructors and CAS administrative staff with
+    step-by-step instructions for uploading course outlines, filtering the
+    centralized assessment calendar, exporting database records, and reviewing
+    policy compliance flags and scheduling recommendations. The manual will
+    be checked against the implemented system and reviewed for completeness,
+    clarity, and whether users can follow its procedures to complete the
+    documented tasks.
+\end{enumerate}
 
 \subsection{Relevant Documentation}
 
@@ -540,66 +559,246 @@ How test will be performed: The tester exports as administrator and opens the fi
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+\noindent The following tests assess the system-wide nonfunctional
+requirements. Accuracy measurements use a manually prepared answer key for a
+representative set of course outlines. Performance measurements will record
+the test environment, document characteristics, workload, and response times.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
+\subsubsection{Course Outline Processing}
 		
-\paragraph{Title for Test}
-
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{\textbf{NFR-ACC-01: Extraction accuracy}\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Dynamic, automatic
 
-Type: Functional, Dynamic, Manual, Static etc.
+Initial State: The course-outline processing service is available and the
+representative test dataset and manually prepared answer key are stored.
 					
-Initial State: 
+Input/Condition: Submit each test outline for processing.
 					
-Input: 
+Output/Result: The final structured output contains the expected assessment
+dates, assessment weights, and learning outcomes with at least 95\% accuracy
+for each field type. At least 95\% of predefined missing, unclear, or
+incomplete fields are flagged for human review.
 					
-Output: 
+How test will be performed: Run the extraction pipeline on every outline,
+compare the confirmed structured output with the answer key, and calculate
+precision/recall or an equivalent field-level accuracy for each field type.
+Calculate missing-field recall as the proportion of known missing or
+incomplete fields that were flagged. Record the results and compare them with
+the targets in the Accuracy NFR.
+
+\item{\textbf{NFR-ACC-03: Policy and CEAB compliance accuracy}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The compliance-checking service is available and the
+representative test dataset has a manually prepared answer key identifying
+all predefined policy and CEAB compliance issues.
+
+Input/Condition: Submit each test outline for compliance checking.
+
+Output/Result: The system identifies at least 95\% of the predefined policy
+and CEAB compliance issues and reports each identified issue in the
+verification results.
+
+How test will be performed: Run the compliance checker on every outline,
+compare the reported issues with the answer key, and calculate recall as the
+number of correctly identified predefined issues divided by the total number
+of predefined issues. Record false positives separately and compare the
+recall with the 95\% target in the Accuracy NFR.
 					
-How test will be performed: 
+\item{\textbf{NFR-PERF-01: Outline processing time}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The processing service is available and the test environment
+has been recorded. A supported PDF course outline of no more than 30 pages is
+available.
+					
+Input/Condition: Submit a representative set of supported outlines, including documents
+with different layouts and extraction sizes.
+					
+Output/Result: At least 90\% of successful processing runs complete within 60
+seconds. Failures and delays caused by unavailable external dependencies are
+recorded separately.
+					
+How test will be performed: Run each outline through the complete document
+processing and information-extraction workflow, measure elapsed time from
+submission to structured output, and report the percentile and individual
+results against the 60-second target in the Performance NFR.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Calendar and Web Application}
 
-...
+\begin{enumerate}
+
+\item{\textbf{NFR-PERF-02: Calendar response time}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The database contains the representative processed assessment
+dataset, the web application is running in the recorded test environment, and
+the user is authenticated.
+
+Input/Condition: Issue calendar-load requests using representative filters
+for course, year, and program under the expected concurrent workload.
+
+Output/Result: At least 95\% of requests display the previously processed
+calendar data within 3 seconds.
+
+How test will be performed: Generate repeated calendar-load requests with the
+defined filters, measure the elapsed time until the calendar data is displayed,
+and report the response-time distribution and the percentage meeting the
+3-second target in the Performance NFR.
+
+\item{\textbf{NFR-USE-01: Core task completion}\\}
+
+Type: Dynamic, manual
+
+Initial State: Representative CAS administrators and course instructors who
+were not involved in implementation and do not have programming or machine
+learning knowledge are provided with access to the deployed system and the
+task scenarios.
+
+Input/Condition: Each participant attempts the designated core tasks:
+uploading an outline, reviewing extracted information, viewing and filtering
+the calendar, interpreting a flagged issue, and exporting available data,
+without programming or machine learning assistance.
+
+Output/Result: At least 80\% of participants complete each designated core
+task without assistance or technical knowledge. Any usability issues, errors,
+requests for help, or evidence of programming or machine learning assistance
+are recorded.
+
+How test will be performed: Observe each participant using the system without
+providing task-specific or technical assistance, record task completion and
+time, and collect post-task feedback about ease of use. Calculate the
+completion rate for every task and verify that the results demonstrate use by
+non-technical participants. Compare the results with the Usability NFR.
+
+\item{\textbf{NFR-PORT-01: Hosting and browser portability}\\}
+
+Type: Dynamic, automatic and manual
+
+Initial State: The system is deployed in the designated McMaster University
+hosting environment. The deployed web application and its core workflows are
+available on supported desktop operating systems in Google Chrome 120 or
+later, Mozilla Firefox 121 or later, and Safari 17 or later.
+
+Input/Condition: Run the authentication, outline submission, information
+review, calendar viewing, and export workflows in each supported browser and
+on the designated hosting environment.
+
+Output/Result: The system is usable in the designated McMaster University
+hosting environment and the core workflows complete successfully in each
+supported browser. Automated accessibility checks report no unresolved
+high-severity issues against the applicable AODA and WCAG 2.0 Level AA
+criteria.
+
+How test will be performed: Run an automated accessibility scan, then
+manually complete the core workflows in every supported browser and on the
+designated hosting environment. Use keyboard navigation and a screen-reader
+check, and record the browser, operating system, hosting environment,
+applicable WCAG success criteria, results, and any deviations against the
+Portability and Accessibility NFRs.
+
+\end{enumerate}
+
+\subsubsection{Security, Reliability, and Deployment}
+
+\begin{enumerate}
+
+\item{\textbf{NFR-SEC-01: Access control and data protection}\\}
+
+Type: Dynamic, automatic and manual
+
+Initial State: Test accounts exist for each supported role, including an
+unauthenticated user, a professor, and a CAS administrator. Test data
+includes records that each role should and should not be able to access.
+
+Input/Condition: Attempt to access protected pages and API endpoints without
+authentication, with the wrong role, and with valid permissions. Inspect
+deployment configuration and logs for exposed credentials or sensitive
+configuration values.
+
+Output/Result: Unauthenticated and unauthorized requests are rejected.
+Permitted users can perform only the actions assigned to their roles, and
+credentials and sensitive configuration values are not exposed.
+
+How test will be performed: Execute the access-control test cases for each
+role, verify both the user interface and direct endpoint responses, and
+inspect configuration handling. Record every unexpected access or exposure
+and compare the results with the Security NFR.
+
+\item{\textbf{NFR-REL-01: Invalid input and dependency failure recovery}\\}
+
+Type: Dynamic, automatic
+
+Initial State: The database contains valid course, assessment, and calendar
+records. A submitted outline is retained by the system.
+
+Input/Condition: Submit an unsupported, malformed, oversized, incomplete, or
+unreadable outline, and separately make the extraction or recommendation
+service unavailable during processing.
+
+Output/Result: The system reports an actionable error without crashing,
+corrupting or deleting existing records, and retains the submitted outline
+for retry. While the external service is unavailable, users can still view
+and edit stored information, view the calendar, and export available data.
+
+How test will be performed: Run each invalid-input and dependency-failure
+scenario, verify the response and stored data before and after the failure,
+and retry processing after restoring the dependency. Record whether each
+predefined case meets the Reliability NFR.
+
+\item{\textbf{NFR-DEP-01: Deployment and maintainability}\\}
+
+Type: Static and dynamic, manual
+
+Initial State: A clean designated McMaster University hosting environment and
+the documented installation and deployment instructions are available to a
+maintainer who did not perform the original setup.
+
+Input/Condition: Deploy the system by following the documentation. Verify
+that the documentation identifies the required software, configuration
+values, environment variables, database setup, and service startup steps.
+Then implement representative isolated changes to document processing,
+scheduling, or compliance rules.
+
+Output/Result: The maintainer can deploy the system to the designated
+McMaster University hosting environment and complete the core workflow
+without undocumented steps. The documentation contains all required setup
+information. The representative changes do not require unrelated components
+to be rewritten, and the effort for each change is recorded relative to the
+original implementation effort for the affected component.
+
+How test will be performed: Give the documentation and clean hosting
+environment to a new maintainer without providing undocumented guidance.
+Observe the maintainer follow the installation and deployment instructions,
+execute the core workflow, and record any missing or ambiguous steps. Review
+the change diffs and effort records with the team, then document the results
+against the Installability, Deployability, and Maintainability NFRs.
+
+\end{enumerate}
 
 \section{Unit Test Description}
 
-Unit testing will be filled in after the detailed design and Module Interface Specification (MIS) are written. This branch focuses on system tests for functional requirements only.
+\wss{This section should not be filled in until after the MIS (detailed design
+  document) has been completed.}
+
+\wss{Reference your MIS (detailed design document) and explain your overall
+philosophy for test case selection.}
+
+\wss{To save space and time, it may be an option to provide less detail in this section.
+For the unit tests you can potentially layout your testing strategy here.  That is, you
+can explain how tests will be selected for each module.  For instance, your test building
+approach could be test cases for each access program, including one test for normal behaviour
+and as many tests as needed for edge cases.  Rather than create the details of the input
+and output here, you could point to the unit testing code.  For this to work, you code
+needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Unit Testing Scope}
 
@@ -622,28 +821,33 @@ Unit testing will be filled in after the detailed design and Module Interface Sp
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input: 
-					
+
+Initial State:
+
+Input:
+
 Output: \wss{The expected result for the given inputs}
 
 Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
-					
+How test will be performed:
+
 \item{test-id2\\}
 
-Type: Functional, Dynamic, Manual, Automatic, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+  be automatic}
+
+Initial State:
+
+Input:
+
+Output: \wss{The expected result for the given inputs}
+
+Test Case Derivation: \wss{Justify the expected value given in the Output field}
+
+How test will be performed:
+
+\item{...\\}
 
 \end{enumerate}
 
@@ -661,33 +865,33 @@ How test will be performed:
   mentioned functional tests.}
 
 \subsubsection{Module ?}
-		
+
 \begin{enumerate}
 
 \item{test-id1\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
+
+Initial State:
+
+Input/Condition:
+
+Output/Result:
+
+How test will be performed:
+
 \item{test-id2\\}
 
 Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+
+Initial State:
+
+Input:
+
+Output:
+
+How test will be performed:
 
 \end{enumerate}
 
