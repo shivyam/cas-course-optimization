@@ -1,0 +1,73 @@
+{
+  "course_code": "SFWRENG 2DA4",
+  "term": "Fall 2026",
+  "why_chosen": "Short and clean; good baseline. Assignment weights given as a group (10% for four), split equally at 2.5% each",
+  "assessments": [
+    {
+      "name": "Assignment 1",
+      "aliases": [
+        "A1"
+      ],
+      "due_date": "2026-10-05",
+      "date_tbd": false,
+      "weight_percent": 2.5
+    },
+    {
+      "name": "Assignment 2",
+      "aliases": [
+        "A2"
+      ],
+      "due_date": "2026-10-26",
+      "date_tbd": false,
+      "weight_percent": 2.5
+    },
+    {
+      "name": "Assignment 3",
+      "aliases": [
+        "A3"
+      ],
+      "due_date": "2026-11-16",
+      "date_tbd": false,
+      "weight_percent": 2.5
+    },
+    {
+      "name": "Assignment 4",
+      "aliases": [
+        "A4"
+      ],
+      "due_date": "2026-11-30",
+      "date_tbd": false,
+      "weight_percent": 2.5
+    },
+    {
+      "name": "Midterm",
+      "aliases": [
+        "Midterm Exam",
+        "Midterm Test"
+      ],
+      "due_date": "2026-11-06",
+      "date_tbd": false,
+      "weight_percent": 30
+    },
+    {
+      "name": "Final Exam",
+      "aliases": [
+        "Final"
+      ],
+      "due_date": null,
+      "date_tbd": true,
+      "weight_percent": 50
+    },
+    {
+      "name": "Labs",
+      "aliases": [
+        "Lab",
+        "Labs 1-5"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 10,
+      "note": "Five labs, recurring over two-week blocks; no single due date"
+    }
+  ]
+}

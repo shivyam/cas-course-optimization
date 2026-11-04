@@ -1,0 +1,113 @@
+{
+  "course_code": "SFWRENG 2OP3",
+  "term": "Fall 2026",
+  "why_chosen": "Assignment dates only in the weekly schedule; weights given as a group (15% for five), split equally at 3% each; floating 5% and 2% bonus",
+  "assessments": [
+    {
+      "name": "Assignment 1",
+      "aliases": [
+        "A1"
+      ],
+      "due_date": "2026-09-18",
+      "date_tbd": false,
+      "weight_percent": 3
+    },
+    {
+      "name": "Assignment 2",
+      "aliases": [
+        "A2"
+      ],
+      "due_date": "2026-10-02",
+      "date_tbd": false,
+      "weight_percent": 3
+    },
+    {
+      "name": "Assignment 3",
+      "aliases": [
+        "A3"
+      ],
+      "due_date": "2026-10-23",
+      "date_tbd": false,
+      "weight_percent": 3
+    },
+    {
+      "name": "Assignment 4",
+      "aliases": [
+        "A4"
+      ],
+      "due_date": "2026-11-06",
+      "date_tbd": false,
+      "weight_percent": 3
+    },
+    {
+      "name": "Assignment 5",
+      "aliases": [
+        "A5"
+      ],
+      "due_date": "2026-11-20",
+      "date_tbd": false,
+      "weight_percent": 3
+    },
+    {
+      "name": "Project",
+      "aliases": [
+        "Project Assignment",
+        "Individual Project"
+      ],
+      "due_date": "2026-12-03",
+      "date_tbd": false,
+      "weight_percent": 15
+    },
+    {
+      "name": "Midterm Test",
+      "aliases": [
+        "Midterm"
+      ],
+      "due_date": "2026-10-22",
+      "date_tbd": false,
+      "weight_percent": 20
+    },
+    {
+      "name": "Final Exam",
+      "aliases": [
+        "Final"
+      ],
+      "due_date": null,
+      "date_tbd": true,
+      "weight_percent": 35
+    },
+    {
+      "name": "Tutorial attendance",
+      "aliases": [
+        "Tutorials",
+        "Tutorial Attendance"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 10,
+      "note": "Recurring, 1% per tutorial (11 tutorials, max 10%)"
+    },
+    {
+      "name": "Floating best",
+      "aliases": [
+        "Floating Best"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 5,
+      "note": "Grading rule, not a deliverable: goes to the better of midterm and final"
+    },
+    {
+      "name": "Research Surveys Bonus",
+      "aliases": [
+        "Research Surveys",
+        "Bonus"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 2,
+      "is_bonus": true,
+      "note": "Bonus, not part of the 100%"
+    }
+  ]
+}
