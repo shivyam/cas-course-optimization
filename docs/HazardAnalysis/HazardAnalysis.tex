@@ -390,7 +390,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \addlinespace
 \haz{H9-2}\newline \textit{SE, H} & An instructor changes another instructor's course & Assessment dates are changed without the authority to do so & Missing or incorrect role check & \fmi{a}{Enforce role checks on the server for every change}\par \fmi{b}{Record each change} & \fmi{a}{FR16, DR3}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
 \addlinespace
-\haz{H9-3}\newline \textit{SE, M} & A session is left open on a shared computer & Another person views or changes data as that user & No inactivity timeout & End a session after a period of inactivity & New: session timeout\\
+\haz{H9-3}\newline \textit{SE, M} & A session is left open on a shared computer & Another person views or changes data as that user & No inactivity timeout & End a session after 30 minutes of inactivity and require the user to authenticate again before accessing protected data & \ssrref{SSR_SessionTimeout}\\
 \addlinespace
 \haz{H9-4}\newline \textit{SE, H} & A non-administrator changes the master course sheet or academic calendar & Compliance and restricted-period results become wrong for every course & Reference data editable by all roles & \fmi{a}{Allow only administrators to change reference data}\par \fmi{b}{Record each change} & \fmi{a}{\ssrref{SSR_MasterSheetEdit}}\par \fmi{b}{\ssrref{SSR_AuditTrail}}\\
 \midrule
@@ -416,7 +416,6 @@ Requirements (Table~\ref{TblSafetySecurityRequirements}) and to the SRS:
 
 \begin{itemize}
   \item \textbf{Warning ranking} (\hazref{H8-2}): rank workload clusters by size.
-  \item \textbf{Session timeout} (\hazref{H9-3}): end a session after inactivity.
   \item \textbf{Model change test} (\hazref{H11-2}): re-run the accuracy test set before a
     model change is deployed.
   \item \textbf{Output validation} (\hazref{H4-5}): check model output against the
@@ -458,6 +457,7 @@ compared with the sheet by the system's own code.
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & \hazref{H2-5}, \hazref{H9-2}, \hazref{H9-4}: unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date, an extracted value, or reference data (the master course sheet or the academic calendar) is changed, and shall retain that record for the retention period in DR4.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & \hazref{H5-4}, \hazref{H6-5}, \hazref{H9-4}: unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet and the academic calendar.\\
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ConfirmedDataPreservation} & \hazref{H2-2}: overwriting previously confirmed course information & The system shall preserve previously confirmed course information when an outline is re-uploaded until newly extracted values have been reviewed and explicitly approved by the user for replacement.\\
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_SessionTimeout} & \hazref{H9-3}: an authenticated session left open on a shared computer & The system shall expire an authenticated session after 30 minutes without user activity and shall require the user to authenticate again before protected data or functions can be accessed.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -485,7 +485,11 @@ The team will also prioritize \ssrref{SSR_CheckCoverage} to identify which compl
 checked for each course outline and flag courses that are missing from the
 master course sheet. \ssrref{SSR_MasterSheetEdit} will restrict modifications to the master course
 sheet and academic calendar to administrators, complementing the existing
-login and role-based access controls.
+login, role-based access controls, and session timeout.
+
+The team will also implement \ssrref{SSR_SessionTimeout} so that inactive
+authenticated sessions expire after 30 minutes and protected data cannot be
+accessed without re-authentication.
 
 If time permits, the team will implement \ssrref{SSR_AuditTrail} to record the user, timestamp,
  and previous value whenever assessment dates, extracted values, or reference
