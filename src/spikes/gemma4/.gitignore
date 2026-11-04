@@ -4,3 +4,5 @@
 results/
 .venv/
 __pycache__/
+# Local settings (outlines path)
+.env

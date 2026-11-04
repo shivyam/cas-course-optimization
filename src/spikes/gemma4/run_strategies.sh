@@ -6,6 +6,11 @@
 #   bash src/spikes/gemma4/run_strategies.sh [--extractor pdfplumber|pymupdf]
 #                                             [--strategies "baseline think linking fewshot"]
 #                                             [--outlines hard|all]
+#                                             [--outlines-dir PATH]
+#
+# Outline PDFs are not in the repo. Tell the script where yours are, either with
+# --outlines-dir, the SPIKE_OUTLINES_DIR environment variable, or a .env file in this
+# folder (copy .env.example to .env). The folder must contain Fall_2026/.
 #
 # Defaults reproduce the first strategy run:
 #   --extractor pdfplumber --strategies "linking think fewshot" --outlines hard
@@ -20,30 +25,32 @@ cd "$(dirname "$0")" || exit 1
 EXTRACTOR="pdfplumber"
 STRATEGIES="linking think fewshot"
 OUTLINE_SET="hard"
+OUTLINES_DIR_ARG=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --extractor)  EXTRACTOR="$2"; shift 2 ;;
     --strategies) STRATEGIES="$2"; shift 2 ;;
     --outlines)   OUTLINE_SET="$2"; shift 2 ;;
+    --outlines-dir) OUTLINES_DIR_ARG=(--outlines-dir "$2"); shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
 HARD=(
-  "outlines/Fall_2026/SFWRENG2OP3_AngelaZavaleta_Fall2026.pdf"
-  "outlines/Fall_2026/SFWRENG2XC3_SamScott_Fall2026.pdf"
+  "Fall_2026/SFWRENG2OP3_AngelaZavaleta_Fall2026.pdf"
+  "Fall_2026/SFWRENG2XC3_SamScott_Fall2026.pdf"
 )
 EASY=(
-  "outlines/Fall_2026/SFWRENG2DA4_RyanLeduc_Fall2026.pdf"
-  "outlines/Fall_2026/SFWRENG2DM3_RidhaKhedri_Fall2026.pdf"
-  "outlines/Fall_2026/COMPSCI2C03-VincentMaccio_Fall2026.pdf"
+  "Fall_2026/SFWRENG2DA4_RyanLeduc_Fall2026.pdf"
+  "Fall_2026/SFWRENG2DM3_RidhaKhedri_Fall2026.pdf"
+  "Fall_2026/COMPSCI2C03-VincentMaccio_Fall2026.pdf"
 )
 case "$OUTLINE_SET" in
   hard) OUTLINES=("${HARD[@]}") ;;
   all)  OUTLINES=("${HARD[@]}" "${EASY[@]}") ;;
   *) echo "--outlines must be hard or all"; exit 1 ;;
 esac
-COMMON_ARGS=(--extractor "$EXTRACTOR" --postprocess --num-ctx 16384 --key-dir keys)
+COMMON_ARGS=(--extractor "$EXTRACTOR" --postprocess --num-ctx 16384 --key-dir keys "${OUTLINES_DIR_ARG[@]}")
 
 mkdir -p results/logs
 LOG="results/logs/${EXTRACTOR}_$(date +%Y%m%d-%H%M%S).log"
@@ -77,6 +84,27 @@ export PYTHONIOENCODING=utf-8
   fi
   if [ "$EXTRACTOR" = "pdfplumber" ] && ! python -c "import pdfplumber" 2>/dev/null; then
     echo "ERROR: pdfplumber is not installed in this venv. Run: pip install pdfplumber"
+    exit 1
+  fi
+
+  # Check every outline PDF can be found before starting
+  if ! python - "${OUTLINES_DIR_ARG[@]:1}" "${OUTLINES[@]}" <<'PY'
+import sys
+from spike_gemma import outlines_dir, resolve_pdf, OUTLINES_ENV
+args = sys.argv[1:]
+cli = args.pop(0) if args and not args[0].lower().endswith(".pdf") else None
+base, source = outlines_dir(cli)
+print(f"Outlines folder: {base}  [{source}]")
+missing = [a for a in args if resolve_pdf(a, base) is None]
+for a in missing:
+    print(f"ERROR: not found: {a}")
+if missing:
+    print(f"Set {OUTLINES_ENV} in .env (copy .env.example), set the environment variable, "
+          "or pass --outlines-dir PATH.")
+    sys.exit(1)
+print(f"All {len(args)} outline PDFs found.")
+PY
+  then
     exit 1
   fi
 

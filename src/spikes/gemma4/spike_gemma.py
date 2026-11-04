@@ -5,28 +5,31 @@ text to a local Ollama model and records what comes back, so the team can
 judge whether a small local model is good enough for outline extraction.
 
 Setup (once):
-    pip install pdfplumber
+    pip install pdfplumber pymupdf==1.27.2.2
     ollama pull gemma4:e2b
     (Ollama must be running; it listens on http://localhost:11434)
+    Copy .env.example to .env and set SPIKE_OUTLINES_DIR to your folder of outline PDFs
+    (or set the SPIKE_OUTLINES_DIR environment variable, or pass --outlines-dir).
+    PDF arguments below are relative to that folder.
 
 Typical runs:
     # 1. Assessment extraction at the default 4K context
-    python spike_gemma.py outlines/2AA4.pdf --num-ctx 4096
+    python spike_gemma.py Fall_2026/2AA4.pdf --num-ctx 4096
 
     # 2. Same outline at larger contexts, 3 runs each, scored against a key
-    python spike_gemma.py outlines/2AA4.pdf --num-ctx 16384 --runs 3 --key keys/2AA4.json
+    python spike_gemma.py Fall_2026/2AA4.pdf --num-ctx 16384 --runs 3 --key keys/2AA4.json
 
-    # 3. Several outlines at once
-    python spike_gemma.py outlines/*.pdf --num-ctx 16384 --key-dir keys
+    # 3. Several outlines at once (list them; shell globs only work with full paths)
+    python spike_gemma.py Fall_2026/2AA4.pdf Fall_2026/2C03.pdf --num-ctx 16384 --key-dir keys
 
     # 4. Prompt-injection check (adds a hostile line to the outline text)
-    python spike_gemma.py outlines/2AA4.pdf --num-ctx 16384 --inject
+    python spike_gemma.py Fall_2026/2AA4.pdf --num-ctx 16384 --inject
 
     # 5. Graduate-attribute mapping for an outline with no GA numbers
-    python spike_gemma.py outlines/2AA4.pdf --task ga --num-ctx 16384
+    python spike_gemma.py Fall_2026/2AA4.pdf --task ga --num-ctx 16384
 
     # 6. Compare with the bigger model
-    python spike_gemma.py outlines/2AA4.pdf --model gemma4:e4b --num-ctx 16384 --key keys/2AA4.json
+    python spike_gemma.py Fall_2026/2AA4.pdf --model gemma4:e4b --num-ctx 16384 --key keys/2AA4.json
 
 Every run writes a JSON file to results/ (raw model output, parsed output,
 timings, token counts, score) and appends one line to results/summary.csv,
@@ -47,6 +50,64 @@ from datetime import datetime
 from pathlib import Path
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
+
+# ---------------------------------------------------------------------------
+# Where the outline PDFs live
+#
+# The PDFs are not in the repo. Point the script at your local copy, in this order
+# of priority:
+#   1. --outlines-dir PATH on the command line
+#   2. the SPIKE_OUTLINES_DIR environment variable
+#   3. SPIKE_OUTLINES_DIR=PATH in a .env file next to this script (copy .env.example)
+#   4. the outlines/ folder next to this script
+# PDF arguments can then be given relative to that folder,
+# e.g. "Fall_2026/SFWRENG2OP3_AngelaZavaleta_Fall2026.pdf".
+# ---------------------------------------------------------------------------
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTLINES_ENV = "SPIKE_OUTLINES_DIR"
+
+
+def read_dotenv(path: Path) -> dict:
+    """Minimal KEY=VALUE reader (no extra dependency). Ignores blank lines and comments."""
+    values = {}
+    if not path.is_file():
+        return values
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def outlines_dir(cli_value: str | None = None) -> tuple[Path, str]:
+    """Return the outlines folder and where the setting came from."""
+    import os
+
+    if cli_value:
+        return Path(cli_value).expanduser(), "--outlines-dir"
+    if os.environ.get(OUTLINES_ENV):
+        return Path(os.environ[OUTLINES_ENV]).expanduser(), f"{OUTLINES_ENV} environment variable"
+    dotenv = read_dotenv(SCRIPT_DIR / ".env")
+    if dotenv.get(OUTLINES_ENV):
+        return Path(dotenv[OUTLINES_ENV]).expanduser(), f"{OUTLINES_ENV} in .env"
+    return SCRIPT_DIR / "outlines", "default (outlines/ next to the script)"
+
+
+def resolve_pdf(arg: str, base: Path) -> Path | None:
+    """Find a PDF given as a path, or relative to the outlines folder."""
+    # Also accept PDFs placed directly in the folder (without a Fall_2026/ subfolder)
+    candidates = [Path(arg), base / arg, base / Path(arg).name]
+    # Old commands used "outlines/<...>"; let those still work against the new folder
+    parts = Path(arg).parts
+    if parts and parts[0] == "outlines":
+        candidates.append(base.joinpath(*parts[1:]))
+    for c in candidates:
+        if c.is_file():
+            return c
+    return None
 
 # ---------------------------------------------------------------------------
 # Output schemas (passed to Ollama's "format" option for structured output)
@@ -1022,6 +1083,8 @@ def main() -> None:
     ap.add_argument("--task", choices=["assessments", "ga"], default="assessments")
     ap.add_argument("--strategy", choices=STRATEGIES, default="baseline",
                     help="How to ask the model (see the Strategies section in the code)")
+    ap.add_argument("--outlines-dir",
+                    help=f"Folder with the outline PDFs (overrides {OUTLINES_ENV} and .env)")
     ap.add_argument("--extractor", choices=["pdfplumber", "pymupdf"], default="pdfplumber",
                     help="PDF text extraction: the spike's pdfplumber, or Shivya's PyMuPDF from feat/pdf-outline-upload")
     ap.add_argument("--postprocess", action="store_true",
@@ -1058,10 +1121,15 @@ def main() -> None:
     if not args.pdfs:
         ap.error("give at least one PDF, or use --rescore")
 
+    base, source = outlines_dir(args.outlines_dir)
+    print(f"Outlines folder: {base}  [{source}]")
+    if not base.is_dir():
+        print(f"WARNING: that folder does not exist. Set {OUTLINES_ENV} (see .env.example) "
+              "or pass --outlines-dir.")
     for pdf_arg in args.pdfs:
-        pdf = Path(pdf_arg)
-        if not pdf.exists():
-            print(f"Skipping {pdf}: file not found")
+        pdf = resolve_pdf(pdf_arg, base)
+        if pdf is None:
+            print(f"Skipping {pdf_arg}: not found as given or under {base}")
             continue
         for run_no in range(1, args.runs + 1):
             print(f"[{pdf.name}] {args.model} extractor={args.extractor} task={args.task} strategy={args.strategy}"
