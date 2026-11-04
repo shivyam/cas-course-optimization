@@ -189,12 +189,13 @@ INJECTION_LINE = (
 # ---------------------------------------------------------------------------
 
 
-def extract_pdf_text(pdf_path: Path) -> str:
+def extract_pdf_text(pdf_path: Path, extractor: str = "pdfplumber") -> str:
+    if extractor == "pymupdf":
+        return extract_pdf_text_pymupdf(pdf_path)
     try:
         import pdfplumber
     except ImportError:
         sys.exit("pdfplumber is not installed. Run: pip install pdfplumber")
-
     import logging
 
     logging.getLogger("pdfminer").setLevel(logging.ERROR)  # hides harmless FontBBox warnings
@@ -204,6 +205,27 @@ def extract_pdf_text(pdf_path: Path) -> str:
             text = page.extract_text() or ""
             pages.append(f"--- Page {i} ---\n{text}")
     return "\n\n".join(pages)
+
+
+def extract_pdf_text_pymupdf(pdf_path: Path) -> str:
+    """Shivya's extraction, copied unchanged from extract_pdf_text() in
+    src/backend/app/api/outlines.py on branch feat/pdf-outline-upload (commit 91f35b2).
+    Uses the same PyMuPDF version: pip install pymupdf==1.27.2.2
+    """
+    try:
+        import pymupdf
+    except ImportError:
+        sys.exit("pymupdf is not installed. Run: pip install pymupdf==1.27.2.2")
+    contents = pdf_path.read_bytes()
+    try:
+        document = pymupdf.open(stream=contents, filetype="pdf")
+        text = "\n\n".join(page.get_text() for page in document).strip()
+    except pymupdf.FileDataError as error:
+        raise ValueError("The uploaded file is not a valid PDF.") from error
+    finally:
+        if "document" in locals():
+            document.close()
+    return text
 
 
 def inject(text: str) -> str:
@@ -674,16 +696,17 @@ DATE_LINE = re.compile(
 
 
 def candidate_lines(text: str, limit: int = 90) -> list[tuple[str, str]]:
-    """Every line that mentions a date or TBA (marked >>), with the lines before and after as context."""
+    """Every line that mentions a date or TBA (marked >>), with nearby lines as context."""
     lines = [ln.strip() for ln in text.splitlines()]
     out, seen = [], set()
     for i, ln in enumerate(lines):
         if not ln or ln.startswith("--- Page") or not DATE_LINE.search(ln):
             continue
-        # Tables often come out of the PDF split across lines, so keep one line before and after
-        prv = lines[i - 1] if i > 0 and not lines[i - 1].startswith("--- Page") else ""
+        # Tables often come out of the PDF split across lines (PyMuPDF puts each cell on
+        # its own short line), so keep up to two lines before and one after
+        before = [lines[j] for j in (i - 2, i - 1) if j >= 0 and lines[j] and not lines[j].startswith("--- Page")]
         nxt = lines[i + 1] if i + 1 < len(lines) and not lines[i + 1].startswith("--- Page") else ""
-        snippet = " | ".join(x for x in (prv, f">> {ln}", nxt) if x)
+        snippet = " | ".join(x for x in (*before, f">> {ln}", nxt) if x)
         key = snippet.lower()
         if key in seen:
             continue
@@ -868,7 +891,7 @@ def run_strategy(text: str, args) -> tuple[dict | None, list[dict]]:
 
 
 def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
-    text = extract_pdf_text(pdf)
+    text = extract_pdf_text(pdf, args.extractor)
     if args.inject:
         text = inject(text)
     est_tokens = len(text) // 4  # rough estimate, about 4 characters per token
@@ -904,6 +927,7 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
         "model": args.model,
         "task": args.task,
         "strategy": args.strategy if args.task == "assessments" else "ga",
+        "extractor": args.extractor,
         "postprocess": bool(args.postprocess),
         "num_ctx": args.num_ctx,
         "run": run_no,
@@ -938,7 +962,8 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
 
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     strat = args.strategy if args.task == "assessments" else "ga"
-    tag = f"{pdf.stem}_{args.model.replace(':', '-')}_{strat}{'-pp' if args.postprocess else ''}_ctx{args.num_ctx}_r{run_no}"
+    ext = "" if args.extractor == "pdfplumber" else f"_{args.extractor}"
+    tag = f"{pdf.stem}_{args.model.replace(':', '-')}{ext}_{strat}{'-pp' if args.postprocess else ''}_ctx{args.num_ctx}_r{run_no}"
     if args.inject:
         tag += "_inject"
     (out_dir / f"{tag}_{stamp}_input.txt").write_text(text, encoding="utf-8")
@@ -956,6 +981,7 @@ def append_summary(result: dict, out_dir: Path) -> None:
         "pdf": Path(result["pdf"]).name,
         "model": result["model"],
         "task": result["task"],
+        "extractor": result.get("extractor", "pdfplumber"),
         "strategy": result.get("strategy", "baseline"),
         "postprocess": result.get("postprocess", False),
         "num_ctx": result["num_ctx"],
@@ -996,6 +1022,8 @@ def main() -> None:
     ap.add_argument("--task", choices=["assessments", "ga"], default="assessments")
     ap.add_argument("--strategy", choices=STRATEGIES, default="baseline",
                     help="How to ask the model (see the Strategies section in the code)")
+    ap.add_argument("--extractor", choices=["pdfplumber", "pymupdf"], default="pdfplumber",
+                    help="PDF text extraction: the spike's pdfplumber, or Shivya's PyMuPDF from feat/pdf-outline-upload")
     ap.add_argument("--postprocess", action="store_true",
                     help="Apply fixed rules in code after the model (split group weights, TBD for undated tests)")
     ap.add_argument("--num-ctx", type=int, default=4096, help="Context window (Ollama default is 4096)")
@@ -1036,7 +1064,7 @@ def main() -> None:
             print(f"Skipping {pdf}: file not found")
             continue
         for run_no in range(1, args.runs + 1):
-            print(f"[{pdf.name}] {args.model} task={args.task} strategy={args.strategy}"
+            print(f"[{pdf.name}] {args.model} extractor={args.extractor} task={args.task} strategy={args.strategy}"
                   f"{' +postprocess' if args.postprocess else ''} ctx={args.num_ctx} run {run_no}/{args.runs} ...")
             r = run_one(pdf, args, run_no, out_dir)
             append_summary(r, out_dir)

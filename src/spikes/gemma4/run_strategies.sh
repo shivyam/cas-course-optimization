@@ -1,23 +1,52 @@
 #!/usr/bin/env bash
-# Spike #38: run the linking, think and fewshot strategies on the two hard outlines
-# and save everything printed to results/logs/strategies_<timestamp>.log
+# Spike #38: run prompt strategies on course outlines and save everything printed to
+# results/logs/<extractor>_<timestamp>.log
 #
 # Usage (Git Bash, from anywhere):
-#   bash src/spikes/gemma4/run_strategies.sh
+#   bash src/spikes/gemma4/run_strategies.sh [--extractor pdfplumber|pymupdf]
+#                                             [--strategies "baseline think linking fewshot"]
+#                                             [--outlines hard|all]
 #
-# Takes about 40 to 50 minutes on CPU. Ollama must be running.
+# Defaults reproduce the first strategy run:
+#   --extractor pdfplumber --strategies "linking think fewshot" --outlines hard
+#
+# Shivya's extraction on all five outlines:
+#   bash src/spikes/gemma4/run_strategies.sh --extractor pymupdf --strategies "baseline think linking" --outlines all
+#
+# Each outline takes about 5 to 7 minutes per strategy on CPU. Ollama must be running.
 
 cd "$(dirname "$0")" || exit 1
 
-OUTLINES=(
+EXTRACTOR="pdfplumber"
+STRATEGIES="linking think fewshot"
+OUTLINE_SET="hard"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --extractor)  EXTRACTOR="$2"; shift 2 ;;
+    --strategies) STRATEGIES="$2"; shift 2 ;;
+    --outlines)   OUTLINE_SET="$2"; shift 2 ;;
+    *) echo "Unknown option: $1"; exit 1 ;;
+  esac
+done
+
+HARD=(
   "outlines/Fall_2026/SFWRENG2OP3_AngelaZavaleta_Fall2026.pdf"
   "outlines/Fall_2026/SFWRENG2XC3_SamScott_Fall2026.pdf"
 )
-STRATEGIES=(linking think fewshot)
-COMMON_ARGS=(--postprocess --num-ctx 16384 --key-dir keys)
+EASY=(
+  "outlines/Fall_2026/SFWRENG2DA4_RyanLeduc_Fall2026.pdf"
+  "outlines/Fall_2026/SFWRENG2DM3_RidhaKhedri_Fall2026.pdf"
+  "outlines/Fall_2026/COMPSCI2C03-VincentMaccio_Fall2026.pdf"
+)
+case "$OUTLINE_SET" in
+  hard) OUTLINES=("${HARD[@]}") ;;
+  all)  OUTLINES=("${HARD[@]}" "${EASY[@]}") ;;
+  *) echo "--outlines must be hard or all"; exit 1 ;;
+esac
+COMMON_ARGS=(--extractor "$EXTRACTOR" --postprocess --num-ctx 16384 --key-dir keys)
 
 mkdir -p results/logs
-LOG="results/logs/strategies_$(date +%Y%m%d-%H%M%S).log"
+LOG="results/logs/${EXTRACTOR}_$(date +%Y%m%d-%H%M%S).log"
 
 # Stream Python output straight away (no buffering) and keep it UTF-8 for the log
 export PYTHONUNBUFFERED=1
@@ -25,8 +54,9 @@ export PYTHONIOENCODING=utf-8
 
 {
   echo "Spike #38 strategy runs, started $(date)"
+  echo "Extractor: $EXTRACTOR"
+  echo "Strategies: $STRATEGIES"
   echo "Outlines: ${OUTLINES[*]}"
-  echo "Strategies: ${STRATEGIES[*]}"
   echo "Options: ${COMMON_ARGS[*]}"
   echo
 
@@ -40,14 +70,24 @@ export PYTHONIOENCODING=utf-8
   fi
   echo "Python: $(command -v python)"
 
-  # Check Ollama is up before spending 40 minutes
+  # Check the extractor library is installed before spending an hour
+  if [ "$EXTRACTOR" = "pymupdf" ] && ! python -c "import pymupdf" 2>/dev/null; then
+    echo "ERROR: pymupdf is not installed in this venv. Run: pip install pymupdf==1.27.2.2"
+    exit 1
+  fi
+  if [ "$EXTRACTOR" = "pdfplumber" ] && ! python -c "import pdfplumber" 2>/dev/null; then
+    echo "ERROR: pdfplumber is not installed in this venv. Run: pip install pdfplumber"
+    exit 1
+  fi
+
+  # Check Ollama is up
   if ! curl -s --max-time 5 http://localhost:11434/api/tags > /dev/null; then
     echo "ERROR: Ollama is not reachable at http://localhost:11434. Start Ollama and run this again."
     exit 1
   fi
   echo "Ollama is reachable."
 
-  for strategy in "${STRATEGIES[@]}"; do
+  for strategy in $STRATEGIES; do
     echo
     echo "=================================================================="
     echo "STRATEGY: $strategy    started $(date +%H:%M:%S)"
