@@ -34,7 +34,6 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin" element={<AdminPage />} />
-          {/* This route receives the extracted text through React Router state. */}
           <Route path="/admin/outline-preview" element={<OutlinePreviewPage />} />
           <Route path="/instructor" element={<InstructorPage />} />
         </Routes>

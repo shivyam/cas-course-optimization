@@ -62,14 +62,12 @@ function AdminPage() {
     formData.append('file', selectedFile)
 
     try {
-      // Do not set Content-Type manually; the browser adds the multipart
-      // boundary required by the backend when sending FormData.
+      // Send course outline file to backend
       const response = await fetch(`${apiBaseUrl}/outlines`, {
         method: 'POST',
         body: formData,
       })
-      // The response contains either extraction data or a detail message for
-      // an error response.
+      // The response contains either extracted text or error message.
       const body = (await response.json()) as {
         detail?: string
         filename?: string
