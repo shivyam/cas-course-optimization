@@ -73,7 +73,7 @@ def test_cli_extracts_local_outline(tmp_path, monkeypatch, capsys):
     pdf_path.write_bytes(make_pdf("CLI outline text"))
     output_dir = tmp_path / "extracted_text"
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", output_dir)
-    monkeypatch.setattr("sys.argv", ["extract", str(pdf_path)])
+    monkeypatch.setattr("sys.argv", ["cas-extract-outline", str(pdf_path)])
 
     assert extract_course_outline() == 0
 

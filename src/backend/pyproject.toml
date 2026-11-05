@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-extract = "app.cli:main"
+cas-extract-outline = "app.cli:main"
 
 # Tools only needed for development and CI, not for running the app.
 [project.optional-dependencies]
