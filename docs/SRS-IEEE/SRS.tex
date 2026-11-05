@@ -1013,6 +1013,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \begin{itemize}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Login}:] The system shall require users to log in before they can view or change any data.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Roles}:] The system shall allow administrators to manage data for all courses, and shall allow instructors to change data only for their own courses.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Timeout}:] The system shall expire an authenticated session after 30 minutes without user activity and shall require the user to log in again before accessing protected data or functions.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file.
 \end{itemize}
 
@@ -1236,10 +1237,13 @@ message (String): description of the problem found. \\
 \textbf{Security:}
 \begin{itemize}
     \item The system shall implement the access controls specified in \rref{FR_Access_Login}
-    and \rref{FR_Access_Roles}, together with the privacy and data-retention requirements
+    and \rref{FR_Access_Roles}, including the inactivity timeout specified in
+    \rref{FR_Access_Timeout}, together with the privacy and data-retention requirements
     in Section~\ref{SecPrivacyDataRetention}.
     \item Security verification shall include tests for unauthorized access, role-based
-    permissions, and the protection of sensitive configuration values and credentials.
+    permissions, session expiration after 30 minutes of inactivity, re-authentication
+    before protected access, and the protection of sensitive configuration values and
+    credentials.
 \end{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accessibility}:]
@@ -1437,7 +1441,7 @@ Validation Plan.
 \lcref{LC_SchedulingMethod} & \rref{FR_Suggest_Generation} \\
 \lcref{LC_Notification} & \rref{FR_Suggest_Generation}, \rref{FR_Comp_Policy}, \rref{FR_Comp_Grad} \\
 \lcref{LC_ExportFormat} & \rref{FR_Export_CSV} \\
-\lcref{LC_Authentication} & \srref{SR-REC-05}, \rref{FR_Access_Login}, \nfrref{NFR_Security} \\
+\lcref{LC_Authentication} & \srref{SR-REC-05}, \rref{FR_Access_Login}, \rref{FR_Access_Timeout}, \nfrref{NFR_Security} \\
 \lcref{LC_Mosaic} & \rref{FR_Work_Cluster}, \asref{A_CourseCode}, \asref{A_Electives} \\
 \lcref{LC_ScopeExpansion} & \srref{SR-CAS-01}, \rref{FR_Calendar}, \rref{FR_Access_Roles}, \asref{A_CourseCode} \\
 \bottomrule
