@@ -1,0 +1,88 @@
+{
+  "course_code": "COMPSCI 2C03",
+  "term": "Fall 2026",
+  "why_chosen": "No midterm, no GA section, 'best 7 of 8' rule, and the outline says nine assignments in one place and eight in another",
+  "assessments": [
+    {
+      "name": "Assignment 1",
+      "aliases": [
+        "A1"
+      ],
+      "due_date": "2026-09-25",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 2",
+      "aliases": [
+        "A2"
+      ],
+      "due_date": "2026-10-09",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 3",
+      "aliases": [
+        "A3"
+      ],
+      "due_date": "2026-10-23",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 4",
+      "aliases": [
+        "A4"
+      ],
+      "due_date": "2026-10-30",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 5",
+      "aliases": [
+        "A5"
+      ],
+      "due_date": "2026-11-06",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 6",
+      "aliases": [
+        "A6"
+      ],
+      "due_date": "2026-11-13",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 7",
+      "aliases": [
+        "A7"
+      ],
+      "due_date": "2026-11-24",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Assignment 8",
+      "aliases": [
+        "A8"
+      ],
+      "due_date": "2026-12-01",
+      "date_tbd": false,
+      "weight_percent": 7.25
+    },
+    {
+      "name": "Final Exam",
+      "aliases": [
+        "Final"
+      ],
+      "due_date": null,
+      "date_tbd": true,
+      "weight_percent": 49.25
+    }
+  ]
+}

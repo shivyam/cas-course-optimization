@@ -1,0 +1,62 @@
+{
+  "course_code": "SFWRENG 2DM3",
+  "term": "Fall 2026",
+  "why_chosen": "Longest outline (15 pages); PDF text has broken ligatures ('anal exam' for 'final exam'); best 3 of 4 assignments",
+  "assessments": [
+    {
+      "name": "Assignment 1",
+      "aliases": [
+        "A1"
+      ],
+      "due_date": "2026-09-25",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Assignment 2",
+      "aliases": [
+        "A2"
+      ],
+      "due_date": "2026-10-09",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Assignment 3",
+      "aliases": [
+        "A3"
+      ],
+      "due_date": "2026-11-13",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Assignment 4",
+      "aliases": [
+        "A4"
+      ],
+      "due_date": "2026-12-10",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Midterm",
+      "aliases": [
+        "Midterm Test",
+        "Midterm Exam"
+      ],
+      "due_date": "2026-10-22",
+      "date_tbd": false,
+      "weight_percent": 30
+    },
+    {
+      "name": "Final Exam",
+      "aliases": [
+        "Final"
+      ],
+      "due_date": null,
+      "date_tbd": true,
+      "weight_percent": 55
+    }
+  ]
+}
