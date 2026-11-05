@@ -61,8 +61,10 @@ def signature(r: dict) -> Counter:
 
 
 def is_assignment(a: dict) -> bool:
-    """True for assignment rows (by type, or by name if the type is wrong)."""
-    return a.get("type") == "assignment" or "assign" in (a.get("name") or "").lower()
+    """True for assignment rows, judged by name only. (The type is not used: a model
+    can type "Research Surveys Bonus" as an assignment in one run and as "other" in
+    the next, which looked like a dropped assignment when nothing was dropped.)"""
+    return "assign" in (a.get("name") or "").lower()
 
 
 def is_final(a: dict) -> bool:
