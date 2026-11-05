@@ -56,9 +56,8 @@ async def upload_outline(file: Annotated[UploadFile, File()]) -> dict:
     # Check both the browser-provided type and the filename before reading the
     # upload so unsupported files fail with a clear client-facing response.
     filename = file.filename or ""
-    if (
-        file.content_type not in ALLOWED_CONTENT_TYPES
-        or not filename.lower().endswith(".pdf")
+    if file.content_type not in ALLOWED_CONTENT_TYPES or not filename.lower().endswith(
+        ".pdf"
     ):
         raise HTTPException(status_code=415, detail="Only PDF files are supported.")
 

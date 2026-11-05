@@ -54,9 +54,7 @@ def test_upload_outline_accepts_alternate_pdf_content_types(
     content_type, tmp_path, monkeypatch
 ):
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
-    files = {
-        "file": ("outline.pdf", make_pdf("Course outline text"), content_type)
-    }
+    files = {"file": ("outline.pdf", make_pdf("Course outline text"), content_type)}
 
     response = client.post("/api/outlines", files=files)
 
