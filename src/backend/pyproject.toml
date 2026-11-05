@@ -11,7 +11,11 @@ dependencies = [
     "uvicorn[standard]>=0.30",
     # Needed by FastAPI to accept file uploads (multipart/form-data).
     "python-multipart>=0.0.9",
+    "pymupdf==1.27.2.2",
 ]
+
+[project.scripts]
+cas-extract-outline = "app.cli:main"
 
 # Tools only needed for development and CI, not for running the app.
 [project.optional-dependencies]

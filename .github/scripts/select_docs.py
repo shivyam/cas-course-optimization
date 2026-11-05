@@ -30,8 +30,7 @@ IGNORED_PREFIXES = ("pdfs/", "docs/SRS-Meyer/", ".github/")
 # document source changed: the package list decides which LaTeX packages are
 # available, and the Makefile decides how each document is compiled.  These
 # override IGNORED_PREFIXES above.
-TOOLCHAIN_PATHS = ("Makefile", ".github/workflows/latex-pages.yml",
-                   ".github/scripts/")
+TOOLCHAIN_PATHS = ("Makefile", ".github/workflows/latex-pages.yml", ".github/scripts/")
 
 
 def is_document(rel_path):
@@ -112,8 +111,11 @@ def main():
     unrecorded = documents - set(manifest)
     if unrecorded:
         build |= unrecorded
-        print("select_docs: %d document(s) have no recorded dependencies"
-              % len(unrecorded), file=sys.stderr)
+        print(
+            "select_docs: %d document(s) have no recorded dependencies"
+            % len(unrecorded),
+            file=sys.stderr,
+        )
 
     for path in list(args.changed) + list(args.deleted):
         if not path:
@@ -131,8 +133,10 @@ def main():
         if readers:
             hits = readers & documents
             build |= hits
-            print("select_docs: %s is read by %d document(s)" % (path, len(hits)),
-                  file=sys.stderr)
+            print(
+                "select_docs: %s is read by %d document(s)" % (path, len(hits)),
+                file=sys.stderr,
+            )
             continue
         if is_document(path):
             # A document that was deleted; nothing to build for it.

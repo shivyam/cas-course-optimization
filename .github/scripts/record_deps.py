@@ -23,15 +23,29 @@ import sys
 
 # Artifacts LaTeX generates for itself; they are outputs, not real inputs.
 GENERATED_SUFFIXES = {
-    ".aux", ".bbl", ".blg", ".fls", ".log", ".out", ".toc", ".lof", ".lot",
-    ".nav", ".snm", ".vrb", ".fdb_latexmk", ".synctex.gz", ".spl", ".bcf",
+    ".aux",
+    ".bbl",
+    ".blg",
+    ".fls",
+    ".log",
+    ".out",
+    ".toc",
+    ".lof",
+    ".lot",
+    ".nav",
+    ".snm",
+    ".vrb",
+    ".fdb_latexmk",
+    ".synctex.gz",
+    ".spl",
+    ".bcf",
     ".run.xml",
 }
 
 MD_REFERENCE_RE = re.compile(
-    r"""!\[[^\]]*\]\(\s*<?([^)\s>]+)>?[^)]*\)"""   # ![alt](path)
+    r"""!\[[^\]]*\]\(\s*<?([^)\s>]+)>?[^)]*\)"""  # ![alt](path)
     r"""|\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"""  # raw LaTeX in md
-    r"""|^\s*!include\s+(\S+)""",                   # include extension
+    r"""|^\s*!include\s+(\S+)""",  # include extension
     re.MULTILINE,
 )
 
@@ -131,8 +145,7 @@ def save_manifest(manifest, manifest_path):
 def prune(manifest_path, repo_root):
     """Drop manifest entries whose source document no longer exists."""
     manifest = load_manifest(manifest_path)
-    gone = [doc for doc in manifest
-            if not os.path.exists(os.path.join(repo_root, doc))]
+    gone = [doc for doc in manifest if not os.path.exists(os.path.join(repo_root, doc))]
     for doc in gone:
         del manifest[doc]
         print("record_deps: pruned %s" % doc)
@@ -149,8 +162,10 @@ def main():
         return
 
     if len(sys.argv) < 3:
-        sys.exit("usage: record_deps.py <source> <manifest.json> [repo_root]\n"
-                 "       record_deps.py --prune <manifest.json> [repo_root]")
+        sys.exit(
+            "usage: record_deps.py <source> <manifest.json> [repo_root]\n"
+            "       record_deps.py --prune <manifest.json> [repo_root]"
+        )
 
     source = sys.argv[1]
     manifest_path = sys.argv[2]
@@ -174,12 +189,13 @@ def main():
             # No .fls this time (a failed or skipped build). Keep what we
             # already knew rather than degrading the entry to the source
             # alone, which would silently stop rebuilding its dependents.
-            print("record_deps: no .fls for %s; keeping previous dependencies"
-                  % source_rel)
+            print(
+                "record_deps: no .fls for %s; keeping previous dependencies"
+                % source_rel
+            )
             return
         else:
-            print("record_deps: no .fls for %s; recording source only"
-                  % source_rel)
+            print("record_deps: no .fls for %s; recording source only" % source_rel)
         deps |= deps_from_aux(stem + ".aux", repo_root)
 
     manifest[source_rel] = sorted(deps)
