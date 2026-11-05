@@ -1,5 +1,6 @@
 """Course outline upload endpoint."""
 
+import os
 import re
 from pathlib import Path
 from typing import Annotated
@@ -10,7 +11,12 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 router = APIRouter(tags=["outlines"])
 
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
-EXTRACTED_TEXT_DIR = Path(__file__).resolve().parents[4] / "data" / "extracted_text"
+DEFAULT_EXTRACTED_TEXT_DIR = (
+    Path(__file__).resolve().parents[4] / "data" / "extracted_text"
+)
+EXTRACTED_TEXT_DIR = Path(
+    os.getenv("EXTRACTED_TEXT_DIR", str(DEFAULT_EXTRACTED_TEXT_DIR))
+)
 EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
 ALLOWED_CONTENT_TYPES = {
     "application/pdf",
