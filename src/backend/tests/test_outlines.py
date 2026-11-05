@@ -1,6 +1,7 @@
 """Tests for the POST /api/outlines endpoint."""
 
 import pymupdf
+import pytest
 from fastapi.testclient import TestClient
 
 from app.api import outlines
@@ -43,6 +44,24 @@ def test_upload_outline_extracts_text(tmp_path, monkeypatch):
     assert saved_files[0].name == "outline.txt"
     assert body["text_file"] == "data/extracted_text/outline.txt"
     assert saved_files[0].read_text(encoding="utf-8") == "Course outline text"
+
+
+@pytest.mark.parametrize(
+    "content_type",
+    ["application/x-pdf", "application/octet-stream"],
+)
+def test_upload_outline_accepts_alternate_pdf_content_types(
+    content_type, tmp_path, monkeypatch
+):
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    files = {
+        "file": ("outline.pdf", make_pdf("Course outline text"), content_type)
+    }
+
+    response = client.post("/api/outlines", files=files)
+
+    assert response.status_code == 200
+    assert response.json()["text"] == "Course outline text"
 
 
 def test_upload_outline_rejects_non_pdf():

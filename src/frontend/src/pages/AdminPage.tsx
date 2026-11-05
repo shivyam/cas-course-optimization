@@ -80,7 +80,6 @@ function AdminPage() {
       }
 
       setUploadState('success')
-      setMessage(`${body.filename ?? selectedFile.name} uploaded successfully.`)
       // Keep the extracted text in navigation state so the preview can render
       // it immediately after a successful upload.
       navigate('/admin/outline-preview', {

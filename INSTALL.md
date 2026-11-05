@@ -4,20 +4,20 @@ How to install and uninstall everything needed to run CAS Midterm and Assignment
 
 The project has two parts with separate dependencies:
 
-| Part | Folder | Dependencies listed in | Installed into |
-| --- | --- | --- | --- |
-| Backend (Python) | `src/backend` | `pyproject.toml` | `src/backend/.venv/` |
+| Part             | Folder         | Dependencies listed in                 | Installed into               |
+| ---------------- | -------------- | -------------------------------------- | ---------------------------- |
+| Backend (Python) | `src/backend`  | `pyproject.toml`                       | `src/backend/.venv/`         |
 | Frontend (React) | `src/frontend` | `package.json` and `package-lock.json` | `src/frontend/node_modules/` |
 
 Both install folders stay inside the project and are ignored by git, so removing them removes the project's dependencies completely.
 
 ## 1. Install the Prerequisites
 
-| Tool | Version |
-| --- | --- |
-| Python | 3.12 or newer |
+| Tool    | Version                         |
+| ------- | ------------------------------- |
+| Python  | 3.12 or newer                   |
 | Node.js | 22.22.2 or newer (includes npm) |
-| Git | any recent version |
+| Git     | any recent version              |
 
 **Windows** (PowerShell or Git Bash):
 
@@ -62,12 +62,12 @@ python -m venv .venv
 
 Activate the virtual environment:
 
-| Terminal | Command |
-| --- | --- |
-| Git Bash | `source .venv/Scripts/activate` |
-| PowerShell | `.venv\Scripts\Activate.ps1` |
-| Command Prompt | `.venv\Scripts\activate.bat` |
-| macOS / Linux | `source .venv/bin/activate` |
+| Terminal       | Command                         |
+| -------------- | ------------------------------- |
+| Git Bash       | `source .venv/Scripts/activate` |
+| PowerShell     | `.venv\Scripts\Activate.ps1`    |
+| Command Prompt | `.venv\Scripts\activate.bat`    |
+| macOS / Linux  | `source .venv/bin/activate`     |
 
 Your prompt should now start with `(.venv)`. Then install:
 
@@ -82,7 +82,7 @@ To install only what is needed to run the app, without the dev tools, use `pip i
 After installation, extract a local course outline PDF with:
 
 ```bash
-extract path/to/course-outline.pdf
+cas-extract-outline path/to/course-outline.pdf
 ```
 
 The extracted text is saved to `data/extracted_text/course-outline.txt`.

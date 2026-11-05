@@ -12,6 +12,11 @@ router = APIRouter(tags=["outlines"])
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
 EXTRACTED_TEXT_DIR = Path(__file__).resolve().parents[4] / "data" / "extracted_text"
 EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
+ALLOWED_CONTENT_TYPES = {
+    "application/pdf",
+    "application/x-pdf",
+    "application/octet-stream",
+}
 
 
 def extract_pdf_text(contents: bytes) -> str:
@@ -45,7 +50,10 @@ async def upload_outline(file: Annotated[UploadFile, File()]) -> dict:
     # Check both the browser-provided type and the filename before reading the
     # upload so unsupported files fail with a clear client-facing response.
     filename = file.filename or ""
-    if file.content_type != "application/pdf" or not filename.lower().endswith(".pdf"):
+    if (
+        file.content_type not in ALLOWED_CONTENT_TYPES
+        or not filename.lower().endswith(".pdf")
+    ):
         raise HTTPException(status_code=415, detail="Only PDF files are supported.")
 
     # Read one byte beyond the limit so an oversized upload can be detected
