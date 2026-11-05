@@ -1,0 +1,117 @@
+{
+  "course_code": "SFWRENG 2XC3",
+  "term": "Fall 2026",
+  "why_chosen": "Dates and weights sit in a multi-column schedule table; C Test is TBA",
+  "assessments": [
+    {
+      "name": "Assignment 1",
+      "aliases": [
+        "A1"
+      ],
+      "due_date": "2026-10-05",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Assignment 2",
+      "aliases": [
+        "A2"
+      ],
+      "due_date": "2026-10-26",
+      "date_tbd": false,
+      "weight_percent": 10
+    },
+    {
+      "name": "Linux and Git Test",
+      "aliases": [
+        "Test",
+        "Test 1",
+        "Linux/Git Test"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 20,
+      "note": "Outline says 'Nov 3 or 4' (lab-dependent). No single date, so due_date is null; CHECK how you want this scored."
+    },
+    {
+      "name": "Assignment 3",
+      "aliases": [
+        "A3"
+      ],
+      "due_date": "2026-11-09",
+      "date_tbd": false,
+      "weight_percent": 5
+    },
+    {
+      "name": "Team Development Plan",
+      "aliases": [
+        "Development Plan"
+      ],
+      "due_date": "2026-11-18",
+      "date_tbd": false,
+      "weight_percent": 2
+    },
+    {
+      "name": "Assignment 4",
+      "aliases": [
+        "A4"
+      ],
+      "due_date": "2026-11-23",
+      "date_tbd": false,
+      "weight_percent": 10
+    },
+    {
+      "name": "Team Increment",
+      "aliases": [
+        "Increment"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 2,
+      "note": "Due in lab, week 11 (Nov 26 to Dec 2); no single date."
+    },
+    {
+      "name": "Team Final Submission",
+      "aliases": [
+        "Final Submission",
+        "Team Assignment"
+      ],
+      "due_date": "2026-12-10",
+      "date_tbd": false,
+      "weight_percent": 10
+    },
+    {
+      "name": "C Test",
+      "aliases": [
+        "Test 2",
+        "Final Test"
+      ],
+      "due_date": null,
+      "date_tbd": true,
+      "weight_percent": 30
+    },
+    {
+      "name": "Lab Milestones",
+      "aliases": [
+        "Lab Milestones",
+        "Weekly lab submissions",
+        "Labs"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 5,
+      "note": "About one per week, due end of each course week"
+    },
+    {
+      "name": "Teams Formed in Lab",
+      "aliases": [
+        "Teams Formed",
+        "Team Formation"
+      ],
+      "due_date": null,
+      "date_tbd": false,
+      "weight_percent": 1,
+      "note": "Week 8 lab (Nov 5 to 11); no single date"
+    }
+  ]
+}
