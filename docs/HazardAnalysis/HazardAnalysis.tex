@@ -171,7 +171,14 @@ still includes the failure and its mitigation (for example, \hazref{H5-4} and \h
 sheet and academic calendar).
 
 \begin{itemize}
-\item \textbf{Hosting Infrastructure:} The hosting infrastructure is secured, backed up, and maintained by CAS IT. The security of the hosting infrastructure itself is outside the scope of this analysis.
+\item \textbf{Hosting Infrastructure and Recovery:} CAS IT is responsible for
+securing, backing up, and restoring the hosting infrastructure, including the
+application database and stored course information. The project team is
+responsible for documenting which application data must be included in those
+backups and verifying, with CAS IT, that a representative restore preserves
+confirmed assessment details, compliance findings, and tentative dates. The
+security of the hosting infrastructure itself remains outside the scope of this
+analysis.
 
 \item \textbf{User Accounts:} Users access the system using valid McMaster accounts and do not share their credentials.
 
@@ -306,7 +313,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \multicolumn{6}{l}{\textbf{C2: Course Information Database}}\\*
 \midrule
-\haz{H2-1}\newline \textit{DI, H} & Stored data is lost or corrupted & Confirmed data and decisions are lost and review must be repeated & \fmi{a}{Hardware or software failure}\par \fmi{b}{Failed update} & \fmi{a}{Back up data regularly and test that it can be restored}\par \fmi{b}{Keep records for the retention period} & \fmi{a}{New: backup and restore}\par \fmi{b}{DR4}\\
+\haz{H2-1}\newline \textit{DI, H} & Stored data is lost or corrupted & Confirmed data and decisions are lost and review must be repeated & \fmi{a}{Hardware or software failure}\par \fmi{b}{Failed update} & \fmi{a}{Have CAS IT back up the application database and stored files regularly; document the required data and verify a representative restore}\par \fmi{b}{Keep records for the retention period} & \fmi{a}{\ssrref{SSR_BackupRestore}}\par \fmi{b}{DR4}\\
 \addlinespace
 \haz{H2-2}\newline \textit{DI, M} & Uploading an outline again replaces confirmed values & Reviewed values are replaced by unreviewed ones & New upload overwrites existing records & \fmi{a}{Preserve confirmed values until replacement is explicitly approved by the user}\par \fmi{b}{Review newly extracted values before replacement} & \fmi{a}{New: confirm before replace}\par \fmi{b}{FR5}\\
 \addlinespace
@@ -421,8 +428,6 @@ Requirements (Table~\ref{TblSafetySecurityRequirements}) and to the SRS:
     model change is deployed.
   \item \textbf{Output validation} (\hazref{H4-5}): check model output against the
     expected structure.
-  \item \textbf{Backup and restore} (\hazref{H2-1}): back up stored data and test
-    restoring it.
   \item \textbf{Confirm before replace} (\hazref{H2-2}): keep confirmed values when an
     outline is uploaded again.
   \item \textbf{Reference version shown} (\hazref{H5-4}, \hazref{H5-6}, \hazref{H6-5}): record which
@@ -458,6 +463,7 @@ compared with the sheet by the system's own code.
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_AuditTrail} & \hazref{H2-5}, \hazref{H9-2}, \hazref{H9-4}: unauthorized or untraceable data modification & The system shall record the user, the time, and the previous value whenever an assessment date, an extracted value, or reference data (the master course sheet or the academic calendar) is changed, and shall retain that record for the retention period in DR4.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & \hazref{H5-4}, \hazref{H6-5}, \hazref{H9-4}: unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet and the academic calendar.\\
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ConfirmedDataPreservation} & \hazref{H2-2}: overwriting previously confirmed course information & The system shall preserve previously confirmed course information when an outline is re-uploaded until newly extracted values have been reviewed and explicitly approved by the user for replacement.\\
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_BackupRestore} & \hazref{H2-1}: loss or corruption of stored course information & CAS IT shall maintain regular backups of the application database and stored files. Before production use and after material schema changes, the project team and CAS IT shall verify a representative restore containing confirmed assessment details, compliance findings, and tentative dates. The restore procedure and verification results shall be documented.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -470,6 +476,14 @@ The capstone implementation will prioritize safety and security requirements
 that prevent data loss, restrict unauthorized changes, and reduce the risk of
 incorrect assessment scheduling. Requirements that cannot be completed within
 the capstone timeline will be documented as future work.
+
+\ssrref{SSR_BackupRestore} is an external operational dependency on CAS IT.
+The project team will document the application's backup contents and restore
+procedure and will coordinate a representative restore verification with CAS IT
+before production use. CAS IT will remain responsible for the backup schedule,
+backup storage, infrastructure restoration, and ongoing recovery operations.
+The project team will not manage the hosting infrastructure or operate its
+production backup service.
 
 During the capstone timeline, the team will implement \ssrref{SSR_ProcessFailure} to handle PDF
 extraction and model processing failures without losing previously entered
