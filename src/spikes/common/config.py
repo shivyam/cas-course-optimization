@@ -63,6 +63,12 @@ def resolve_pdf(arg: str, base: Path) -> Path | None:
     for c in candidates:
         if c.is_file():
             return c
+    # Last resort: find the file by name anywhere under the outlines folder, so the
+    # subfolder can be called "Fall_2026" or "Fall 2026" on different machines
+    if base.is_dir():
+        for c in sorted(base.rglob(Path(arg).name)):
+            if c.is_file():
+                return c
     return None
 
 

@@ -109,22 +109,26 @@ export PYTHONIOENCODING=utf-8
   # -------------------------------------------------------------------------
   # Checks before starting, so a long run does not fail halfway
   # -------------------------------------------------------------------------
-  # Use a venv in this folder, else the gemma4 spike's venv, else system Python
-  if [ -f .venv/Scripts/activate ]; then source .venv/Scripts/activate
-  elif [ -f .venv/bin/activate ]; then source .venv/bin/activate
-  elif [ -f ../gemma4/.venv/Scripts/activate ]; then source ../gemma4/.venv/Scripts/activate
-  else echo "WARNING: no .venv found; using the system Python"
+  # Use the venv in this folder by its full path. (Sourcing activate is not enough
+  # when Anaconda or an alias puts another python first on the PATH.)
+  if [ -f .venv/Scripts/python.exe ]; then PY=".venv/Scripts/python.exe"
+  elif [ -f .venv/bin/python ]; then PY=".venv/bin/python"
+  else PY="python"; echo "WARNING: no .venv found here; using the system Python"
   fi
-  echo "Python: $(command -v python)"
+  echo "Python: $PY ($("$PY" --version 2>&1))"
 
   # The PDF library must be installed
-  if ! python -c "import pymupdf" 2>/dev/null; then
-    echo "ERROR: pymupdf is not installed. Run: pip install pymupdf==1.27.2.2"; exit 1
+  if ! "$PY" -c "import pymupdf" 2>/dev/null; then
+    echo "ERROR: pymupdf is not installed. Run: $PY -m pip install pymupdf==1.27.2.2"; exit 1
   fi
+  # #38 used pymupdf 1.27.2.2; a different version could change the extracted text
+  PYMUPDF_VERSION=$("$PY" -c "import pymupdf; print(pymupdf.VersionBind)")
+  echo "pymupdf: $PYMUPDF_VERSION"
+  [ "$PYMUPDF_VERSION" != "1.27.2.2" ] && echo "WARNING: pymupdf is not 1.27.2.2, so results may not match #38"
 
   # Every outline PDF must be found. The first argument is the --outlines-dir path
   # if one was given; the rest are the outline paths.
-  if ! python - "${OUTLINES_DIR_ARG[@]:1}" "${OUTLINES[@]}" <<'PY'
+  if ! "$PY" - "${OUTLINES_DIR_ARG[@]:1}" "${OUTLINES[@]}" <<'PY'
 import sys
 from config import outlines_dir, resolve_pdf, OUTLINES_ENV
 args = sys.argv[1:]
@@ -154,7 +158,7 @@ PY
   # Ollama version, model digest (which exact download), size, quantization and
   # trained context length, plus the machine. Saved next to the results.
   ENV_FILE="$OUT_DIR/env_${LABEL}_${STAMP}.json"
-  python - "$MODEL" "$ENV_FILE" <<'PY'
+  "$PY" - "$MODEL" "$ENV_FILE" <<'PY'
 import json, platform, sys, urllib.request
 model, path = sys.argv[1], sys.argv[2]
 def get(url, body=None):
@@ -197,7 +201,7 @@ PY
       echo "STRATEGY: $strategy   INJECTION: $variant   started $(date +%H:%M:%S)"
       echo "=================================================================="
       start=$(date +%s)
-      if python spike_llm.py "${OUTLINES[@]}" --strategy "$strategy" "${COMMON_ARGS[@]}" "${INJ_ARGS[@]}"; then
+      if "$PY" spike_llm.py "${OUTLINES[@]}" --strategy "$strategy" "${COMMON_ARGS[@]}" "${INJ_ARGS[@]}"; then
         status="finished"
       else
         # Keep going so one failure does not lose the rest of a long run
