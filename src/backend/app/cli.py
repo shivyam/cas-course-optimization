@@ -5,7 +5,6 @@ import sys
 from pathlib import Path
 
 from app.api.outlines import (
-    EXTRACTED_TEXT_REPO_PATH,
     MAX_FILE_SIZE_BYTES,
     extract_pdf_text,
     save_extracted_text,
@@ -51,7 +50,7 @@ def main() -> int:
         print(f"Error: unable to save extracted text: {error}", file=sys.stderr)
         return 1
 
-    print(EXTRACTED_TEXT_REPO_PATH / output_path.name)
+    print("Succesfully extracted course outline text to: " + str(output_path))
     return 0
 
 
