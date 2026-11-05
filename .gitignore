@@ -115,6 +115,9 @@ acs-*.bib
 *.lzo
 *.lzs
 
+#pip generated file
+*.egg-info/
+
 # uncomment this for glossaries-extra (will ignore makeindex's style files!)
 # *.ist
 

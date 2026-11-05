@@ -3,6 +3,7 @@ import { NavLink, Route, Routes } from 'react-router'
 import AdminPage from './pages/AdminPage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import InstructorPage from './pages/InstructorPage.tsx'
+import OutlinePreviewPage from './pages/OutlinePreviewPage.tsx'
 
 // Styles the nav link for the current page differently from the others.
 function navLinkClass({ isActive }: { isActive: boolean }) {
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/outline-preview" element={<OutlinePreviewPage />} />
           <Route path="/instructor" element={<InstructorPage />} />
         </Routes>
       </main>
