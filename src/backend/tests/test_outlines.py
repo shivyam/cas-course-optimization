@@ -96,4 +96,4 @@ def test_cli_extracts_local_outline(tmp_path, monkeypatch, capsys):
 
     output_path = output_dir / "course_outline.txt"
     assert output_path.read_text(encoding="utf-8") == "CLI outline text"
-    assert capsys.readouterr().out.strip() == "data/extracted_text/course_outline.txt"
+    assert capsys.readouterr().out.strip() == "Succesfully extracted course outline text to: data/extracted_text/course_outline.txt"
