@@ -22,7 +22,8 @@ Files:
     rules.py          --postprocess rules and the weight check
     scoring.py        scoring against keys/ and the printed report
 
-Spikes using this harness: #38 Gemma 4 E2B (gemma4:e2b), #40 Llama 3.2 3B (llama3.2:3b).
+Spikes using this harness: #38 Gemma 4 E2B (gemma4:e2b), #40 Llama 3.2 3B (llama3.2:3b),
+#39 Qwen3 4B (qwen3:4b, with --native-think, see README.md).
 
 Setup (once):
     pip install pymupdf==1.27.2.2
@@ -108,6 +109,7 @@ def run_one(pdf: Path, args, run_no: int, out_dir: Path) -> dict:
         "extractor": "pymupdf",
         "postprocess": bool(args.postprocess),
         "num_ctx": args.num_ctx,
+        "native_think": args.native_think,  # None = not sent to Ollama (all Gemma and Llama runs)
         "run": run_no,
         "injected": args.inject or False,  # variant name, or False for a normal run
         "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -209,6 +211,10 @@ def main() -> None:
     ap.add_argument("--runs", type=int, default=1, help="Repeat each outline this many times")
     ap.add_argument("--inject", nargs="?", const="ignore", choices=sorted(INJECTIONS),
                     help="Insert a prompt-injection line into the text (default variant: ignore)")
+    ap.add_argument("--native-think", choices=["on", "off"],
+                    help="Turn the model's built-in reasoning mode on or off (Qwen3). Not given: "
+                         "nothing is sent, as in the Gemma and Llama runs. Results go to "
+                         "results/<model>_think-<on|off>/ so they never mix with other runs")
     ap.add_argument("--key", help="Answer key JSON (single outline)")
     ap.add_argument("--key-dir", help="Folder of answer keys named <pdf stem>.json")
     ap.add_argument("--out", default="results", help="Output folder (a subfolder per model is added)")
@@ -223,6 +229,8 @@ def main() -> None:
     out_dir = Path(args.out)
     if args.model:
         out_dir = out_dir / model_slug(args.model)
+        if args.native_think:
+            out_dir = out_dir.with_name(f"{out_dir.name}_think-{args.native_think}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     if args.rescore:
@@ -268,7 +276,8 @@ def main() -> None:
             )
             for st in r["steps"]:
                 if "raw" in st:
-                    print(f"    step '{st['step']}': {st['seconds']}s, read {st['prompt_tokens']} tokens, wrote {st['output_tokens']}")
+                    extra = f" (built-in reasoning: {st['thinking_chars']} characters)" if st.get("thinking_chars") else ""
+                    print(f"    step '{st['step']}': {st['seconds']}s, read {st['prompt_tokens']} tokens, wrote {st['output_tokens']}{extra}")
                 elif "count" in st:
                     print(f"    step '{st['step']}': {st['count']} lines")
             for w in r.get("warnings", []):

@@ -12,7 +12,7 @@ were removed; they are still on `spike/gemma4`.
 | `config.py` | Ollama address, where the outline PDFs are |
 | `extraction.py` | PDF to text (Shivya's PyMuPDF code) |
 | `prompts.py` | Prompts, JSON schema, prompt-injection lines (same for every model) |
-| `ollama_client.py` | Calls to Ollama |
+| `ollama_client.py` | Calls to Ollama (and `--native-think`, the model's own reasoning mode) |
 | `strategies.py` | baseline and think |
 | `rules.py` | `--postprocess` rules and the 100% weight check |
 | `scoring.py` | Scoring against `keys/`, printed report |
@@ -57,6 +57,42 @@ python src/spikes/common/compare_inject.py src/spikes/common/results/llama3.2-3b
 Phase C needs normal runs of the same outlines and strategy in the same results folder
 (Phase A or B provides them for Llama; Gemma needs them re-run with this harness).
 
+## Spike #39: Qwen3 4B
+
+Qwen3 has a built-in reasoning mode ("thinking") that Gemma and Llama did not use. It is
+separate from the `think` strategy (which is our two-call prompt). `--native-think on|off`
+sends Ollama's `think` field; without the option nothing is sent, exactly as in the Gemma
+and Llama runs. Results go to `results/qwen3-4b_think-off/` or `results/qwen3-4b_think-on/`,
+and the reasoning text is saved in each step of the result JSON (`thinking`).
+
+The main comparison uses `--native-think off`, so Qwen is asked the same way as the other two
+models. `on` is one extra check of whether the reasoning mode is worth its extra time.
+
+```bash
+ollama pull qwen3:4b
+
+# Smoke test: one outline, baseline, reasoning off
+bash src/spikes/common/run_spike.sh --model qwen3:4b --native-think off --strategies baseline --outlines 2DA4 --label smoke
+
+# Phase A: baseline and think, all five outlines, one run, reasoning off
+bash src/spikes/common/run_spike.sh --model qwen3:4b --native-think off --label phaseA
+
+# Phase A2: baseline with the reasoning mode on, all five outlines (much slower)
+bash src/spikes/common/run_spike.sh --model qwen3:4b --native-think on --strategies baseline --label phaseA2
+
+# Phase B: the best setting from Phase A/A2, three runs (example: think strategy, reasoning off)
+bash src/spikes/common/run_spike.sh --model qwen3:4b --native-think off --strategies think --runs 3 --label phaseB
+
+# Phase C: prompt-injection gate with that same setting
+bash src/spikes/common/run_spike.sh --model qwen3:4b --native-think off --strategies think \
+     --outlines "2OP3 2DA4" --inject "ignore alter disguised" --label phaseC
+python src/spikes/common/compare_inject.py src/spikes/common/results/qwen3-4b_think-off --strategy think
+```
+
+With reasoning on, the think strategy's first call is capped at 2500 output tokens, and the
+reasoning counts toward that cap, so the notes can come back cut short. Use `on` with baseline
+(no cap), as in Phase A2.
+
 ## Adding another model later
 
-Pass a different `--model` (for example `qwen3:4b`). Results go to their own folder.
+Pass a different `--model`. Results go to their own folder.
