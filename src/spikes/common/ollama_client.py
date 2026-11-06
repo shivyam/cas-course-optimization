@@ -34,7 +34,8 @@ def chat(model: str, messages: list[dict], num_ctx: int, schema: dict | None = N
     )
     start = time.perf_counter()
     try:
-        with urllib.request.urlopen(req, timeout=1800) as resp:
+        # One hour per call: Qwen3 4B's think step took up to 27 min, and one call passed 30 min
+        with urllib.request.urlopen(req, timeout=3600) as resp:
             data = json.loads(resp.read().decode("utf-8"))
     except urllib.error.URLError as e:
         sys.exit(f"Could not reach Ollama at {OLLAMA_URL}. Is it running? ({e})")
