@@ -1014,7 +1014,7 @@ time between getting his work done and studying for his upcoming back-to-back mi
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Login}:] The system shall require users to log in before they can view or change any data.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Roles}:] The system shall allow administrators to manage data for all courses, and shall allow instructors to change data only for their own courses.
 \item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Access_Timeout}:] The system shall expire an authenticated session after 30 minutes without user activity and shall require the user to log in again before accessing protected data or functions.
-\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{FR_Export_CSV}:] The system shall allow an administrator to export extracted assessment data as a CSV file and shall escape cells whose values begin with \texttt{=}, \texttt{+}, \texttt{-}, or \texttt{@} so that they are treated as text when opened in a spreadsheet program.
 \end{itemize}
 
 % \subsection*{Notifications}
@@ -1145,6 +1145,9 @@ message (String): description of the problem found. \\
     information in the same test dataset.
     \item The system shall identify at least 95\% of predefined policy and CEAB compliance
     issues and report the results in the Verification and Validation Plan.
+    \item Before a new or updated language model is deployed, the system shall
+    re-run the representative accuracy test dataset and confirm that these
+    thresholds continue to be met.
     \item These thresholds align with the success measures in the Problem Statement and
     Goals document~\citep{TeamBVSH2026PS}.
 \end{itemize}

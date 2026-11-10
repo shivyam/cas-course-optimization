@@ -405,7 +405,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \haz{H10-1}\newline \textit{SE, M} & An export contains confidential or unconfirmed data & Confidential data leaves the system, or unchecked values are used elsewhere & Export not limited by role or review status & \fmi{a}{Export only confirmed data that the user's role may see}\par \fmi{b}{Mark tentative dates} & \fmi{a}{FR17, DR3; New: export limits}\par \fmi{b}{FR7}\\
 \addlinespace
-\haz{H10-2}\newline \textit{SE, L} & A cell in the exported file runs as a formula when opened & A harmful formula runs in the user's spreadsheet program & Outline text that begins with =, +, $-$, or @ & Escape cells that begin with these characters & New: CSV escaping\\
+\haz{H10-2}\newline \textit{SE, L} & A cell in the exported file runs as a formula when opened & A harmful formula runs in the user's spreadsheet program & Outline text that begins with =, +, $-$, or @ & Escape cells that begin with these characters & \ssrref{SSR_CSVExport}\\
 \addlinespace
 \haz{H10-3}\newline \textit{DI, L} & Characters in the export are garbled & Course names or text cannot be read & Wrong character encoding & Export in UTF-8 and test in common spreadsheet programs & FR17\\
 \midrule
@@ -413,13 +413,13 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \haz{H11-1}\newline \textit{AV, M} & The language model service is unavailable & Extraction and suggestion explanations are delayed & \fmi{a}{Service outage}\par \fmi{b}{Network failure} & \fmi{a}{Keep the outline, inform the user, and allow a retry}\par \fmi{b}{Keep other functions available} & \fmi{a}{\ssrref{SSR_ProcessFailure}}\par \fmi{b}{NFR7}\\
 \addlinespace
-\haz{H11-2}\newline \textit{DQ, M} & A change of model or model version lowers accuracy & More extraction errors reach reviewers without anyone noticing & \fmi{a}{Provider updates the model}\par \fmi{b}{Team switches model (LC1)} & Re-run the accuracy test set before any model change is deployed & NFR1; New: model change test\\
+\haz{H11-2}\newline \textit{DQ, M} & A change of model or model version lowers accuracy & More extraction errors reach reviewers without anyone noticing & \fmi{a}{Provider updates the model}\par \fmi{b}{Team switches model (LC1)} & Re-run the accuracy test set before any model change is deployed & \ssrref{SSR_ModelChangeTest}\\
 \end{longtable}
 }
 
-\noindent The analysis identified the following recommended actions that do not
-yet have a requirement. Each will be added to the Safety and Security
-Requirements (Table~\ref{TblSafetySecurityRequirements}) and to the SRS:
+\noindent The analysis identified the following recommended actions. The model
+change test and CSV escaping actions are formalized in the Safety and Security
+Requirements (Table~\ref{TblSafetySecurityRequirements}) and in the SRS:
 
 \begin{itemize}
   \item \textbf{Warning ranking} (\hazref{H8-2}): rank workload clusters by size.
@@ -463,7 +463,9 @@ compared with the sheet by the system's own code.
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_MasterSheetEdit} & \hazref{H5-4}, \hazref{H6-5}, \hazref{H9-4}: unauthorized modification of course-rule data & The system shall allow only administrators to change the master course sheet and the academic calendar.\\
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ConfirmedDataPreservation} & \hazref{H2-2}: overwriting previously confirmed course information & The system shall preserve previously confirmed course information when an outline is re-uploaded until newly extracted values have been reviewed and explicitly approved by the user for replacement.\\
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_SessionTimeout} & \hazref{H9-3}: an authenticated session left open on a shared computer & The system shall expire an authenticated session after 30 minutes without user activity and shall require the user to authenticate again before protected data or functions can be accessed.\\
-\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_BackupRestore} & \hazref{H2-1}: loss or corruption of stored course information & CAS IT shall maintain regular backups of the application database and stored files. Before production use and after material schema changes, the project team and CAS IT shall verify a representative restore containing confirmed assessment details, compliance findings, and tentative dates. The restore procedure and verification results shall be documented.\\
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_BackupRestore} & \hazref{H2-1}: loss or corruption of stored course information & CAS IT shall maintain regular backups of the application database and stored files. Before production use and after material schema changes, the project team and CAS IT shall verify a representative restore containing confirmed assessment details, compliance findings, and tentative dates. The restore procedure and verification results shall be documented.\\ \addlinespace
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_CSVExport} & \hazref{H10-2}: exported text interpreted as a spreadsheet formula & The system shall escape exported CSV cells whose values begin with \texttt{=}, \texttt{+}, \texttt{-}, or \texttt{@}, and the export shall be tested to confirm that these values are treated as text when opened in a spreadsheet program.\\ \addlinespace
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ModelChangeTest} & \hazref{H11-2}: a model or model-version change lowers extraction accuracy & The team shall re-run the representative accuracy test set and confirm that the documented accuracy thresholds are met before deploying a new or updated language model. The model version and test result shall be recorded.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -494,6 +496,11 @@ prevent assessment date suggestions that conflict with holidays, recess,
 examination periods, or test and examination ban periods defined by the academic
 calendar. \ssrref{SSR_StaleSuggestion} will ensure that suggestions are marked as out of date when
 relevant assessment dates change before instructor review.
+
+The team will also implement \ssrref{SSR_CSVExport} so that exported values
+cannot be interpreted as spreadsheet formulas, and \ssrref{SSR_ModelChangeTest}
+so that model changes are checked against the representative accuracy test set
+before deployment.
 
 The team will also prioritize \ssrref{SSR_CheckCoverage} to identify which compliance rules were
 checked for each course outline and flag courses that are missing from the

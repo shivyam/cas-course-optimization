@@ -90,6 +90,12 @@ Peer & Word document support is not explicitly addressed in the schedule & Clari
 \hline
 TA & Need more details in the team charter: How is "repeatedly misses a commitment" defined? What's the exact amount? What would work balancing look like? & Updated team charter to include examples and more details. & \href{https://github.com/shivyam/cas-course-optimization/issues/94}{IS\#94}, \href{https://github.com/shivyam/cas-course-optimization/pull/117}{PR\#117} \\
 \hline
+Peer & The PoC fallback could leave the CP-SAT constraint risk unresolved & Prioritized a reduced CP-SAT model and clarified that any scoring fallback must document the unresolved constraints and evaluate them before full implementation. & \href{https://github.com/shivyam/cas-course-optimization/issues/35}{IS\#35} \\
+\hline
+Peer & CEAB validation is not clearly demonstrated in the PoC & Added one representative CEAB graduate-attribute check to the PoC and clarified that broader CEAB coverage will be evaluated afterward. & \href{https://github.com/shivyam/cas-course-optimization/issues/34}{IS\#34} \\
+\hline
+TA & The PoC plan is too ambitious and does not clearly prioritize its main risks & Made reliable data extraction and alternative scheduling dates the primary PoC focus, while limiting policy, CEAB, explanation, and other features to small demonstrations or follow-up work. & \href{https://github.com/shivyam/cas-course-optimization/issues/93}{IS\#93} \\
+\hline
 Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
 \end{longtable}
@@ -117,6 +123,10 @@ and pull requests, along with a summary of our response/changes.
 
 Peer & Session timeout protection is not formally specified in the SRS and Hazard Analysis & Added a requirement specifying that authenticated sessions should expire after a defined period of inactivity in the SRS and updated the Hazard Analysis accordingly & \href{https://github.com/shivyam/cas-course-optimization/issues/86}{IS\#86}, \href{https://github.com/shivyam/cas-course-optimization/pull/118}{PR\#118} \\
 \hline
+Peer & Model changes could reduce extraction accuracy without a formal regression requirement & Added a requirement to re-run the representative accuracy dataset and confirm the thresholds before deploying a new or updated model. & \href{https://github.com/shivyam/cas-course-optimization/issues/84}{IS\#84} \\
+\hline
+Peer & CSV export did not specify protection against spreadsheet formula interpretation & Updated the CSV export requirement to escape values beginning with formula characters. & \href{https://github.com/shivyam/cas-course-optimization/issues/85}{IS\#85} \\
+\hline
 TA & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
 Instructor & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
@@ -141,6 +151,10 @@ issues and pull requests, along with a summary of our response/changes.
 \endhead
 
 Peer & Backup and recovery safeguards are not clearly defined & Clarified H2-1 by assigning backups and recovery to CAS IT, requiring the project team to document application data and verify representative restores, and adding a backup and restore requirement to the roadmap. & \href{https://github.com/shivyam/cas-course-optimization/issues/83}{IS\#83}, \href{https://github.com/shivyam/cas-course-optimization/pull/123}{PR\#123}, ... \\
+\hline
+Peer & CSV formula injection prevention was not included in the safety requirements & Added SSR\_CSVExport to formalize escaping dangerous spreadsheet formula prefixes and testing the resulting export. & \href{https://github.com/shivyam/cas-course-optimization/issues/85}{IS\#85} \\
+\hline
+Peer & Model changes lacked a defined regression testing requirement & Added SSR\_ModelChangeTest to require accuracy testing and recording the model version before deployment. & \href{https://github.com/shivyam/cas-course-optimization/issues/84}{IS\#84} \\
 \hline
 TA & summary of feedback & summary of changes made & \href{link}{IS\#},
 \href{link}{PR\#}, ... \\
