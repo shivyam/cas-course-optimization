@@ -1,0 +1,330 @@
+{
+  "course_outline_filename": "COMPSCI2C03_JelleHellings_Fall-2026.pdf",
+
+  "course_information": {
+    "term": ["Fall 2026"],
+    "course_code": "COMPSCI 2CO3",
+    "course_title": "Data Structures and Algorithms",
+    "website": {
+      "link": "https://avenue.mcmaster.ca",
+      "source_text": "Website Avenue to Learn (https://avenue.mcmaster.ca). Announcements, course material, assignments, submission of assignments, and miscellaneous material.",
+      "source_page": 1
+    },
+    "contact": [
+      {
+        "instructor": "Jelle Hellings",
+        "email": "jhellings@mcmaster.ca",
+        "source_text": "Jelle Hellings (jhellings@mcmaster.ca, https://jhellings.nl).",
+        "source_page": 1,
+        "office_hours": {
+          "source_page": 1,
+          "source_text": "Office hours See Avenue to Learn for updates"
+        }
+      },
+      {
+        "instructor": "Vincent Maccio",
+        "email": "macciov@mcmaster.ca",
+        "source_text": "Instructor Vincent Maccio (macciov@mcmaster.ca).",
+        "source_page": 1,
+        "office_hours": {
+          "source_page": 2,
+          "source_text": "Office hours See Avenue to Learn for updates. Communicated during first lecture."
+        }
+      }
+    ],
+    "sections": [
+      {
+        "section": "C01",
+        "lectures": [
+          {
+            "has_location": true,
+            "source_text": "Tuesday: 3:30PM–4:20PM (ITB 137).",
+            "source_page": 1
+          },
+          {
+            "has_location": true,
+            "source_text": "Wednesday: 3:30PM–4:20PM (ITB 137).",
+            "source_page": 1
+          },
+          {
+            "has_location": true,
+            "source_text": "Friday: 3:30PM–4:20PM (ITB 137).",
+            "source_page": 1
+          }
+        ],
+        "tutorials": [
+          {
+            "has_location": true,
+            "source_text": "T01: Thursday 11:30AM–12:20PM at ABB 162 (starting September 17).",
+            "source_page": 1
+          },
+          {
+            "has_location": true,
+            "source_text": "T02: Thursday 1:30PM–2:20PM at ABB 166 (starting September 17).",
+            "source_page": 1
+          },
+          {
+            "section": "T03",
+            "has_location": true,
+            "source_text": "T03: Monday 3:30PM–4:20PM at JHE T13 125 (starting September 14).",
+            "source_page": 1
+          }
+        ],
+        "teaching_assistants": [
+          {
+            "name": "Nancy Kansal",
+            "email": "kansan1@mcmaster.ca",
+            "source_text": "Nancy Kansal (kansan1@mcmaster.ca).",
+            "source_page": 1
+          },
+          {
+            "name": "Hilary He",
+            "email": "hez88@mcmaster.ca",
+            "source_text": "Hilary He (hez88@mcmaster.ca).",
+            "source_page": 1
+          },
+          {
+            "name": "Angela Fernando",
+            "email": "fernaa61@mcmaster.ca",
+            "source_text": "Angela Fernando (fernaa61@mcmaster.ca).",
+            "source_page": 1
+          }
+        ]
+      },
+      {
+        "section": "C02",
+        "lectures": [
+          {
+            "has_location": true,
+            "source_text": "Tuesday: 3:30PM–4:20PM (MDCL 1105).",
+            "source_page": 1
+          },
+          {
+            "has_location": true,
+            "source_text": "Wednesday: 3:30PM–4:20PM (MDCL 1105).",
+            "source_page": 1
+          },
+          {
+            "has_location": true,
+            "source_text": "Friday: 3:30PM–4:20PM (MDCL 1105).",
+            "source_page": 1
+          }
+        ],
+        "tutorials": [
+          {
+            "has_location": true,
+            "source_text": "Tutorials Starting September 14, there is one tutorial per week",
+            "source_page": 2
+          }
+        ],
+        "teaching_assistants": [
+          {
+            "name": "Rahaf Abuzarifa",
+            "email": "abuzarir@mcmaster.ca",
+            "source_text": "Rahaf Abuzarifa (abuzarir@mcmaster.ca).",
+            "source_page": 2
+          },
+          {
+            "name": "Xintong Chen",
+            "email": "chenx545@mcmaster.ca",
+            "source_text": "Xintong Chen (chenx545@mcmaster.ca).",
+            "source_page": 2
+          },
+          {
+            "name": "Jessica Pourleyli",
+            "email": "pourleyj@mcmaster.ca",
+            "source_text": "Jessica Pourleyli (pourleyj@mcmaster.ca).",
+            "source_page": 2
+          },
+          {
+            "name": "Azeen Saba Baig",
+            "email": "baiga33@mcmaster.ca",
+            "source_text": "Azeen Saba Baig (baiga33@mcmaster.ca).",
+            "source_page": 2
+          }
+        ]
+      }
+    ]
+  },
+  "assessments": [
+    {
+      "id": "1",
+      "name": "Assignment 1",
+      "type": "assignment",
+      "source_text": "September 25",
+      "date": "2026-09-25",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "2",
+      "name": "Assignment 2",
+      "type": "assignment",
+      "source_text": "October 9",
+      "date": "2026-10-09",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "3",
+      "name": "Assignment 3",
+      "type": "assignment",
+      "source_text": "October 23",
+      "date": "2026-10-23",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "4",
+      "name": "Assignment 4",
+      "type": "assignment",
+      "source_text": "October 30",
+      "date": "2026-10-30",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "5",
+      "name": "Assignment 5",
+      "type": "assignment",
+      "source_text": "November 6",
+      "date": "2026-11-06",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "6",
+      "name": "Assignment 6",
+      "type": "assignment",
+      "source_text": "November 13",
+      "date": "2026-11-13",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "7",
+      "name": "Assignment 7",
+      "type": "assignment",
+      "source_text": "November 24",
+      "date": "2026-11-24",
+      "weight_percent": 7.25,
+      "source_page": 4
+    },
+    {
+      "id": "8",
+      "name": "Assignment 8",
+      "type": "assignment",
+      "source_text": "December 1",
+      "date": "2026-12-01",
+      "weight_percent": 0,
+      "source_page": 4
+    },
+    {
+      "id": "9",
+      "name": "Final Exam",
+      "type": "final_exam",
+      "date": null,
+      "weight_percent": 49.25,
+      "source_text": "Final Exam 49.25% of the final grade.",
+      "source_page": 4
+    }
+  ],
+  "materials": {
+    "has_materials": true,
+    "source_text": "Materials & Fees",
+    "source_page": 3
+  },
+  "learning_outcomes": [
+    {
+      "id": "LO1",
+      "text": "Analyzing correctness of algorithms.",
+      "source_page": 3
+    },
+    {
+      "id": "LO2",
+      "text": "Analyzing the complexity of algorithms.",
+      "source_page": 3
+    },
+    {
+      "id": "LO3",
+      "text": "Fundamental search and sorting algorithms (e.g., binary search, mergesort, quicksort, and heapsort).",
+      "source_page": 3
+    },
+    {
+      "id": "LO4",
+      "text": "Fundamental data structures (e.g., lists, dynamic arrays, search trees, and hash tables).",
+      "source_page": 3
+    },
+    {
+      "id": "LO5",
+      "text": "Fundamental abstract data types (e.g., stacks, queues, and dictionaries).",
+      "source_page": 3
+    },
+    {
+      "id": "LO6",
+      "text": "Elementary graph representations and graph algorithms (e.g., BFS and DFS, topological search, spanning trees, and shortest paths).",
+      "source_page": 3
+    }
+  ],
+  "graduate_attributes": [
+    {
+      "code": "1.1",
+      "name": "Knowledge in Mathematics",
+      "level": "Applied Level",
+      "source_text": "1.1 Knowledge in Mathematics (Applied Level).",
+      "source_page": 3
+    },
+    {
+      "code": "1.3",
+      "name": "Competence in Engineering Fundamentals",
+      "level": "Developmental Level",
+      "source_text": "1.3 Competence in Engineering Fundamentals (Developmental Level).",
+      "source_page": 3
+    },
+    {
+      "code": "2.1",
+      "name": "Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem.",
+      "level": "Developmental Level",
+      "source_text": "2.1 Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem. (Developmental Level).",
+      "source_page": 3
+    },
+    {
+      "code": "2.2",
+      "name": "Proposes problem solutions supported by substantiated reasoning, recognizing the limitations of the solutions.",
+      "level": "Developmental Level",
+      "source_text": "2.2 Proposes problem solutions supported by substantiated reasoning, recognizing the limitations of the solutions. (Developmental Level).",
+      "source_page": 3
+    },
+    {
+      "code": "7.1",
+      "name": "Demonstrates comprehension of technical and non-technical instructions and questions.",
+      "level": "Applied Level",
+      "source_text": "7.1 Demonstrates comprehension of technical and non-technical instructions and questions. (Applied Level).",
+      "source_page": 3
+    },
+    {
+      "code": "7.2",
+      "name": "Composes an effective written document for the intended audience.",
+      "level": "Applied Level",
+      "source_text": "7.2 Composes an effective written document for the intended audience. (Applied Level).",
+      "source_page": 3
+    }
+  ],
+  "policies": {
+    "genai": {
+      "has_genai": true,
+      "source_text": "Students are not permitted to use generative AI in this course. This included AI generated answers using a normal search on the internet",
+      "source_page": 6
+    },
+    "advisory": {
+      "has_advisory": true,
+      "source_text": "Approved Advisory Statements",
+      "source_page": 7
+    },
+    "discrimination": {
+      "has_discrimination": false,
+      "source_text": "",
+      "source_page": 0
+    }
+  }
+}
