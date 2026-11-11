@@ -48,8 +48,7 @@
 
         "teaching_assistants": [
           {
-            "name": "string",
-            "email": "string",
+            "has_ta_info": "boolean",
             "source_text": "string",
             "source_page": "integer"
           }

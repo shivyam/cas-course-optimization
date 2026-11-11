@@ -72,21 +72,8 @@
         ],
         "teaching_assistants": [
           {
-            "name": "Nancy Kansal",
-            "email": "kansan1@mcmaster.ca",
+            "has_ta_info": true,
             "source_text": "Nancy Kansal (kansan1@mcmaster.ca).",
-            "source_page": 1
-          },
-          {
-            "name": "Hilary He",
-            "email": "hez88@mcmaster.ca",
-            "source_text": "Hilary He (hez88@mcmaster.ca).",
-            "source_page": 1
-          },
-          {
-            "name": "Angela Fernando",
-            "email": "fernaa61@mcmaster.ca",
-            "source_text": "Angela Fernando (fernaa61@mcmaster.ca).",
             "source_page": 1
           }
         ]
@@ -119,27 +106,8 @@
         ],
         "teaching_assistants": [
           {
-            "name": "Rahaf Abuzarifa",
-            "email": "abuzarir@mcmaster.ca",
+            "has_ta_info": true,
             "source_text": "Rahaf Abuzarifa (abuzarir@mcmaster.ca).",
-            "source_page": 2
-          },
-          {
-            "name": "Xintong Chen",
-            "email": "chenx545@mcmaster.ca",
-            "source_text": "Xintong Chen (chenx545@mcmaster.ca).",
-            "source_page": 2
-          },
-          {
-            "name": "Jessica Pourleyli",
-            "email": "pourleyj@mcmaster.ca",
-            "source_text": "Jessica Pourleyli (pourleyj@mcmaster.ca).",
-            "source_page": 2
-          },
-          {
-            "name": "Azeen Saba Baig",
-            "email": "baiga33@mcmaster.ca",
-            "source_text": "Azeen Saba Baig (baiga33@mcmaster.ca).",
             "source_page": 2
           }
         ]
