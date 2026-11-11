@@ -63,7 +63,8 @@
   "docs/DevelopmentPlan/DevelopmentPlan.tex": [
     "docs/Comments.text",
     "docs/Common.text",
-    "docs/DevelopmentPlan/DevelopmentPlan.tex"
+    "docs/DevelopmentPlan/DevelopmentPlan.tex",
+    "refs/References.bib"
   ],
   "docs/HazardAnalysis/HazardAnalysis.tex": [
     "docs/Comments.text",
@@ -74,12 +75,14 @@
   "docs/ProblemStatementAndGoals/ProblemStatement.tex": [
     "docs/Comments.text",
     "docs/Common.text",
-    "docs/ProblemStatementAndGoals/ProblemStatement.tex"
+    "docs/ProblemStatementAndGoals/ProblemStatement.tex",
+    "refs/References.bib"
   ],
   "docs/ReflectAndTrace/ReflectAndTrace.tex": [
     "docs/Comments.text",
     "docs/Common.text",
-    "docs/ReflectAndTrace/ReflectAndTrace.tex"
+    "docs/ReflectAndTrace/ReflectAndTrace.tex",
+    "refs/References.bib"
   ],
   "docs/SRS-IEEE/SRS.tex": [
     "docs/Comments.text",
