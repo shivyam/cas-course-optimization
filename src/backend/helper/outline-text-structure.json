@@ -1,0 +1,113 @@
+{
+  "course_outline_filename": "string",
+
+  "course_information": {
+    "term": ["string"],
+    "course_code": "string",
+    "course_title": "string",
+
+    "website": {
+      "link": "string",
+      "source_text": "string",
+      "source_page": "integer"
+    },
+
+    "contact": [
+      {
+        "instructor": "string",
+        "email": "string",
+        "source_text": "string",
+        "source_page": "integer",
+        "office_hours": {
+          "source_page": "integer",
+          "source_text": "string"
+        }
+      }
+    ],
+
+    "sections": [
+      {
+        "section": "string",
+
+        "lectures": [
+          {
+            "has_location": "boolean",
+            "source_text": "string",
+            "source_page": "integer"
+          }
+        ],
+
+        "tutorials": [
+          {
+            "section": "string (optional)",
+            "has_location": "boolean",
+            "source_text": "string",
+            "source_page": "integer"
+          }
+        ],
+
+        "teaching_assistants": [
+          {
+            "has_ta_info": "boolean",
+            "source_text": "string",
+            "source_page": "integer"
+          }
+        ]
+      }
+    ]
+  },
+
+  "assessments": [
+    {
+      "id": "string",
+      "name": "string",
+      "type": "string",
+      "source_text": "string",
+      "date": "string (YYYY-MM-DD) | null",
+      "weight_percent": "number",
+      "source_page": "integer"
+    }
+  ],
+
+  "materials": {
+    "has_materials": "boolean",
+    "source_text": "string",
+    "source_page": "integer"
+  },
+
+  "learning_outcomes": [
+    {
+      "id": "string",
+      "text": "string",
+      "source_page": "integer"
+    }
+  ],
+
+  "graduate_attributes": [
+    {
+      "code": "string",
+      "name": "string",
+      "level": "string",
+      "source_text": "string",
+      "source_page": "integer"
+    }
+  ],
+
+  "policies": {
+    "genai": {
+      "has_genai": "boolean",
+      "source_text": "string",
+      "source_page": "integer"
+    },
+    "advisory": {
+      "has_advisory": "boolean",
+      "source_text": "string",
+      "source_page": "integer"
+    },
+    "discrimination": {
+      "has_discrimination": "boolean",
+      "source_text": "string",
+      "source_page": "integer"
+    }
+  }
+}
