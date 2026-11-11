@@ -111,7 +111,7 @@ described for
 \href{https://github.com/shivyam/cas-course-optimization/issues/35}{IS\#35} and
 \href{https://github.com/shivyam/cas-course-optimization/issues/93}{IS\#93},
 since date suggestions became an extra after the meeting with the department. &
-\href{https://github.com/shivyam/cas-course-optimization/issues/36}{IS\#36} \\
+\href{https://github.com/shivyam/cas-course-optimization/issues/36}{IS\#36}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 TA & Expected Technology needs clearer justification beyond ``X tool/technology
 does Y'' (Eval Tools, LO13) & Rewrote the Expected Technology section of the
@@ -121,7 +121,7 @@ pdfplumber based on the model-selection spike results, Ollama because the model
 must run on CAS servers at no cost), and its limitations. Added the tools that
 were missing (PyMuPDF, Ollama, the candidate open-weight models, OR-Tools
 CP-SAT), and marked vLLM, CUDA, Transformers and PyTorch as conditional. & TA
-rubric feedback \\
+rubric feedback, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 TA & Keep the quantified success criteria consistent with later documents such
 as the SRS & Raised the targets in Goals 2 and 5 of the Problem
@@ -130,14 +130,14 @@ of the SRS~\citep{TeamBVSH2026SRS}, added a 95\% target for learning outcomes
 (with their graduate attributes) to both documents, and changed ``Software
 Engineering'' to all CAS undergraduate programs in Goals 1 and 3 to match the
 SRS cohorts. &
-\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91} \\
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 TA & The predefined outcomes and datasets lack validation; define the ground
 truth & Added a ``Test dataset and ground truth'' paragraph to the Goals: real
 and mock outlines, and an answer key built by the team that lists every expected
 value, missing field, conflict and compliance issue, double-checked against the
 outlines before it is used for scoring. &
-\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91} \\
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 TA & Has thought been given to courses outside the department (e.g.\ math,
 statistics, engineering) that still affect the schedule? & Added a ``Courses
@@ -145,7 +145,7 @@ covered'' paragraph to the Goals: required courses from other departments and
 first-year engineering courses are not modelled because CAS does not receive or
 control their outlines, so the workload shown is a lower bound. Added the
 matching assumption A8 to the SRS~\citep{TeamBVSH2026SRS}. &
-\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91} \\
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 % \hline
 % Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
@@ -178,9 +178,9 @@ Peer & Model changes could reduce extraction accuracy without a formal regressio
 \hline
 Peer & CSV export did not specify protection against spreadsheet formula interpretation & Updated the CSV export requirement to escape values beginning with formula characters. & \href{https://github.com/shivyam/cas-course-optimization/issues/85}{IS\#85} \\
 \hline
-Peer & The SRS does not say how model outputs that fail validation or contain unexpected instructions are rejected (prompt injection) & Added AIR7 (output validation) to the SRS~\citep{TeamBVSH2026SRS}: outline text is given to the model only as data and output is never acted on as an instruction; malformed output is rejected and the outline flagged for manual entry; values without a matching source passage or out of range are treated as missing; policy violations are not rejected; a model is only used if its validated output is unchanged on the prompt-injection test set. Also added a prompt-injection row to Known Limitations, a definition of prompt injection, a rationale item, and AIR7 to the traceability tables. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82} \\
+Peer & The SRS does not say how model outputs that fail validation or contain unexpected instructions are rejected (prompt injection) & Added AIR7 (output validation) to the SRS~\citep{TeamBVSH2026SRS}: outline text is given to the model only as data and output is never acted on as an instruction; malformed output is rejected and the outline flagged for manual entry; values without a matching source passage or out of range are treated as missing; policy violations are not rejected; a model is only used if its validated output is unchanged on the prompt-injection test set. Also added a prompt-injection row to Known Limitations, a definition of prompt injection, a rationale item, and AIR7 to the traceability tables. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
-TA & Keep the success criteria consistent between the Problem Statement and the SRS; consider courses outside the department & Added the 95\% learning outcome accuracy target to the SRS~\citep{TeamBVSH2026SRS} (NFR1, Evaluation Metrics, \textit{LO\_ACCURACY} in Appendix C), changed the source of the accuracy constants to the goals in the Problem Statement~\citep{TeamBVSH2026PS}, updated the accuracy rationale, stated that the answer key is double-checked, and added assumption A8 (only CAS courses are modelled). & \href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91} \\
+TA & Keep the success criteria consistent between the Problem Statement and the SRS; consider courses outside the department & Added the 95\% learning outcome accuracy target to the SRS~\citep{TeamBVSH2026SRS} (NFR1, Evaluation Metrics, \textit{LO\_ACCURACY} in Appendix C), changed the source of the accuracy constants to the goals in the Problem Statement~\citep{TeamBVSH2026PS}, updated the accuracy rationale, stated that the answer key is double-checked, and added assumption A8 (only CAS courses are modelled). & \href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 % TA & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 % \hline
@@ -211,7 +211,7 @@ Peer & CSV formula injection prevention was not included in the safety requireme
 \hline
 Peer & Model changes lacked a defined regression testing requirement & Added SSR\_ModelChangeTest to require accuracy testing and recording the model version before deployment. & \href{https://github.com/shivyam/cas-course-optimization/issues/84}{IS\#84} \\
 \hline
-Peer & The output validation actions for prompt injection (H4-5) are marked ``New'' but are not in the Safety and Security Requirements & Added SSR13 (SSR\_OutputValidation) to Table 5 of the Hazard Analysis~\citep{TeamBVSH2026HA} and linked it to AIR7 in the SRS~\citep{TeamBVSH2026SRS}; replaced ``New: output validation'' in row H4-5 with SSR13 and AIR7; added AIR7 to row H4-1; and listed AIR7 among the SRS safeguards in Section 6. This also responds, for H4-5, to the TA comment that ``New'' requirements should be added to Table 5. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82} \\
+Peer & The output validation actions for prompt injection (H4-5) are marked ``New'' but are not in the Safety and Security Requirements & Added SSR13 (SSR\_OutputValidation) to Table 5 of the Hazard Analysis~\citep{TeamBVSH2026HA} and linked it to AIR7 in the SRS~\citep{TeamBVSH2026SRS}; replaced ``New: output validation'' in row H4-5 with SSR13 and AIR7; added AIR7 to row H4-1; and listed AIR7 among the SRS safeguards in Section 6. This also responds, for H4-5, to the TA comment that ``New'' requirements should be added to Table 5. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 % \hline
 % TA & summary of feedback & summary of changes made & \href{link}{IS\#},
 % \href{link}{PR\#}, ... \\
@@ -298,7 +298,7 @@ Table~\ref{Tbl-VnVPlan} summarizes the feedback received from our peers, the TA,
 \hline
 \endhead
 
-Peer & A new output validation requirement (prompt injection) needs to be verified & Added system test ST\_OutputValidation to the VnV Plan~\citep{TeamBVSH2026VnVP} (injected instructions, malformed output, values without a source passage or out of range) and traced AIR7 and SSR13 to it in the traceability table. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82} \\
+Peer & A new output validation requirement (prompt injection) needs to be verified & Added system test ST\_OutputValidation to the VnV Plan~\citep{TeamBVSH2026VnVP} (injected instructions, malformed output, values without a source passage or out of range) and traced AIR7 and SSR13 to it in the traceability table. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
 Peer & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
