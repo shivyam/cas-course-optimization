@@ -61,6 +61,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 Monday October 19, 2026 & Harmanpreet, Anindita, Shivya, Vanessa & Initial Hazard Analysis Version\\
+November 10, 2026 & Harmanpreet & Added \ssrref{SSR_OutputValidation} for prompt injection (\hazref{H4-5}), linked to AIR7 in the SRS~\citep{TeamBVSH2026SRS} (peer review \href{https://github.com/shivyam/cas-course-optimization/issues/82}{\#82})\\
 Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
@@ -333,7 +334,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \midrule
 \multicolumn{6}{l}{\textbf{C4: LLM Information Structuring}}\\*
 \midrule
-\haz{H4-1}\newline \textit{DQ, H} & The model reports a value that is not in the outline & A false date or weight is shown and may be confirmed & Model fills gaps or rewrites text & \fmi{a}{Reject values without a source passage}\par \fmi{b}{Require review} & \fmi{a}{AIR4, AIR5}\par \fmi{b}{FR5}\\
+\haz{H4-1}\newline \textit{DQ, H} & The model reports a value that is not in the outline & A false date or weight is shown and may be confirmed & Model fills gaps or rewrites text & \fmi{a}{Reject values without a source passage}\par \fmi{b}{Require review} & \fmi{a}{AIR4, AIR5, AIR7}\par \fmi{b}{FR5}\\
 \addlinespace
 \haz{H4-2}\newline \textit{DQ, H} & The model omits an assessment or a field & Conflicts are missed and weights do not total & Unusual wording or layout & \fmi{a}{Flag missing fields}\par \fmi{b}{Flag weights that do not total}\par \fmi{c}{Measure on the accuracy test set} & \fmi{a}{FR4}\par \fmi{b}{FR13}\par \fmi{c}{NFR1}\\
 \addlinespace
@@ -341,7 +342,7 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 \addlinespace
 \haz{H4-4}\newline \textit{DQ, M} & The model links a learning outcome to the wrong graduate attribute & A graduate attribute is reported as covered or missing when it is not & \fmi{a}{Attribute not listed by number or name}\par \fmi{b}{Ambiguous learning outcome wording} & \fmi{a}{Give the model the CEAB graduate attribute definitions}\par \fmi{b}{Record whether each attribute was listed in the outline or identified by the model}\par \fmi{c}{Require review of identified attributes before the compliance check uses them} & \fmi{a}{AIR1}\par \fmi{b}{AIR3}\par \fmi{c}{FR5, AIR6}\\
 \addlinespace
-\haz{H4-5}\newline \textit{SE, M} & Text in an outline changes the model's behaviour (prompt injection) & Manipulated values or findings are shown & Outline text treated as instructions & \fmi{a}{Treat outline text as data only}\par \fmi{b}{Check the output against the expected structure}\par \fmi{c}{Keep human review} & \fmi{a}{New: output validation}\par \fmi{b}{New: output validation}\par \fmi{c}{FR5}\\
+\haz{H4-5}\newline \textit{SE, M} & Text in an outline changes the model's behaviour (prompt injection) & Manipulated values or findings are shown & Outline text treated as instructions & \fmi{a}{Treat outline text as data only}\par \fmi{b}{Check the output against the expected structure}\par \fmi{c}{Keep human review} & \fmi{a}{\ssrref{SSR_OutputValidation}, AIR7}\par \fmi{b}{\ssrref{SSR_OutputValidation}, AIR7}\par \fmi{c}{FR5}\\
 \addlinespace
 \haz{H4-6}\newline \textit{SE, H} & Confidential data is sent to an external model service & Confidential department data, such as the master course sheet, leaves McMaster's control & Confidential data included in a request to the model by mistake & \fmi{a}{Send only public outline text and the CEAB attribute definitions to an external service}\par \fmi{b}{Compare graduate attributes with the master course sheet in the system's own code} & \fmi{a}{AIR1, AIR2, DR2}\par \fmi{b}{FR14, DR1}\\
 \midrule
@@ -418,15 +419,16 @@ L (Low) & The failure causes inconvenience or wasted effort, but no incorrect
 }
 
 \noindent The analysis identified the following recommended actions. The model
-change test and CSV escaping actions are formalized in the Safety and Security
-Requirements (Table~\ref{TblSafetySecurityRequirements}) and in the SRS:
+change test, CSV escaping, and output validation actions are formalized in the
+Safety and Security Requirements (Table~\ref{TblSafetySecurityRequirements}) and in the SRS~\citep{TeamBVSH2026SRS}:
 
 \begin{itemize}
   \item \textbf{Warning ranking} (\hazref{H8-2}): rank workload clusters by size.
   \item \textbf{Model change test} (\hazref{H11-2}): re-run the accuracy test set before a
     model change is deployed.
-  \item \textbf{Output validation} (\hazref{H4-5}): check model output against the
-    expected structure.
+  \item \textbf{Output validation} (\hazref{H4-5}): give outline text to the model
+    only as data, check model output against the expected structure and the
+    outline text, and test each model with injected outlines before use.
   \item \textbf{Confirm before replace} (\hazref{H2-2}): keep confirmed values when an
     outline is uploaded again.
   \item \textbf{Reference version shown} (\hazref{H5-4}, \hazref{H5-6}, \hazref{H6-5}): record which
@@ -443,7 +445,7 @@ compared with the sheet by the system's own code.
 
 \section{Safety and Security Requirements} \label{sec_SSR}
 
-\noindent The requirements below are in addition to safeguards already in the SRS~\citep{TeamBVSH2026SRS} (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), and restrictions on data sent to external services (AIR2). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to our LLM, but confidential data and student information shall remain internal (see DR2).
+\noindent The requirements below are in addition to safeguards already in the SRS~\citep{TeamBVSH2026SRS} (see Table 4 of the SRS), including user review of extracted data (FR5), flagging of missing fields (FR4), instructor approval of date changes (FR12), login (FR15), role-based access (FR16), restrictions on data sent to external services (AIR2), and validation of model output (AIR7). Additional safety and security requirements are listed in Table~\ref{TblSafetySecurityRequirements}. Public outline text may be sent to our LLM, but confidential data and student information shall remain internal (see DR2).
 
 \begin{table}[H]
 \caption{Safety and Security Requirements}
@@ -465,7 +467,8 @@ compared with the sheet by the system's own code.
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_SessionTimeout} & \hazref{H9-3}: an authenticated session left open on a shared computer & The system shall expire an authenticated session after 30 minutes without user activity and shall require the user to authenticate again before protected data or functions can be accessed.\\
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_BackupRestore} & \hazref{H2-1}: loss or corruption of stored course information & CAS IT shall maintain regular backups of the application database and stored files. Before production use and after material schema changes, the project team and CAS IT shall verify a representative restore containing confirmed assessment details, compliance findings, and tentative dates. The restore procedure and verification results shall be documented.\\ \addlinespace
 \leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_CSVExport} & \hazref{H10-2}: exported text interpreted as a spreadsheet formula & The system shall escape exported CSV cells whose values begin with \texttt{=}, \texttt{+}, \texttt{-}, or \texttt{@}, and the export shall be tested to confirm that these values are treated as text when opened in a spreadsheet program.\\ \addlinespace
-\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ModelChangeTest} & \hazref{H11-2}: a model or model-version change lowers extraction accuracy & The team shall re-run the representative accuracy test set and confirm that the documented accuracy thresholds are met before deploying a new or updated language model. The model version and test result shall be recorded.\\
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_ModelChangeTest} & \hazref{H11-2}: a model or model-version change lowers extraction accuracy & The team shall re-run the representative accuracy test set and confirm that the documented accuracy thresholds are met before deploying a new or updated language model. The model version and test result shall be recorded.\\ \addlinespace
+\leavevmode\refstepcounter{ssrnum}\ssrthessrnum \label{SSR_OutputValidation} & \hazref{H4-5}: text in a course outline changes the model's behaviour (prompt injection) & The system shall give outline text to the language model only as data and shall never act on any part of the model's output as an instruction. Before a model output is shown for review or stored, the system shall reject it as a whole, and flag the outline for manual entry, if it does not have the expected structure, and shall treat as missing any value whose source passage does not appear in the outline text or that is outside its allowed range (AIR7 in the SRS~\citep{TeamBVSH2026SRS}). A language model shall only be used if its validated output is unchanged when instructions are inserted into the outlines of the prompt-injection test set.\\
 \bottomrule
 \end{tabularx}
 \end{table}

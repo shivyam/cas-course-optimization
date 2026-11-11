@@ -137,6 +137,7 @@
 \toprule \textbf{Date} & \textbf{Version} & \textbf{Developer(s)} & \textbf{Notes}\\
 \midrule
 October 19, 2026 & 1.0 & S. Mehta, A. Bornomala, H.S. Sagar, V. Lai & Initial version\\
+November 10, 2026 & 1.1 & H.S. Sagar & Added AIR7 (output validation) (peer review \href{https://github.com/shivyam/cas-course-optimization/issues/82}{\#82}); added the learning outcome accuracy target and assumption \asref{A_CASCoursesOnly}, and aligned accuracy targets with the Problem Statement (TA review \href{https://github.com/shivyam/cas-course-optimization/issues/91}{\#91})\\
 \bottomrule
 \end{tabularx}
 }
@@ -318,6 +319,7 @@ Master Course Sheet & The department's record of which graduate attributes each 
 MSAF & McMaster Student Absence Form, used by students to report short absences that affect academic work.\\
 NFR & Nonfunctional Requirement.\\
 PDF & Portable Document Format.\\
+Prompt Injection & Text placed in a model's input, here inside a course outline, that tries to make the model follow it as an instruction instead of treating it as data (\airref{AIR_Output_Validation}).\\
 Restricted Period & A date range in which an assessment may not be due under university policy, such as a recess or the test and examination ban period.\\
 RTM & Requirements Traceability Matrix.\\
 Scheduling Suggestion & An alternative date for an assessment, proposed by the system with an explanation. Suggestions are not binding; only the instructor can change a date.\\
@@ -1141,6 +1143,8 @@ message (String): description of the problem found. \\
 \begin{itemize}
     \item The system shall achieve at least 95\% accuracy for extracted assessment dates and
     weights on a representative test dataset of course outlines.
+    \item The system shall achieve at least 95\% accuracy for extracted learning outcomes,
+    including the graduate attributes each one addresses, on the same test dataset.
     \item The system shall achieve at least 95\% recall for predefined missing or incomplete
     information in the same test dataset.
     \item The system shall identify at least 95\% of predefined policy and CEAB compliance
@@ -1288,11 +1292,62 @@ message (String): description of the problem found. \\
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Source}:] Every structured value shall include the passage of extracted text it was taken from, so a reviewer can check it without opening the original document.
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Missing}:] The model shall only use information present in the extracted text, and shall report a value as missing, including a date that is marked TBD or is too vague to resolve, instead of inventing one (\rref{FR_Extract_Flag}).
 \item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Review}:] No model output shall be used for the calendar, conflict detection, or compliance results until a user has confirmed it (\rref{FR_Extract_Review}).
+\item[AIR\refstepcounter{airnum}\theairnum \label{AIR_Output_Validation}:] The
+system shall validate any any model output as defined below prior to it being
+shown for review or stored. The outline text shall be given to the model only as
+data to be organized, and the system shall never act on any part of the model
+output as an instruction; it shall only read the fields defined in
+\airref{AIR_Output_Struct}. Specifically:
+  \begin{enumerate}
+  \item[(a)] An output that does not have the structure in \airref{AIR_Output_Struct} shall be rejected as a whole: no value from it shall be stored or shown, and the outline shall be flagged for manual entry with an error message.
+  \item[(b)] A value that fails validation shall be treated as missing and flagged (\rref{FR_Extract_Flag}, \airref{AIR_Output_Missing}), and shall not be stored as an extracted value.
+  \item[(c)] Validation shall not reject a value because it breaks a policy rule, such as weights that do not total \textit{WEIGHT\_\allowbreak{}TOTAL}. Such values are passed on to the compliance check (\rref{FR_Comp_Policy}).
+  \item[(d)] A language model shall only be used if, for every outline in the prompt-injection test set, the values that pass validation are the same whether or not instructions have been inserted into the outline text.
+  \end{enumerate}
 \end{itemize}
+
+% \paragraph{Formal definition of output validation (\airref{AIR_Output_Validation}).}
+% Let $T$ be the text that the PDF extraction library produced from an outline,
+% and let $N(s)$ be the string $s$ with every run of whitespace replaced by a
+% single space. For strings $p$ and $q$, $p \sqsubseteq q$ means that $p$ occurs
+% as a contiguous substring of $q$. Let $\bot$ denote a missing value, let
+% $\mathit{Types}$ be the set of assessment types in the data dictionary
+% (Section~\ref{sec_DataReqs}), let $D_{\mathit{term}}$ be the set of dates from
+% the first day of classes to the last day of the final examination period of the
+% outline's term in the academic calendar, and let $\mathit{GA} = \{1, 2, \ldots,
+% 12\}$ be the CEAB graduate attribute numbers~\citep{CEAB2025}. Let $O$ be the
+% model output for $T$, and let $\mathit{wf}(O)$ hold exactly when $O$ has the
+% structure in \airref{AIR_Output_Struct}.
+
+% An assessment $a$ in $O$ and a learning outcome $\ell$ in $O$ are valid when
+% \begin{align*}
+% \mathit{valid}(a) &\equiv N(a.\mathit{source\_text}) \sqsubseteq N(T)
+%   \;\wedge\; a.\mathit{type} \in \mathit{Types}
+%   \;\wedge\; \big(a.\mathit{due\_date} = \bot \,\vee\, a.\mathit{due\_date} \in D_{\mathit{term}}\big)\\
+%   &\phantom{\equiv}\;\wedge\; \big(a.\mathit{weight\_percent} = \bot \,\vee\, 0 \le a.\mathit{weight\_percent} \le 100\big)\\
+% \mathit{valid}(\ell) &\equiv N(\ell.\mathit{source\_text}) \sqsubseteq N(T)
+%   \;\wedge\; \ell.\mathit{ga\_numbers} \subseteq \mathit{GA}
+% \end{align*}
+% The values that the system may store and show for review are then
+% \[
+% \mathit{accepted}(O) =
+% \begin{cases}
+% \emptyset & \text{if } \neg\,\mathit{wf}(O) \quad \text{(case (a))}\\
+% \{\, x \in O \mid \mathit{valid}(x) \,\} & \text{if } \mathit{wf}(O)
+% \end{cases}
+% \]
+% and every $x \in O$ with $\neg\,\mathit{valid}(x)$ is reported as missing
+% (case (b)). Weight totals and other policy rules do not appear in
+% $\mathit{valid}$ (case (c)). For case (d), let $I$ be the injection test set of
+% outline texts, let $\mathit{inj}(T, k)$ be $T$ with the $k$-th test instruction
+% inserted, and let $O_T$ be the model output for $T$. A model may be used only if
+% \[
+% \forall T \in I,\ \forall k:\quad \mathit{accepted}(O_{\mathit{inj}(T,k)}) = \mathit{accepted}(O_T).
+% \]
 
 \subsection{Evaluation Metrics}
 
-\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team as the reference. Extraction metrics are measured on the final structured output, so they cover the PDF library and the model together.
+\noindent Each metric shall be measured on a set of sample course outlines, using an answer key prepared manually by the team and then double-checked against the outlines as the reference. Extraction metrics are measured on the final structured output, so they cover the PDF library and the model together.
 
 {\small
 \renewcommand{\arraystretch}{1.2}
@@ -1310,6 +1365,7 @@ message (String): description of the problem found. \\
 \caption{Evaluation Metrics} \label{tab:ai-metrics}
 \endlastfoot
 Extraction accuracy & Share of assessment dates and weights that are correct in the final structured output (\rref{FR_Extract_Assessment}) & At least 95\% \\ \addlinespace
+Learning outcome accuracy & Share of learning outcomes whose text and graduate attributes are correct in the final structured output (\rref{FR_Extract_LO}) & At least 95\% \\ \addlinespace
 Missing-field detection & Share of missing or TBD fields that are flagged (\rref{FR_Extract_Flag}) & At least 95\% \\ \addlinespace
 Compliance issue detection & Share of known compliance issues that are found (\rref{FR_Comp_Policy}, \rref{FR_Comp_Grad}) & At least 95\% \\
 \end{longtable}
@@ -1335,7 +1391,8 @@ Compliance issue detection & Share of known compliance issues that are found (\r
 \caption{Expected Failure Modes} \label{tab:ai-limitations}
 \endlastfoot
 PDF library returns messed up or incomplete text (tables, multiple columns, scanned pages) & Dates, weights, or sections are missing or out of order before the model sees them & Flag outlines with little or no extracted text for manual entry; test on outlines with a range of layouts \\ \addlinespace
-Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage; require review \\ \addlinespace
+Model changes or adds values while cleaning up the text & A date or weight that differs from, or appears nowhere in, the outline & Show the source text; reject values with no source passage (\airref{AIR_Output_Validation}); require review \\ \addlinespace
+Instructions placed in outline text (prompt injection) & Values are changed, dropped, or invented as the planted text asks & Give outline text to the model only as data; validate every output and never act on it as an instruction; test each model with injected outlines before use (\airref{AIR_Output_Validation}); require review \\ \addlinespace
 Ambiguous dates, such as ``week of Oct 20'' or ``TBD'' & A date cannot be resolved without a person & Report the date as missing and never guess \\ \addlinespace
 Reviewer over-trusts the output & Wrong values are confirmed without being checked & Show the source beside each value; confirm explicitly, never by default \\ \addlinespace
 Courses missing from the master sheet (technical electives, mechatronics, computer science) & Attribute comparison is not possible & Tell the user the course was not checked, rather than showing no findings \\ \addlinespace
@@ -1433,7 +1490,7 @@ Validation Plan.
 \toprule
 \textbf{Likely Change} & \textbf{Affected Requirements and Assumptions} \\
 \midrule
-\lcref{LC_LLMHosting} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Suggest_Generation}, \nfrref{NFR_Performance}, \nfrref{NFR_Security}, \drref{DR_Hosting}, \airref{AIR_Input_Privacy}, \asref{A_PublicOutlines} \\
+\lcref{LC_LLMHosting} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Suggest_Generation}, \nfrref{NFR_Performance}, \nfrref{NFR_Security}, \drref{DR_Hosting}, \airref{AIR_Input_Privacy}, \airref{AIR_Output_Validation}, \asref{A_PublicOutlines} \\
 \lcref{LC_OutlineFormat} & \rref{FR_Intake_Data}, \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Extract_Flag}, \nfrref{NFR_Performance}, \airref{AIR_Input_Text} \\
 \lcref{LC_PolicyRules} & \rref{FR_Comp_Policy}, \rref{FR_Work_Policy} \\
 \lcref{LC_AccreditationCriteria} & \srref{SR-CAS-04}, \rref{FR_Extract_LO}, \rref{FR_Comp_Grad}, \asref{A_MasterSheet} \\
@@ -1446,7 +1503,7 @@ Validation Plan.
 \lcref{LC_ExportFormat} & \rref{FR_Export_CSV} \\
 \lcref{LC_Authentication} & \srref{SR-REC-05}, \rref{FR_Access_Login}, \rref{FR_Access_Timeout}, \nfrref{NFR_Security} \\
 \lcref{LC_Mosaic} & \rref{FR_Work_Cluster}, \asref{A_CourseCode}, \asref{A_Electives} \\
-\lcref{LC_ScopeExpansion} & \srref{SR-CAS-01}, \rref{FR_Calendar}, \rref{FR_Access_Roles}, \asref{A_CourseCode} \\
+\lcref{LC_ScopeExpansion} & \srref{SR-CAS-01}, \rref{FR_Calendar}, \rref{FR_Access_Roles}, \asref{A_CourseCode}, \asref{A_CASCoursesOnly} \\
 \bottomrule
 \end{tabular}
 \caption{Traceability Between Likely Changes and Requirements}
@@ -1467,6 +1524,7 @@ Validation Plan.
 \airref{AIR_Output_Source} & \rref{FR_Extract_Review} \\
 \airref{AIR_Output_Missing} & \rref{FR_Extract_Flag} \\
 \airref{AIR_Output_Review} & \rref{FR_Extract_Review} \\
+\airref{AIR_Output_Validation} & \rref{FR_Extract_Assessment}, \rref{FR_Extract_LO}, \rref{FR_Extract_Flag}, \rref{FR_Comp_Policy}, \nfrref{NFR_Security} \\
 \drref{DR_Confidentiality} & \rref{FR_Access_Roles} \\
 \drref{DR_Hosting} & \airref{AIR_Input_Privacy}, \nfrref{NFR_Security} \\
 \drref{DR_Access} & \rref{FR_Access_Roles} \\
@@ -1554,6 +1612,15 @@ therefore belong to cohorts in different years.
   master course sheet used by \rref{FR_Comp_Grad} is supplied and maintained
   by the CAS department. The system does not decide which graduate attributes
   a course should cover.
+
+\item[A\refstepcounter{asnum}\theasnum \label{A_CASCoursesOnly}:] \textbf{Only
+  CAS courses are modelled.} Cohorts contain only courses offered by CAS.
+  Required courses that CAS students take in other departments, such as MATH,
+  STATS and ENGINEER courses, and first-year general engineering courses are
+  not included, because CAS does not receive or control their outlines and
+  cannot ask their instructors to move a date. The workload shown for a cohort
+  is therefore a lower bound on the workload its students face. Other
+  departments may be included later (\lcref{LC_ScopeExpansion}).
 
 \end{itemize}
 
@@ -1678,17 +1745,19 @@ periods the system checks.
 \subsection{Nonfunctional Requirements}
 
 \begin{itemize}
-\item \textbf{Accuracy targets} (\nfrref{NFR_Accuracy}). The Problem
-  Statement and Goals~\citep{TeamBVSH2026PS} set extraction accuracy, missing-field recall and
+\item \textbf{Accuracy targets} (\nfrref{NFR_Accuracy}). The first version
+  of the Problem Statement and Goals~\citep{TeamBVSH2026PS} set extraction accuracy, missing-field recall and
   compliance detection at 90\%. The team raised
   \textit{EXTRACT\_\allowbreak{}ACCURACY}, \textit{FLAG\_\allowbreak{}RECALL}
   and \textit{COMPLIANCE\_\allowbreak{}RECALL} to 95\% while writing this
-  document. Every extracted value is confirmed by a person before use
+  document, and added \textit{LO\_\allowbreak{}ACCURACY} at the same level
+  because the graduate attribute check (\rref{FR_Comp_Grad}) depends on the
+  extracted learning outcomes. Every extracted value is confirmed by a person before use
   (\rref{FR_Extract_Review}), so the system is only useful if review is mostly
   confirmation rather than correction. At 90\%, an administrator would correct
   roughly one value in ten, which would leave much of the manual effort the
   system is meant to remove. The targets are below 100\% because review remains
-  the safeguard. The Problem Statement and Goals~\citep{TeamBVSH2026PS} will be updated to match.
+  the safeguard. The Problem Statement and Goals~\citep{TeamBVSH2026PS} has been updated to match.
 
 \item \textbf{Maintainability is measured against likely changes}
   (\nfrref{NFR_Maintainability}). Section~\ref{sec_LikelyChanges} lists the
@@ -1756,6 +1825,21 @@ periods the system checks.
   model are less certain than ones listed in the outline, so they are reviewed
   like every other extracted value (\rref{FR_Extract_Review},
   \airref{AIR_Output_Review}).
+
+\item \textbf{Model output is validated by the system rather than trusted}
+  (\airref{AIR_Output_Validation}). Course outlines are written by many
+  instructors and their text is sent to the model, so text inside an outline
+  could be followed as an instruction (prompt injection, hazard H4-5 in the
+  Hazard Analysis~\citep{TeamBVSH2026HA}). In the model-selection spikes,
+  neither small model tested so far reliably ignored instructions inserted into
+  outline text, so the safeguard cannot rely on the prompt alone. Checking the
+  structure and the source passages in code rejects malformed output and values
+  that do not appear in the outline. It cannot detect a changed value that still
+  cites real outline text, which is why every value is still confirmed by a
+  person (\airref{AIR_Output_Review}) and why a model must pass the injection
+  test before it is used. Policy violations are deliberately not rejected by
+  validation: the system exists to report them (\rref{FR_Comp_Policy}), and
+  rejecting them would hide exactly the problems it should find.
 \end{itemize}
 
 \subsection{Numeric Values}
@@ -1965,11 +2049,12 @@ supervisors.
 \midrule
 \multicolumn{4}{l}{\textbf{Success targets}}\\
 \textit{CALENDAR\_COVERAGE} & 95\% & Share of assessment dates in the test outlines that appear in the calendar. & Goal 1\\
-\textit{EXTRACT\_ACCURACY} & 95\% & Share of assessment dates and weights extracted correctly (\nfrref{NFR_Accuracy}). & Proposed\\
-\textit{FLAG\_RECALL} & 95\% & Share of known missing or incomplete fields that are flagged (\nfrref{NFR_Accuracy}). & Proposed\\
+\textit{EXTRACT\_ACCURACY} & 95\% & Share of assessment dates and weights extracted correctly (\nfrref{NFR_Accuracy}). & Goal 2\\
+\textit{LO\_ACCURACY} & 95\% & Share of learning outcomes, with their graduate attributes, extracted correctly (\nfrref{NFR_Accuracy}). & Goal 2\\
+\textit{FLAG\_RECALL} & 95\% & Share of known missing or incomplete fields that are flagged (\nfrref{NFR_Accuracy}). & Goal 2\\
 \textit{CONFLICT\_RECALL} & 90\% & Share of known scheduling conflicts identified. & Goal 3\\
 \textit{SUGGEST\_SUCCESS} & 90\% & Share of conflict cases for which at least \textit{MIN\_ALTERNATIVES} feasible dates are offered. & Goal 4\\
-\textit{COMPLIANCE\_RECALL} & 95\% & Share of known policy and CEAB compliance issues identified (\nfrref{NFR_Accuracy}). & Proposed\\
+\textit{COMPLIANCE\_RECALL} & 95\% & Share of known policy and CEAB compliance issues identified (\nfrref{NFR_Accuracy}). & Goal 5\\
 \midrule
 \multicolumn{4}{l}{\textbf{Nonfunctional targets}}\\
 \textit{TASK\_COMPLETION} & 80\% & Share of usability-test participants who complete each core task without assistance (\nfrref{NFR_Usability}). & Proposed\\
