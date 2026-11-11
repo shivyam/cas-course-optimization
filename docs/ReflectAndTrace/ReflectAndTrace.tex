@@ -3,6 +3,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage[letterpaper,left=0.8in,top=1.0in,right=1.0in,bottom=1.0in]{geometry}
 
 \title{Reflection and Traceability Report on \progname}
@@ -26,50 +27,50 @@
 
 \newpage
 
-\plt{Reflection is an important component of getting the full benefits from a
-learning experience.  Besides the intrinsic benefits of reflection, this
-document will be used to help the TAs grade how well your team responded to
-feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
-important part of the reflection exercise.  In addition, several CEAB (Canadian
-Engineering Accreditation Board) Learning Outcomes (LOs) will be assessed based
-on your reflections.}
+% \plt{Reflection is an important component of getting the full benefits from a
+% learning experience.  Besides the intrinsic benefits of reflection, this
+% document will be used to help the TAs grade how well your team responded to
+% feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
+% important part of the reflection exercise.  In addition, several CEAB (Canadian
+% Engineering Accreditation Board) Learning Outcomes (LOs) will be assessed based
+% on your reflections.}
 
 \section{Changes in Response to Feedback}
 
-\plt{Summarize the changes made over the course of the project in response to
-feedback from TAs, the instructor, teammates, other teams, the project
-supervisor (if present), and from user testers.}
+% \plt{Summarize the changes made over the course of the project in response to
+% feedback from TAs, the instructor, teammates, other teams, the project
+% supervisor (if present), and from user testers.}
 
-\plt{For those teams with an external supervisor, please highlight how the feedback 
-from the supervisor shaped your project.  In particular, you should highlight the 
-supervisor's response to your Rev 0 demonstration to them.}
+% \plt{For those teams with an external supervisor, please highlight how the feedback 
+% from the supervisor shaped your project.  In particular, you should highlight the 
+% supervisor's response to your Rev 0 demonstration to them.}
 
-\plt{Version control can make the summary relatively easy, if you used issues
-and meaningful commits.  If your feedback is in an issue, and you responded in
-the issue tracker, you can point to the issue as part of explaining your
-changes.  If addressing the issue required changes to code or documentation, you
-can point to the specific commit that made the changes.  Although the links are
-helpful for the details, you should include a label for each item of feedback so
-that the reader has an idea of what each item is about without the need to click
-on everything to find out.}
+% \plt{Version control can make the summary relatively easy, if you used issues
+% and meaningful commits.  If your feedback is in an issue, and you responded in
+% the issue tracker, you can point to the issue as part of explaining your
+% changes.  If addressing the issue required changes to code or documentation, you
+% can point to the specific commit that made the changes.  Although the links are
+% helpful for the details, you should include a label for each item of feedback so
+% that the reader has an idea of what each item is about without the need to click
+% on everything to find out.}
 
-\plt{If you were not organized with your commits, traceability between feedback
-and commits will not be feasible to capture after the fact.  You will instead
-need to spend time writing down a summary of the changes made in response to
-each item of feedback.}
+% \plt{If you were not organized with your commits, traceability between feedback
+% and commits will not be feasible to capture after the fact.  You will instead
+% need to spend time writing down a summary of the changes made in response to
+% each item of feedback.}
 
-\plt{You should address EVERY item of feedback.  A table or itemized list is
-recommended.  You should record every item of feedback, along with the source of
-that feedback and the change you made in response to that feedback.  The
-response can be a change to your documentation, code, or development process.
-The response can also be the reason why no changes were made in response to the
-feedback.  To make this information manageable, you will record the feedback and
-response separately for each deliverable in the sections that follow.}
+% \plt{You should address EVERY item of feedback.  A table or itemized list is
+% recommended.  You should record every item of feedback, along with the source of
+% that feedback and the change you made in response to that feedback.  The
+% response can be a change to your documentation, code, or development process.
+% The response can also be the reason why no changes were made in response to the
+% feedback.  To make this information manageable, you will record the feedback and
+% response separately for each deliverable in the sections that follow.}
 
-\plt{If the feedback is general or incomplete, the TA (or instructor) will not
-be able to grade your response to feedback.  In that case your grade on this
-document, and likely the Revision 1 versions of the other documents will be
-low.} 
+% \plt{If the feedback is general or incomplete, the TA (or instructor) will not
+% be able to grade your response to feedback.  In that case your grade on this
+% document, and likely the Revision 1 versions of the other documents will be
+% low.} 
 
 \subsection{Problem Statement, Goals, and Development Plan} %------------------------------------------------------------------------
 
@@ -96,7 +97,57 @@ Peer & CEAB validation is not clearly demonstrated in the PoC & Added one repres
 \hline
 TA & The PoC plan is too ambitious and does not clearly prioritize its main risks & Made reliable data extraction and alternative scheduling dates the primary PoC focus, while limiting policy, CEAB, explanation, and other features to small demonstrations or follow-up work. & \href{https://github.com/shivyam/cas-course-optimization/issues/93}{IS\#93} \\
 \hline
-Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+Peer & The PoC integrates too many components (storage, calendar, conflict
+detection, alternative dates, LLM explanations, compliance checks) to evaluate
+the main risks before the demonstration & Narrowed the PoC in the Development
+Plan~\citep{TeamBVSH2026DP} to one outline going through the extraction
+pipeline: PDF upload, PyMuPDF text extraction, a local LLM returning
+schema-checked JSON, and a frontend table showing each value with its source
+passage. Listed the calendar, conflict detection, CP-SAT suggestions, policy and
+CEAB checks, LLM explanations, login and export as not part of the
+demonstration, and gave a fallback for each risk. This replaces the PoC scope
+described for
+\href{https://github.com/shivyam/cas-course-optimization/issues/34}{IS\#34},
+\href{https://github.com/shivyam/cas-course-optimization/issues/35}{IS\#35} and
+\href{https://github.com/shivyam/cas-course-optimization/issues/93}{IS\#93},
+since date suggestions became an extra after the meeting with the department. &
+\href{https://github.com/shivyam/cas-course-optimization/issues/36}{IS\#36}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+\hline
+TA & Expected Technology needs clearer justification beyond ``X tool/technology
+does Y'' (Eval Tools, LO13) & Rewrote the Expected Technology section of the
+Development Plan~\citep{TeamBVSH2026DP} so that each tool states how it is used,
+why it was chosen over the alternatives considered (for example, PyMuPDF over
+pdfplumber based on the model-selection spike results, Ollama because the model
+must run on CAS servers at no cost), and its limitations. Added the tools that
+were missing (PyMuPDF, Ollama, the candidate open-weight models, OR-Tools
+CP-SAT), and marked vLLM, CUDA, Transformers and PyTorch as conditional. & TA
+rubric feedback, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+\hline
+TA & Keep the quantified success criteria consistent with later documents such
+as the SRS & Raised the targets in Goals 2 and 5 of the Problem
+Statement~\citep{TeamBVSH2026PS} from 90\% to 95\% to match NFR1 and Appendix C
+of the SRS~\citep{TeamBVSH2026SRS}, added a 95\% target for learning outcomes
+(with their graduate attributes) to both documents, and changed ``Software
+Engineering'' to all CAS undergraduate programs in Goals 1 and 3 to match the
+SRS cohorts. &
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+\hline
+TA & The predefined outcomes and datasets lack validation; define the ground
+truth & Added a ``Test dataset and ground truth'' paragraph to the Goals: real
+and mock outlines, and an answer key built by the team that lists every expected
+value, missing field, conflict and compliance issue, double-checked against the
+outlines before it is used for scoring. &
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+\hline
+TA & Has thought been given to courses outside the department (e.g.\ math,
+statistics, engineering) that still affect the schedule? & Added a ``Courses
+covered'' paragraph to the Goals: required courses from other departments and
+first-year engineering courses are not modelled because CAS does not receive or
+control their outlines, so the workload shown is a lower bound. Added the
+matching assumption A8 to the SRS~\citep{TeamBVSH2026SRS}. &
+\href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+% \hline
+% Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
 \end{longtable}
 
@@ -127,12 +178,16 @@ Peer & Model changes could reduce extraction accuracy without a formal regressio
 \hline
 Peer & CSV export did not specify protection against spreadsheet formula interpretation & Updated the CSV export requirement to escape values beginning with formula characters. & \href{https://github.com/shivyam/cas-course-optimization/issues/85}{IS\#85} \\
 \hline
-TA & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+Peer & The SRS does not say how model outputs that fail validation or contain unexpected instructions are rejected (prompt injection) & Added AIR7 (output validation) to the SRS~\citep{TeamBVSH2026SRS}: outline text is given to the model only as data and output is never acted on as an instruction; malformed output is rejected and the outline flagged for manual entry; values without a matching source passage or out of range are treated as missing; policy violations are not rejected; a model is only used if its validated output is unchanged on the prompt-injection test set. Also added a prompt-injection row to Known Limitations, a definition of prompt injection, a rationale item, and AIR7 to the traceability tables. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
-Instructor & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+TA & Keep the success criteria consistent between the Problem Statement and the SRS; consider courses outside the department & Added the 95\% learning outcome accuracy target to the SRS~\citep{TeamBVSH2026SRS} (NFR1, Evaluation Metrics, \textit{LO\_ACCURACY} in Appendix C), changed the source of the accuracy constants to the goals in the Problem Statement~\citep{TeamBVSH2026PS}, updated the accuracy rationale, stated that the answer key is double-checked, and added assumption A8 (only CAS courses are modelled). & \href{https://github.com/shivyam/cas-course-optimization/issues/91}{IS\#91}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
 \hline
-Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
-\hline
+% TA & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+% \hline
+% Instructor & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+% \hline
+% Other & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
+% \hline
 \end{longtable}
 
 \subsubsection{Hazard Analysis}
@@ -156,14 +211,16 @@ Peer & CSV formula injection prevention was not included in the safety requireme
 \hline
 Peer & Model changes lacked a defined regression testing requirement & Added SSR\_ModelChangeTest to require accuracy testing and recording the model version before deployment. & \href{https://github.com/shivyam/cas-course-optimization/issues/84}{IS\#84} \\
 \hline
-TA & summary of feedback & summary of changes made & \href{link}{IS\#},
-\href{link}{PR\#}, ... \\
-\hline
-Instructor & summary of feedback & summary of changes made & \href{link}{IS\#},
-\href{link}{PR\#}, ... \\
-\hline
-Other & summary of feedback & summary of changes made & \href{link}{IS\#},
-\href{link}{PR\#}, ... \\
+Peer & The output validation actions for prompt injection (H4-5) are marked ``New'' but are not in the Safety and Security Requirements & Added SSR13 (SSR\_OutputValidation) to Table 5 of the Hazard Analysis~\citep{TeamBVSH2026HA} and linked it to AIR7 in the SRS~\citep{TeamBVSH2026SRS}; replaced ``New: output validation'' in row H4-5 with SSR13 and AIR7; added AIR7 to row H4-1; and listed AIR7 among the SRS safeguards in Section 6. This also responds, for H4-5, to the TA comment that ``New'' requirements should be added to Table 5. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+% \hline
+% TA & summary of feedback & summary of changes made & \href{link}{IS\#},
+% \href{link}{PR\#}, ... \\
+% \hline
+% Instructor & summary of feedback & summary of changes made & \href{link}{IS\#},
+% \href{link}{PR\#}, ... \\
+% \hline
+% Other & summary of feedback & summary of changes made & \href{link}{IS\#},
+% \href{link}{PR\#}, ... \\
 \hline
 \end{longtable}
 
@@ -241,6 +298,8 @@ Table~\ref{Tbl-VnVPlan} summarizes the feedback received from our peers, the TA,
 \hline
 \endhead
 
+Peer & A new output validation requirement (prompt injection) needs to be verified & Added system test ST\_OutputValidation to the VnV Plan~\citep{TeamBVSH2026VnVP} (injected instructions, malformed output, values without a source passage or out of range) and traced AIR7 and SSR13 to it in the traceability table. & \href{https://github.com/shivyam/cas-course-optimization/issues/82}{IS\#82}, \href{https://github.com/shivyam/cas-course-optimization/pull/140}{PR\#140} \\
+\hline
 Peer & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
 \hline
 TA & summary of feedback & summary of changes made & \href{link}{IS\#}, \href{link}{PR\#}, ... \\
@@ -351,5 +410,10 @@ to ensure equitable treatment of all stakeholders.}
 
 \plt{What skills/knowledge did you need to acquire for your capstone project
 that was outside the courses you took?}
+
+\newpage
+
+\bibliographystyle{../SRS-IEEE/IEEEtran}
+\bibliography{../../refs/References}
 
 \end{document}
