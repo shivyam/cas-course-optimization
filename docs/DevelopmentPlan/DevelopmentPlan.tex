@@ -4,6 +4,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{float}
+\usepackage[numbers,square,sort&compress]{natbib}
 
 \title{Development Plan\\\progname}
 
@@ -32,6 +33,10 @@ Meeting Plan, Team Communication Plan \\
 and Team Charter Appendices\\
 28 September 2026 & Vanessa Lai & Confidential Information, Team Member
 Roles, Workflow plan - use of CI/CD, Use of AI/LLMs\\
+10 November 2026 & Harmanpreet Singh Sagar & Narrowed the POC
+demonstration plan to the single-outline extraction pipeline (peer review
+\href{https://github.com/shivyam/cas-course-optimization/issues/36}{\#36}, TA feedback); justified the choices and limitations in Expected
+Technology (TA feedback)\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -209,7 +214,7 @@ Anindita Bornomala & Machine Learning, AI, Git, APIs, Fullstack, Software Requir
 
 
 
-\section{Workflow Plan}
+\section{Workflow Plan} \label{sec_WorkflowPlan}
 
 The team will use GitHub for version control, issue tracking, project planning,
 and code review. The \texttt{main} branch will contain stable,
@@ -329,7 +334,7 @@ Only the first 9 weeks of the project are shown in detail, as the remaining week
 The GitHub Project is available at:
 \href{https://github.com/shivyam/cas-course-optimization}{GitHub Project Link}.
 
-\section{Proof of Concept Demonstration Plan}
+\section{Proof of Concept Demonstration Plan} \label{sec_PoC}
 
 % What is the main risk, or risks, for the success of your project?  What will you
 % demonstrate during your proof of concept demonstration to convince yourself that
@@ -337,113 +342,198 @@ The GitHub Project is available at:
 
 The main risk for this project is extracting reliable information from course
 outlines. CAS course outlines do not follow one standard format. Different
-instructors use different layouts and file types, and some information may be
-missing or incomplete, such as ``Midterm Date: TBD''. Since most of the system
-depends on this information, including the shared calendar, conflict detection,
-scheduling suggestions, and compliance checking, the extracted data needs to be
-accurate. If assessment dates, weights, or learning outcomes are extracted
-incorrectly, the rest of the system will also produce unreliable results.
+instructors use different layouts, and some information may be missing or
+incomplete, such as ``Midterm Date: TBD''. Every other feature depends on this
+information, including the shared calendar, conflict detection, scheduling
+suggestions, and compliance checking. If assessment dates or weights are
+extracted incorrectly, the rest of the system will also produce unreliable
+results. For this reason, the proof of concept (PoC) is limited to the
+extraction pipeline for a single course outline.
 
 \bigskip
-Another major risk is turning the scheduling problem into something that can
-actually be solved. The team plans to use the CP-SAT solver from Google
-OR-Tools. The difficult part will be converting things such as assessment dates,
-student cohorts, exam periods, and policy restrictions into constraints that the
-solver can work with. 
+\noindent The PoC is designed to test the following risks:
+
+\begin{enumerate}
+  \item \textbf{Text extraction.} The PDF text extraction library may return
+  text that is out of order or incomplete, especially for tables and
+  multi-column layouts, so that a date or weight is attached to the wrong
+  assessment before the model sees it.
+  \item \textbf{Structured extraction by a local model.} The language model
+  must run on CAS servers, so it has to be a small open-weight model. Such a
+  model may not organize the text into correct structured data, may invent a
+  value that is not in the outline, or may follow an instruction written
+  inside the outline text (prompt injection).
+  \item \textbf{Traceability.} Every extracted value is confirmed by a person
+  before it is used. This review is only practical if each value comes with
+  the passage of the outline it was taken from, so that the reviewer does not
+  have to search the original document.
+\end{enumerate}
 
 \bigskip
-There are also a few smaller risks. LLM-generated explanations may not always be
-accurate, and the model may eventually need to be hosted on CAS servers instead
-of using an external API. In addition, McMaster's course outline policy and CEAB
-requirements are written for people to interpret, so the team will need to
-convert them into clear rules that the system can check automatically.
+\noindent The PoC demonstration will show one course outline going through the
+whole pipeline:
+
+\begin{enumerate}
+  \item A PDF course outline is uploaded through the web application.
+  \item The backend extracts the text from the PDF with PyMuPDF.
+  \item A locally hosted open-weight model, run through Ollama, receives the
+  extracted text and returns JSON in a fixed schema: the name, type, date (or
+  TBD), and weight of each assessment, the source passage for each assessment,
+  the learning outcomes, and a list of missing fields.
+  \item The backend checks that the JSON matches the schema and that each
+  source passage appears in the extracted text.
+  \item The frontend displays the assessments in a table, with the source
+  passage shown beside each value and missing or TBD values clearly flagged.
+\end{enumerate}
 
 \bigskip
-To test whether these risks are manageable, the proof of concept will use real
-course outlines from the 2025-2026 academic year. The team will focus on
-courses taken by one cohort, such as second-year Software Engineering students,
-so that realistic assessment conflicts can be identified. The system will
-extract assessment names, dates, weights, and learning outcomes from the
-outlines and store them in a database. Any missing or unclear information will
-be flagged instead of being ignored. The extracted results will be compared with
-a manually prepared answer key to measure accuracy. If fully automated
-extraction is not accurate enough, the team will use a semi-automated approach
-where the extracted information is pre-filled and then confirmed or corrected by
-a user.
+Before the demonstration, the pipeline will also be run on a small set of
+real course outlines and scored against the team's answer key, so that the
+extraction accuracy can be reported alongside the live example. One outline
+will also be run with an instruction inserted into its text, and the output
+will be compared with the normal run of the same outline to show how the
+pipeline behaves under prompt injection.
 
 \bigskip
-The extracted assessment data will then be shown in a simple calendar that can
-be filtered by course. The system will identify at least one week when students
-in the selected cohort have multiple assessments due close together. For one of
-these assessments, the solver will suggest alternative dates that reduce the
-workload while still following important constraints, such as avoiding the exam
-period, or changing lab due dates. If creating a complete constraint model
-becomes too complex for the proof of concept, the team will use a simpler
-scoring method that ranks possible dates based on student workload. This would
-still show that the system can provide useful scheduling suggestions.
+\noindent The following features are part of the project but are
+\textbf{not} part of the PoC demonstration:
+
+\begin{itemize}
+  \item Uploading a batch of outlines, persistent database storage, and the
+  review and confirmation workflow.
+  \item The shared calendar and workload or conflict detection. These only
+  display and count data that the pipeline produces, so they carry little
+  technical risk of their own.
+  \item Scheduling suggestions with the CP-SAT solver. After the October
+  meeting with the department, date suggestions became an extra feature rather
+  than a core one. Translating policies into solver constraints is still a
+  technical risk, and it will be evaluated with a reduced model after the PoC.
+  \item McMaster policy and CEAB graduate-attribute checking. These checks
+  are written as deterministic code that runs on the extracted data, so they
+  depend on the pipeline being reliable first.
+  \item LLM-generated explanations for date suggestions, login and user
+  roles, and export.
+\end{itemize}
 
 \bigskip
-Each suggested date will also include a short explanation generated by an LLM.
-For the proof of concept, the team plans to use a hosted LLM API. The
-explanation will only use information produced by the scheduling system, such as
-comparing how many assessments are scheduled in the original week versus the
-suggested week. This makes the explanation easier to check against the actual
-data. Only publicly available course outline information will be sent to the
-API. The LLM component will also be designed so that it can later be replaced by
-a model hosted on CAS servers without requiring major changes to the rest of the
-system.
+If the PoC does not address the risks as expected, the team will review which
+parts were unsuccessful, determine the reasons, and discuss next steps with
+our supervisors. The response depends on which risk was not met:
 
-\bigskip
-The proof of concept will also include a basic compliance checker. The sample
-course outlines will be checked against a small set of rules from McMaster's
-course outline policy, such as whether required sections are included and
-whether assessment weights add up to 100\%. Any missing or incorrect information
-will be listed for the user.
+\begin{itemize}
+  \item If text extraction fails on some layouts, the team will compare a
+  second extraction library on those outlines, and outlines that still produce
+  little or unusable text will be flagged for manual entry.
+  \item If the model's accuracy is too low, the team will compare other small
+  open-weight models and prompting strategies, which is already planned as a
+  series of model-selection spikes. If no model is accurate enough, the system
+  will move to a semi-automated approach where extracted values are pre-filled
+  and then confirmed or corrected by a user. The small models tested so far
+  do not reliably ignore instructions placed in outline text, so the system
+  cannot rely on the model alone: the backend validates every model output
+  before it is shown, and a person confirms every value.
+  \item If source passages are unreliable, values without a matching passage
+  will be treated as missing and entered by the reviewer.
+\end{itemize}
 
-\bigskip
-The user interface will be kept simple for the proof of concept. The goal at
-this stage is not to build the final product, but to show that the data
-pipeline, the optimization, and the explanation features work together. If the
-team can successfully extract course information, identify workload conflicts,
-suggest better dates, check basic policy requirements, and explain the
-suggestions, it will show that the main technical risks can be handled before
-moving on to the full system.
-
-\bigskip
-If the proof of concept does not address the main risks as expected, the team
-will use the results to identify what needs to be changed before moving forward.
-We will review which parts were unsuccessful, determine the reasons, and discuss
-possible next steps with our supervisors. Depending on the results, we may need
-to reduce the project scope, such as supporting fewer course outline formats,
-adding more manual confirmation for extracted data, or moving features like
-compliance checking and LLM-generated explanations to the stretch goals. The
-project plan and schedule would then be adjusted so that the team can focus on
-building a smaller, reliable system rather than trying to complete too many
-features that may not work well.
+\noindent In each case, the project plan and schedule would be adjusted, for
+example by supporting fewer outline layouts or moving features such as
+compliance checking to the stretch goals, so that the team can build a
+smaller, reliable system rather than many features that may not work well.
 
 \section{Expected Technology}
 
-This list outlines the technologies we currently expect to use for the project. These choices may change as development progresses.
+This section lists the technologies we expect to use and the reasons for each
+choice. Three constraints drive these choices: the language model must run on
+CAS servers with no outline data sent to an external service, the tools must be
+free, and the system will be handed over to CAS, so it should be easy to deploy
+and maintain. These choices may change as development progresses.
+
+\subsection{Course Outline Processing}
+
+This is the highest-risk part of the system (Section~\ref{sec_PoC}), so these tools were compared in model-selection spikes
+before being chosen.
 
 \begin{itemize}
-\item \textbf{React.js + TypeScript} $\rightarrow$ Used to build the frontend and provide type safety.
-\item \textbf{Vite} $\rightarrow$ Frontend build tool and development server for the React application.
-\item \textbf{Tailwind CSS} $\rightarrow$ CSS framework for styling the frontend application.
-\item \textbf{Python + FastAPI} $\rightarrow$ Used to build the backend REST APIs and application logic.
-\item \textbf{MongoDB} $\rightarrow$ Database for storing course information, assessments, learning objectives, and CEAB-related information.
-\item \textbf{Ruff} $\rightarrow$ Python linter and formatter following PEP 8 conventions.
-\item \textbf{ESLint + Prettier} $\rightarrow$ Tools for identifying issues and maintaining consistent formatting in the frontend.
-\item \textbf{Pytest} $\rightarrow$ Testing framework for backend unit and integration tests.
-\item \textbf{Vitest/Jest + React Testing Library} $\rightarrow$ Tools for testing React components and frontend functionality.
-\item \textbf{GitHub Actions} $\rightarrow$ CI tool for automatically running tests, linting, formatting, and coverage checks.
-\item \textbf{Git + GitHub} $\rightarrow$ Version control and collaborative code management.
-\item \textbf{GitHub Projects} $\rightarrow$ Kanban board for organizing and tracking project tasks.
-\item \textbf{Visual Studio Code} $\rightarrow$ IDE for development.
-\item \textbf{Docker} $\rightarrow$ Used to containerize application components and maintain consistent development environments.
-\item \textbf{Hugging Face Transformers} $\rightarrow$ Library for loading and running pretrained language models for extracting assessment dates, learning objectives, and other information from course outlines.
-\item \textbf{PyTorch} $\rightarrow$ Deep learning framework used to run LLM inference and support potential model fine-tuning.
-\item \textbf{vLLM} $\rightarrow$ LLM inference and serving framework for hosting pretrained models on school servers and exposing them through an API.
-\item \textbf{CUDA} $\rightarrow$ GPU computing platform used to accelerate LLM inference on NVIDIA GPUs.
+\item \textbf{PyMuPDF (1.27.2.2)} extracts the text from each PDF outline. In
+the first spike, pdfplumber mixed up the columns of schedule tables and lost
+the spaces between words, while PyMuPDF kept table cells in order. It cannot
+read scanned pages, so outlines with little extracted text are flagged for
+manual entry. The version is pinned so every model is tested on the same text.
+
+\item \textbf{Ollama} runs the open-weight model locally and exposes it to the
+backend through an HTTP API. It meets the requirement that the model runs on
+CAS servers at no cost, lets the team switch models by changing one name, and
+can restrict the model's output to a JSON schema. On a CPU it took several
+minutes per outline in the spikes, so it sits behind a replaceable interface.
+
+\item \textbf{Small open-weight models} (Gemma 4 E2B and Llama 3.2 3B so far,
+with Qwen next) turn the extracted text into structured data, because models of
+this size can run on CAS hardware. Each is scored against the team's answer key
+and a prompt-injection test. They are less accurate than large hosted models,
+and none tested so far reliably ignores instructions in outline text, so the
+backend validates every output and a person confirms every value (AIR6 and AIR7 in the
+SRS~\citep{TeamBVSH2026SRS}).
+
+\item \textbf{vLLM and CUDA} would replace Ollama if CAS provides an NVIDIA
+GPU, since vLLM serves many requests at once more efficiently. They will only
+be used once the server hardware is known.
+
+\item \textbf{Hugging Face Transformers and PyTorch} would only be used if the
+chosen model needs fine-tuning on CAS outlines. The spikes so far use the
+models without fine-tuning.
+
+\item \textbf{Google OR-Tools (CP-SAT)} will generate alternative assessment
+dates, now an extra feature. It is free, has a Python API, and fits the
+problem: dates are whole numbers of days, restricted periods are excluded
+values, and it can return several feasible solutions. A simple scoring method
+was considered but would not guarantee that every policy is respected. Each
+policy still has to be written as a constraint by hand.
+\end{itemize}
+
+\subsection{Application}
+
+\begin{itemize}
+\item \textbf{Python and FastAPI} provide the backend REST API. The extraction,
+model, and solver libraries are all Python, so the backend uses one language,
+and FastAPI's typed models can also check the model's JSON against the expected
+schema. Python is slower than compiled languages, but the time per outline is
+dominated by the model.
+
+\item \textbf{React, TypeScript, Vite, and Tailwind CSS} provide the frontend.
+The team already knows React, TypeScript catches mismatches with the backend's
+data at compile time, Vite gives a fast development server, and Tailwind makes
+it easy to apply the McMaster colour scheme.
+
+\item \textbf{MongoDB} will store courses, outlines, assessments, learning
+outcomes, and their source passages. The model's output is already JSON and its
+structure is still changing, so a document database avoids a migration for
+each new field. Links such as cross-listed courses and the audit trail must be
+kept by the application; PostgreSQL with JSON columns is the alternative if
+that proves hard, and the choice will be confirmed when the database is
+connected.
+
+\item \textbf{Docker} packages the backend, frontend, database, and model
+server, giving every developer the same environment and making it simple to
+hand the system to CAS IT.
+\end{itemize}
+
+\subsection{Code Quality, Testing, and Project Management}
+
+\begin{itemize}
+\item \textbf{Ruff} (Python) and \textbf{ESLint with Prettier} (TypeScript)
+lint and format the code in CI, so style is not debated in code review
+(Section~\ref{sec_CodingStandard}).
+\item \textbf{Pytest} tests the backend and \textbf{Vitest with React Testing
+Library} tests the frontend; Vitest was chosen over Jest because it shares
+Vite's configuration. Extraction accuracy is measured separately against the
+answer key.
+\item \textbf{GitHub Actions} runs the linters and tests on every pull request
+and builds the documentation PDFs, at no cost and next to the code.
+\item \textbf{Git, GitHub, and GitHub Projects} are used for version control,
+issues, and the Kanban board (Section~\ref{sec_WorkflowPlan}).
+\item \textbf{Visual Studio Code} is the shared editor; its Ruff, ESLint, and
+Prettier extensions apply the same rules as CI while code is written.
 \end{itemize}
 
 
@@ -469,7 +559,7 @@ will be validated through CI/CD pipelines using automated builds, linting, and
 unit, integration, and regression testing.  Dependencies, configuration
 changes, and potential security issues will be reviewed carefully.
 
-\section{Coding Standard}
+\section{Coding Standard} \label{sec_CodingStandard}
 
 The project will follow the following established coding standards to maintain consistency, readability, and maintainability across the codebase:
 
@@ -488,6 +578,11 @@ The project will follow the following established coding standards to maintain c
 \end{itemize}
 
 \newpage{}
+
+\newpage{}
+
+\bibliographystyle{../SRS-IEEE/IEEEtran}
+\bibliography{../../refs/References}
 
 \section{Appendix --- Generative AI Use Disclosure}
 

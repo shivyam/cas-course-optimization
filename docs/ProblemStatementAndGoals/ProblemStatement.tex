@@ -3,6 +3,7 @@
 \usepackage{comment}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{comment}
 
 \setlength{\emergencystretch}{1em}
@@ -27,6 +28,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 September 28, 2026 & Shivya, Anindita, Harmanpreet, Vanessa& Initial version\\
+November 10, 2026 & Harmanpreet & Aligned goal targets and course scope with the SRS, defined the test dataset and ground truth, and stated how courses outside CAS are handled (TA review \href{https://github.com/shivyam/cas-course-optimization/issues/91}{\#91})\\
 % Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
@@ -107,8 +109,8 @@ and students continue to suffer from congested work deadlines and midterm dates.
 \begin{enumerate}
     % cspell:ignore CEAB
     \item \textbf{Shared Academic Calendar:} The system will provide a centralized, calendar-like 
-    interface displaying midterm dates and assignment deadlines across all undergraduate Software 
-    Engineering courses. Professors and administrators will be able to filter the calendar by 
+    interface displaying midterm dates and assignment deadlines across all undergraduate CAS 
+    courses. Professors and administrators will be able to filter the calendar by 
     course and academic year to view relevant deadlines and identify potential scheduling conflicts.
 
     \item \textbf{CEAB Compliance Notifications:} The system will analyze
@@ -176,15 +178,15 @@ The project goals include:
 \begin{enumerate}
     \item \textbf{Centralized Assessment Calendar}
 
-    Develop a shared calendar that allows professors and CAS administrators to view midterm and assignment deadlines across all undergraduate Software Engineering courses, with filters for course, year, and program. Success will be measured by successfully displaying at least 95\% of assessment dates from the course outlines in the test dataset and correctly filtering assessments by course and year.
+    Develop a shared calendar that allows professors and CAS administrators to view midterm and assignment deadlines across all undergraduate CAS courses (Software Engineering, Computer Science, and Mechatronics), with filters for course, year, and program. Success will be measured by successfully displaying at least 95\% of assessment dates from the course outlines in the test dataset and correctly filtering assessments by course and year.
 
     \item \textbf{Automated Course Outline Data Extraction}
 
-    Automatically extract assessment dates, weights, and learning outcomes from course outlines and store them in a centralized CAS database for administrators to review, correct, and export. The system will flag missing, unclear, or incomplete information for human verification. Success will be measured by achieving at least 90\% extraction accuracy for assessment dates, weights, and learning outcomes, and correctly flagging at least 90\% of predefined missing or incomplete fields across these data types in the test dataset.
+    Automatically extract assessment dates, weights, and learning outcomes from course outlines and store them in a centralized CAS database for administrators to review, correct, and export. The system will flag missing, unclear, or incomplete information for human verification. Success will be measured by achieving at least 95\% extraction accuracy for each of assessment dates, assessment weights, and learning outcomes (including the graduate attributes each outcome addresses), and correctly flagging at least 95\% of predefined missing or incomplete fields across these data types in the test dataset. The targets are below 100\% because a person confirms every extracted value before it is used, but they are high enough that this review is mostly confirmation rather than correction.
 
     \item \textbf{Assessment Workload and Conflict Detection}
 
-    Identify weeks with high concentrations of assessments for students in the same academic year and program (undergraduate Software Engineering). Workload clustering will be evaluated based on assessment frequency, timing, type, and weighting. Scheduling conflicts will include multiple assessments scheduled on the same day for the same student cohort, assessments during restricted examination periods, and violations of relevant scheduling policies. Success will be measured by correctly identifying at least 90\% of predefined scheduling conflicts in a test dataset and associating all identified conflicts with the correct student cohort.
+    Identify weeks with high concentrations of assessments for students in the same academic year and program (undergraduate Software Engineering, Computer Science, or Mechatronics). Workload clustering will be evaluated based on assessment frequency, timing, type, and weighting. Scheduling conflicts will include multiple assessments scheduled on the same day for the same student cohort, assessments during restricted examination periods, and violations of relevant scheduling policies. Success will be measured by correctly identifying at least 90\% of predefined scheduling conflicts in a test dataset and associating all identified conflicts with the correct student cohort.
 
     \item \textbf{Scheduling Recommendations}
     
@@ -192,8 +194,30 @@ The project goals include:
 
     \item \textbf{Automated Accreditation and Policy Compliance Checking}
 
-    Evaluate course outlines against McMaster's course outline policies and applicable CEAB accreditation requirements, identifying missing information and potential compliance gaps. Notify professors and administrators of issues requiring attention. Success will be measured by correctly identifying at least 90\% of predefined compliance issues in a test dataset and providing an actionable notification for each detected issue.
+    Evaluate course outlines against McMaster's course outline policies and applicable CEAB accreditation requirements, identifying missing information and potential compliance gaps. Notify professors and administrators of issues requiring attention. Success will be measured by correctly identifying at least 95\% of predefined compliance issues in a test dataset and providing an actionable notification for each detected issue.
 \end{enumerate}
+
+\noindent\textbf{Courses covered.} The system covers courses offered by CAS.
+Required courses that CAS students take in other departments, such as MATH,
+STATS, and ENGINEER courses, and first-year general engineering courses are not
+included. CAS does not receive or control the outlines for these courses and
+cannot ask their instructors to change a date. As a result, the workload the
+system shows for a cohort includes only CAS assessments, so it is a lower bound
+on the workload students actually face. Other departments could be added later
+if their outlines are made available.
+
+\bigskip
+\noindent\textbf{Test dataset and ground truth.} The success measures above
+are calculated on a test dataset of real CAS course outlines from the 2025--2026
+and 2026--2027 academic years, together with mock outlines in which known
+problems, such as a midterm marked TBD or weights that do not total 100\%, have
+been planted deliberately. The ground truth is an answer key built by the team.
+For each outline, it lists every assessment with its date and weight, every
+learning outcome with its graduate attributes, every missing or incomplete
+field, and every scheduling conflict and compliance issue that the outline
+contains. Each entry is then double-checked against the outline before the key
+is used for scoring. The full procedure is described in the Verification and
+Validation Plan~\citep{TeamBVSH2026VnVP}.
 
 \section{Stretch Goals}
 
@@ -249,6 +273,11 @@ throughout the year and support end-user adoption:
     exporting database records, and reviewing automated policy compliance flags and scheduling recommendations.
 \end{enumerate}
 
+
+\newpage{}
+
+\bibliographystyle{../SRS-IEEE/IEEEtran}
+\bibliography{../../refs/References}
 
 \newpage{}
 
