@@ -1,41 +1,51 @@
 # PDF highlighting PoC
 
-Proof of concept: given a course-outline PDF (and optional extraction JSON), type the text you want to flag and write a new PDF with native highlight annotations via **PyMuPDF** (`fitz`).
+Flag wrong/important text on a course outline PDF from a CLI. Highlights
+accumulate on **one** working file:
+
+`<source>_flags.pdf`
 
 ## Setup
 
-Use the backend venv (already has PyMuPDF) or a local one:
-
 ```powershell
 cd src/spikes/pdf-highlighting
-# option A: backend env
 ..\..\backend\.venv\Scripts\Activate.ps1
-
-# option B: local env
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install pymupdf==1.27.2.2
 ```
 
 ## Run
 
-Prompt for the text to highlight:
+Close any old `highlight_poc.py` session first, then:
 
 ```powershell
-python highlight_poc.py
+python highlight_poc.py --reset --open
 ```
 
-Or pass it on the command line:
+View **`COMPSCI2C03-VincentMaccio_Fall2026_flags.pdf` only**.
 
-```powershell
-python highlight_poc.py --text "September 25"
-python highlight_poc.py -t "Vincent Maccio" --page 1
+```text
+flag> Teaching Assistants
+flag> TBD
+flag> /path
+flag> /quit
 ```
 
-List `source_text` values from the extraction JSON (handy copy/paste targets):
+If the file is locked, close that PDF tab and retry — the script will not create
+`_v1` / `_highlighted` copies anymore.
 
-```powershell
-python highlight_poc.py --list-json
-```
+### Commands
 
-Output defaults to `COMPSCI2C03-VincentMaccio_Fall2026_highlighted.pdf` in this folder.
+| Command | Meaning |
+|---|---|
+| `<text>` | Highlight (accumulates, case-insensitive) |
+| `/open` | Open `*_flags.pdf` |
+| `/path` | Print working path |
+| `/list` | Session flags |
+| `/json` | Extraction `source_text` values |
+| `/reset` | Clear highlights |
+| `/quit` | Exit |
+
+## Files kept in repo
+
+- `COMPSCI2C03-VincentMaccio_Fall2026.pdf` — source outline
+- `COMPSCI_2C03.json` — extraction fixture
+- `highlight_poc.py`, `README.md`
