@@ -10,6 +10,7 @@
 #        [--inject "ignore alter disguised"]  runs each variant instead of a normal run
 #        [--outlines-dir PATH]
 #        [--label NAME]                       used in the log file name
+#        [--native-think on|off]              model's built-in reasoning (Qwen3); default: not sent
 #
 # Fixed for every run so models compare fairly: PyMuPDF text (Shivya's extraction),
 # --postprocess --num-ctx 16384 --key-dir keys
@@ -37,6 +38,7 @@ OUTLINE_SET="all"
 RUNS=1
 INJECT=""
 LABEL="run"
+NATIVE_THINK=""
 OUTLINES_DIR_ARG=()   # empty unless --outlines-dir is given
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -46,6 +48,7 @@ while [ $# -gt 0 ]; do
     --runs)         RUNS="$2"; shift 2 ;;
     --inject)       INJECT="$2"; shift 2 ;;
     --label)        LABEL="$2"; shift 2 ;;
+    --native-think) NATIVE_THINK="$2"; shift 2 ;;
     --outlines-dir) OUTLINES_DIR_ARG=(--outlines-dir "$2"); shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -54,6 +57,10 @@ done
 if [ -z "$MODEL" ]; then
   echo "ERROR: --model is required, for example --model llama3.2:3b"; exit 1
 fi
+case "$NATIVE_THINK" in
+  ""|on|off) ;;
+  *) echo "ERROR: --native-think must be on or off"; exit 1 ;;
+esac
 
 # ---------------------------------------------------------------------------
 # Which outlines to run
@@ -85,6 +92,8 @@ done
 # ---------------------------------------------------------------------------
 # Folder-safe model name, same rule as model_slug() in spike_llm.py (llama3.2:3b -> llama3.2-3b)
 SLUG=$(echo "$MODEL" | sed 's/[^A-Za-z0-9._-]/-/g')
+# With --native-think the results get their own folder (same rule as spike_llm.py)
+[ -n "$NATIVE_THINK" ] && SLUG="${SLUG}_think-${NATIVE_THINK}"
 OUT_DIR="results/$SLUG"
 mkdir -p "$OUT_DIR/logs"
 STAMP=$(date +%Y%m%d-%H%M%S)
@@ -93,6 +102,7 @@ LOG="$OUT_DIR/logs/${LABEL}_${STAMP}.log"
 # for one model only, or the comparison with the other spikes is no longer fair.
 COMMON_ARGS=(--model "$MODEL" --postprocess --num-ctx 16384
              --key-dir keys --runs "$RUNS" "${OUTLINES_DIR_ARG[@]}")
+[ -n "$NATIVE_THINK" ] && COMMON_ARGS+=(--native-think "$NATIVE_THINK")
 
 # Show Python output straight away (no buffering) and keep the log in UTF-8
 export PYTHONUNBUFFERED=1
@@ -103,6 +113,7 @@ export PYTHONIOENCODING=utf-8
   echo "Model-selection spike run '$LABEL', started $(date)"
   echo "Model: $MODEL   Extractor: pymupdf   Strategies: $STRATEGIES   Runs: $RUNS"
   echo "Injection variants: ${INJECT:-none (normal runs)}"
+  echo "Built-in reasoning (--native-think): ${NATIVE_THINK:-not sent}"
   echo "Outlines: ${OUTLINES[*]}"
   echo
 
