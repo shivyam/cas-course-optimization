@@ -1,4 +1,1 @@
-Create a mock-up of the user interface for exploring the requirements/design
-with the user. The mockup could be done with a tool like Figma. The deliverable
-for this CD should include a discussion of the insights gained from
-presenting the mockup to the client/stakeholders/potential users.
+The wireframe mockups are attached and can be found in the "Wireframe" folder. Insight discussions with the stakeholders will take place after the deliverable deadline on Tuesday, as a result this segment will be updated right after (consideration provided by the TA).
