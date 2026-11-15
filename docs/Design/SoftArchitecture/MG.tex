@@ -192,9 +192,26 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mIntake}:] Outline Intake Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExtract}:] Extraction Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReview}:] Extraction Review Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSchedule}:] Assessment Schedule Module
+\item [\refstepcounter{mnum} \mthemnum \label{mWorkload}:] Workload Analysis Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPolicy}:] Policy Compliance Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGA}:] Graduate Attribute Check Module
+\item [\refstepcounter{mnum} \mthemnum \label{mFindings}:] Findings and Override Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDashboard}:] Dashboard Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSuggest}:] Date Suggestion Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExport}:] Export Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAccess}:] Access Control Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUI}:] Web UI Module
+\item [\refstepcounter{mnum} \mthemnum \label{mControl}:] Request Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReader}:] Document Reader Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLLM}:] LLM Client Module
+\item [\refstepcounter{mnum} \mthemnum \label{mStore}:] Data Store Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCohort}:] Cohort Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCalendar}:] Academic Calendar Module
 \end{description}
-
 
 \begin{table}[h!]
 \centering
@@ -203,28 +220,39 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module}
+& Outline Intake (\mref{mIntake})\\
+& Extraction (\mref{mExtract})\\
+& Extraction Review (\mref{mReview})\\
+& Assessment Schedule (\mref{mSchedule})\\
+& Workload Analysis (\mref{mWorkload})\\
+& Policy Compliance (\mref{mPolicy})\\
+& Graduate Attribute Check (\mref{mGA})\\
+& Findings and Override (\mref{mFindings})\\
+& Dashboard (\mref{mDashboard})\\
+& Date Suggestion (\mref{mSuggest})\\
+& Export (\mref{mExport})\\
+& Access Control (\mref{mAccess})\\
+& Web UI (\mref{mUI})\\
+& Request Controller (\mref{mControl})\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{5}{0.3\textwidth}{Software Decision Module}
+& Document Reader (\mref{mReader})\\
+& LLM Client (\mref{mLLM})\\
+& Data Store (\mref{mStore})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
 \caption{Module Hierarchy}
 \label{TblMH}
 \end{table}
+
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
