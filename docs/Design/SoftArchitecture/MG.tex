@@ -148,25 +148,64 @@ of the change, the possible changes are classified into two
 categories. Anticipated changes are listed in Section \ref{SecAchange}, and
 unlikely changes are listed in Section \ref{SecUchange}.
 
+
 \subsection{Anticipated Changes} \label{SecAchange}
 
 Anticipated changes are the source of the information that is to be hidden
 inside the modules. Ideally, changing one of the anticipated changes will only
 require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
+adapted here is called design for change.
+
+\acref{acLLM} to \acref{acScope} come from the likely changes in the
+SRS~\citep{TeamBVSH2026SRS}; the SRS change is named in brackets.
+\acref{acDBMS} to \acref{acOverride} are design decisions that the SRS does not
+cover.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acLLM}:] The language model
+  used for extraction and where it runs.
+\item[\refstepcounter{acnum} \actheacnum \label{acFormat}:] The format of
+  submitted course outlines, for example DOCX or \LaTeX{} in addition to PDF.
+\item[\refstepcounter{acnum} \actheacnum \label{acPolicy}:] The McMaster and
+  CAS course outline policy rules.
+\item[\refstepcounter{acnum} \actheacnum \label{acCEAB}:] The CEAB
+  accreditation criteria, the graduate attribute list and the master course
+  sheet.
+\item[\refstepcounter{acnum} \actheacnum \label{acGA}:] How graduate
+  attributes are identified from learning outcome text.
+\item[\refstepcounter{acnum} \actheacnum \label{acDensity}:] How assessment
+  density per cohort and week is computed and shown.
+\item[\refstepcounter{acnum} \actheacnum \label{acCohort}:] How courses are
+  grouped into student cohorts, including electives and cross-listed courses.
+\item[\refstepcounter{acnum} \actheacnum \label{acCalendar}:] Academic calendar
+  dates: term dates, recesses, examination periods and ban periods.
+\item[\refstepcounter{acnum} \actheacnum \label{acSuggest}:] The method used to
+  suggest alternative assessment dates.
+\item[\refstepcounter{acnum} \actheacnum \label{acNotify}:] How results reach
+  users. Results are currently only shown on the dashboard.
+\item[\refstepcounter{acnum} \actheacnum \label{acExport}:] The export file
+  format.
+\item[\refstepcounter{acnum} \actheacnum \label{acAuth}:] How users log in,
+  for example local accounts or McMaster single sign-on.
+\item[\refstepcounter{acnum} \actheacnum \label{acSource}:] The source of
+  course data, for example enrolment or timetable data from Mosaic.
+\item[\refstepcounter{acnum} \actheacnum \label{acScope}:] The set of courses
+  covered, for example graduate courses or other departments.
+\item[\refstepcounter{acnum} \actheacnum \label{acDBMS}:] The database
+  management system and the storage schema.
+\item[\refstepcounter{acnum} \actheacnum \label{acPrompt}:] The prompt wording
+  and the output structure asked of the model.
+\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The hardware and
+  operating system of the CAS server on which the system runs.
+\item[\refstepcounter{acnum} \actheacnum \label{acLayout}:] The layout and
+  look of the web pages.
+\item[\refstepcounter{acnum} \actheacnum \label{acOverride}:] The rules for
+  which findings an administrator may accept, and what is recorded when one is
+  accepted.
 \end{description}
 
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
+
+
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -177,11 +216,34 @@ these decision should later need to be changed, then many parts of the design
 will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
+\uref{ucAuthority} to \uref{ucFirstYear} come from the unlikely changes in the
+SRS~\citep{TeamBVSH2026SRS}. \uref{ucDeterministic} and \uref{ucConfirm} are
+design decisions.
+
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucAuthority}:] Instructors
+  keep final authority over assessment dates; the system never changes a date
+  on its own.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucOutline}:] Course outlines
+  remain the main source of assessment information.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucCode}:] The first digit of a
+  course number gives its year level.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucRoles}:] There are two user
+  roles: CAS administrator and instructor.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucOffering}:] Every
+  assessment belongs to one course offering.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucWeb}:] The system is used
+  through a web browser.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucFirstYear}:] First-year
+  courses stay out of scope.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucDeterministic}:] Date,
+  ban-period and weight checks are done by the system's own code, never by the
+  language model.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucConfirm}:] No model output
+  is used for the calendar, the workload analysis or the compliance checks
+  until a user has confirmed it.
 \end{description}
+
 
 \section{Module Hierarchy} \label{SecMH}
 
