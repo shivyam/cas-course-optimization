@@ -1,9 +1,4 @@
 {
-  "docs/CDs/MLReport/main.tex": [
-    "docs/CDs/MLReport/acl.sty",
-    "docs/CDs/MLReport/custom.bib",
-    "docs/CDs/MLReport/main.tex"
-  ],
   "docs/Checklists/Code-Checklist.tex": [
     "docs/Checklists/Code-Checklist.tex",
     "docs/Comments.text"
@@ -56,8 +51,10 @@
   "docs/Design/SoftDetailedDes/MIS.tex": [
     "docs/Comments.text",
     "docs/Common.text",
+    "docs/Design/SoftArchitecture/MG.tex",
     "docs/Design/SoftDetailedDes/MIS.tex",
     "docs/Reflection.text",
+    "docs/SRS-IEEE/SRS.tex",
     "refs/References.bib"
   ],
   "docs/DevelopmentPlan/DevelopmentPlan.tex": [
