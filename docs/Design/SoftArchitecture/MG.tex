@@ -18,6 +18,7 @@
 
 \input{../../Comments.text}
 \input{../../Common.text}
+\newcommand{\sysname}{The ASSURE Project}
 
 \newcounter{acnum}
 \newcommand{\actheacnum}{AC\theacnum}
@@ -359,13 +360,60 @@ to be implemented.
 \subsection{Behaviour-Hiding Module}
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
+\item[Secrets:] The contents of the required behaviours.
+\item[Services:] Includes programs that provide externally visible behaviour of
+  the system as specified in the SRS~\citep{TeamBVSH2026SRS}. This module serves
+  as a communication layer between the hardware-hiding module and the software
+  decision module. The programs in this module will need to change if there are
+  changes in the SRS.
 \item[Implemented By:] --
+\end{description}
+
+\subsubsection{Outline Intake Module (\mref{mIntake})}
+
+\begin{description}
+\item[Secrets:] How submitted files are checked, named and kept.
+\item[Services:] Accepts one or many course outlines in one upload, rejects
+  files that are not supported or too large, keeps the original file and starts
+  extraction for each accepted outline.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Extraction Module (\mref{mExtract})}
+
+\begin{description}
+\item[Secrets:] The prompts, the output structure and the parsing and
+  validation rules used to turn outline text into course data, including how
+  graduate attributes are identified when an outline does not list them.
+\item[Services:] Produces, for one outline, its assessments (name, type, date
+  and weight) and its learning outcomes with their graduate attributes. Each
+  value carries its source passage and page. Missing values and dates marked TBD
+  are reported as missing, never guessed.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Extraction Review Module (\mref{mReview})}
+
+\begin{description}
+\item[Secrets:] The review state of each extracted value.
+\item[Services:] Shows extracted data so a user can correct and confirm it,
+  and tells other modules whether a course's data has been confirmed.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Assessment Schedule Module (\mref{mSchedule})}
+
+\begin{description}
+\item[Secrets:] How tentative and confirmed dates are kept for each assessment.
+\item[Services:] Lets an instructor enter and change tentative dates for their
+  own courses, records approved date changes, and asks for the affected
+  analysis to be re-run after every change. It never changes a date without the
+  instructor's approval.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Input Format Module (\mref{mInput})}
