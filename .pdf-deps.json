@@ -43,6 +43,12 @@
     "docs/Checklists/Writing-Checklist.tex"
   ],
   "docs/Design/SoftArchitecture/MG.tex": [
+    "docs/CDs/Wireframe/01. Homepage (Administrator Dashboard).png",
+    "docs/CDs/Wireframe/02a. Course Outline Upload.png",
+    "docs/CDs/Wireframe/02b. Course Outline Extraction & Review.png",
+    "docs/CDs/Wireframe/03. Policy Compliance & CEAB Accreditation.png",
+    "docs/CDs/Wireframe/04. Shared Academic Calendar.png",
+    "docs/CDs/Wireframe/05. Scheduling Recommendations.png",
     "docs/Comments.text",
     "docs/Common.text",
     "docs/Design/SoftArchitecture/MG.tex",
@@ -51,8 +57,10 @@
   "docs/Design/SoftDetailedDes/MIS.tex": [
     "docs/Comments.text",
     "docs/Common.text",
+    "docs/Design/SoftArchitecture/MG.tex",
     "docs/Design/SoftDetailedDes/MIS.tex",
     "docs/Reflection.text",
+    "docs/SRS-IEEE/SRS.tex",
     "refs/References.bib"
   ],
   "docs/DevelopmentPlan/DevelopmentPlan.tex": [
