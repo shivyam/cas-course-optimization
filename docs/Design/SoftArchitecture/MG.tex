@@ -149,25 +149,64 @@ of the change, the possible changes are classified into two
 categories. Anticipated changes are listed in Section \ref{SecAchange}, and
 unlikely changes are listed in Section \ref{SecUchange}.
 
+
 \subsection{Anticipated Changes} \label{SecAchange}
 
 Anticipated changes are the source of the information that is to be hidden
 inside the modules. Ideally, changing one of the anticipated changes will only
 require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
+adapted here is called design for change.
+
+\acref{acLLM} to \acref{acScope} come from the likely changes in the
+SRS~\citep{TeamBVSH2026SRS}; the SRS change is named in brackets.
+\acref{acDBMS} to \acref{acOverride} are design decisions that the SRS does not
+cover.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acLLM}:] The language model
+  used for extraction and where it runs.
+\item[\refstepcounter{acnum} \actheacnum \label{acFormat}:] The format of
+  submitted course outlines, for example DOCX or \LaTeX{} in addition to PDF.
+\item[\refstepcounter{acnum} \actheacnum \label{acPolicy}:] The McMaster and
+  CAS course outline policy rules.
+\item[\refstepcounter{acnum} \actheacnum \label{acCEAB}:] The CEAB
+  accreditation criteria, the graduate attribute list and the master course
+  sheet.
+\item[\refstepcounter{acnum} \actheacnum \label{acGA}:] How graduate
+  attributes are identified from learning outcome text.
+\item[\refstepcounter{acnum} \actheacnum \label{acDensity}:] How assessment
+  density per cohort and week is computed and shown.
+\item[\refstepcounter{acnum} \actheacnum \label{acCohort}:] How courses are
+  grouped into student cohorts, including electives and cross-listed courses.
+\item[\refstepcounter{acnum} \actheacnum \label{acCalendar}:] Academic calendar
+  dates: term dates, recesses, examination periods and ban periods.
+\item[\refstepcounter{acnum} \actheacnum \label{acSuggest}:] The method used to
+  suggest alternative assessment dates.
+\item[\refstepcounter{acnum} \actheacnum \label{acNotify}:] How results reach
+  users. Results are currently only shown on the dashboard.
+\item[\refstepcounter{acnum} \actheacnum \label{acExport}:] The export file
+  format.
+\item[\refstepcounter{acnum} \actheacnum \label{acAuth}:] How users log in,
+  for example local accounts or McMaster single sign-on.
+\item[\refstepcounter{acnum} \actheacnum \label{acSource}:] The source of
+  course data, for example enrolment or timetable data from Mosaic.
+\item[\refstepcounter{acnum} \actheacnum \label{acScope}:] The set of courses
+  covered, for example graduate courses or other departments.
+\item[\refstepcounter{acnum} \actheacnum \label{acDBMS}:] The database
+  management system and the storage schema.
+\item[\refstepcounter{acnum} \actheacnum \label{acPrompt}:] The prompt wording
+  and the output structure asked of the model.
+\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The hardware and
+  operating system of the CAS server on which the system runs.
+\item[\refstepcounter{acnum} \actheacnum \label{acLayout}:] The layout and
+  look of the web pages.
+\item[\refstepcounter{acnum} \actheacnum \label{acOverride}:] The rules for
+  which findings an administrator may accept, and what is recorded when one is
+  accepted.
 \end{description}
 
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
+
+
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -178,11 +217,34 @@ these decision should later need to be changed, then many parts of the design
 will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
+\uref{ucAuthority} to \uref{ucFirstYear} come from the unlikely changes in the
+SRS~\citep{TeamBVSH2026SRS}. \uref{ucDeterministic} and \uref{ucConfirm} are
+design decisions.
+
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucAuthority}:] Instructors
+  keep final authority over assessment dates; the system never changes a date
+  on its own.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucOutline}:] Course outlines
+  remain the main source of assessment information.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucCode}:] The first digit of a
+  course number gives its year level.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucRoles}:] There are two user
+  roles: CAS administrator and instructor.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucOffering}:] Every
+  assessment belongs to one course offering.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucWeb}:] The system is used
+  through a web browser.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucFirstYear}:] First-year
+  courses stay out of scope.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucDeterministic}:] Date,
+  ban-period and weight checks are done by the system's own code, never by the
+  language model.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucConfirm}:] No model output
+  is used for the calendar, the workload analysis or the compliance checks
+  until a user has confirmed it.
 \end{description}
+
 
 \section{Module Hierarchy} \label{SecMH}
 
@@ -193,9 +255,26 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mIntake}:] Outline Intake Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExtract}:] Extraction Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReview}:] Extraction Review Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSchedule}:] Assessment Schedule Module
+\item [\refstepcounter{mnum} \mthemnum \label{mWorkload}:] Workload Analysis Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPolicy}:] Policy Compliance Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGA}:] Graduate Attribute Check Module
+\item [\refstepcounter{mnum} \mthemnum \label{mFindings}:] Findings and Override Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDashboard}:] Dashboard Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSuggest}:] Date Suggestion Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExport}:] Export Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAccess}:] Access Control Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUI}:] Web UI Module
+\item [\refstepcounter{mnum} \mthemnum \label{mControl}:] Request Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReader}:] Document Reader Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLLM}:] LLM Client Module
+\item [\refstepcounter{mnum} \mthemnum \label{mStore}:] Data Store Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCohort}:] Cohort Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCalendar}:] Academic Calendar Module
 \end{description}
-
 
 \begin{table}[h!]
 \centering
@@ -204,28 +283,39 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module}
+& Outline Intake (\mref{mIntake})\\
+& Extraction (\mref{mExtract})\\
+& Extraction Review (\mref{mReview})\\
+& Assessment Schedule (\mref{mSchedule})\\
+& Workload Analysis (\mref{mWorkload})\\
+& Policy Compliance (\mref{mPolicy})\\
+& Graduate Attribute Check (\mref{mGA})\\
+& Findings and Override (\mref{mFindings})\\
+& Dashboard (\mref{mDashboard})\\
+& Date Suggestion (\mref{mSuggest})\\
+& Export (\mref{mExport})\\
+& Access Control (\mref{mAccess})\\
+& Web UI (\mref{mUI})\\
+& Request Controller (\mref{mControl})\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{5}{0.3\textwidth}{Software Decision Module}
+& Document Reader (\mref{mReader})\\
+& LLM Client (\mref{mLLM})\\
+& Data Store (\mref{mStore})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
 \caption{Module Hierarchy}
 \label{TblMH}
 \end{table}
+
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
@@ -442,8 +532,34 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+The system is used through a web browser (\uref{ucWeb}). Pages follow the
+McMaster University colour scheme. Table~\ref{TblPages} lists the pages and their purpose. 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.22\textwidth} p{0.5\textwidth} p{0.18\textwidth}}
+\toprule
+\textbf{Page} & \textbf{Purpose} \\
+\midrule
+Login & Sign in; the session ends after a period without activity\\
+Home & Pick a task and see the dashboard summary\\
+Upload & Submit one or many outline PDFs\\
+Outline preview and review & Check each extracted value against its source
+passage, correct it and confirm the outline\\
+Calendar & Confirmed and tentative dates, filtered by course, year and program;
+assessments per cohort and week\\
+Findings & Policy and graduate attribute findings; accept a finding with a
+reason\\
+Dashboard & Status of each course and whether the term is fully planned \\
+Export & Download confirmed assessment data\\
+\bottomrule
+\end{tabular}
+\caption{Web pages}
+\label{TblPages}
+\end{table}
+
+All planned wireframes are included in Appendix~\ref{app:wireframes}.
+
 
 \section{Design of Communication Protocols}
 
@@ -496,6 +612,66 @@ consistency, and appropriateness of the submitted document, regardless of
 whether material was generated by a human or an AI system.}
 \end{itemize}}
 
+\appendix
+
+\refstepcounter{section}
+\section*{Appendix \thesection: Wireframes} \label{app:wireframes}
+\addcontentsline{toc}{section}{Appendix \thesection: Wireframes}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/01. Homepage (Administrator Dashboard).png
+    }
+    \caption{Administrator dashboard wireframe}
+    \label{fig:admin-dashboard}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/02a. Course Outline Upload.png
+    }
+    \caption{Course outline upload wireframe}
+    \label{fig:course-outline-upload}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/02b. Course Outline Extraction & Review.png
+    }
+    \caption{Course outline extraction and review wireframe}
+    \label{fig:course-outline-extraction-review}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/03. Policy Compliance & CEAB Accreditation.png
+    }
+    \caption{Policy compliance and CEAB accreditation wireframe}
+    \label{fig:policy-compliance-ceab}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/04. Shared Academic Calendar.png
+    }
+    \caption{Shared academic calendar wireframe}
+    \label{fig:shared-academic-calendar}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{
+        ../../CDs/Wireframe/05. Scheduling Recommendations.png
+    }
+    \caption{Scheduling recommendations wireframe}
+    \label{fig:scheduling-recommendations}
+\end{figure}
 \newpage{}
 
 \bibliographystyle {plainnat}
