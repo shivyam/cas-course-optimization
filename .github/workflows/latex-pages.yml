@@ -106,6 +106,9 @@ jobs:
           # pdflatex finds lmodern.sty but not the fonts it maps to, failing
           # with "Font rm-lmr7 at 600 not found".
           sudo updmap-sys >/dev/null
+          # Rebuild the format file that may be missing from the restored
+          # TeX Live cache.
+          sudo fmtutil-sys --byfmt=pdflatex
           # ...and texlive-binaries' postinst is what creates the bibtex
           # command (an alternatives link to bibtex.original). Without it
           # the Makefile's "|| echo" hides the failure and every citation is [?].
