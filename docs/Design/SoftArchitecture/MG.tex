@@ -7,7 +7,6 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{xr}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -19,7 +18,6 @@
 
 \input{../../Comments.text}
 \input{../../Common.text}
-\externaldocument[SRS-]{../../SRS-IEEE/SRS}
 \newcommand{\sysname}{The ASSURE Project}
 
 \newcounter{acnum}
@@ -33,11 +31,6 @@
 \newcounter{mnum}
 \newcommand{\mthemnum}{M\themnum}
 \newcommand{\mref}[1]{M\ref{#1}}
-\newcommand{\frref}[1]{FR\ref{SRS-#1}}
-\newcommand{\nfrref}[1]{NFR\ref{SRS-#1}}
-\newcommand{\drref}[1]{DR\ref{SRS-#1}}
-\newcommand{\airref}[1]{AIR\ref{SRS-#1}}
-\newcommand{\issue}[1]{\href{https://github.com/shivyam/cas-course-optimization/issues/#1}{\##1}}
 
 \begin{document}
 
@@ -330,48 +323,12 @@ The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
 between requirements and modules is listed in Table~\ref{TblRT}.
 
-%\wss{The intention of this section is to document decisions that are made
-%  ``between'' the requirements and the design.  To satisfy some requirements,
-%  design decisions need to be made.  Rather than make these decisions implicit,
-%  they are explicitly recorded here.  For instance, if a program has security
-%  requirements, a specific design decision may be made to satisfy those
-%  requirements with a password.}
-
-\begin{itemize}
-\item Only the LLM client (\mref{mLLM}) knows which model is used and how it is called. The current model 
-  used is Gemma 4 E2B, with a model hosted on CAS infrastructure as the
-  fallback. Only public outline text may be sent to Copilot, and no student
-  personal information is sent to any model (\drref{DR_Hosting},
-  \airref{AIR_Input_Privacy}). The models Gemma 4 E2B (\issue{38}), Llama 3.2 3B (\issue{40}), 
-  and Qwen3 4B(\issue{39}) can be swapped in without changing any other module.
-\item The Extraction module (\mref{mExtract}) gives the model the outline text only as data and checks
-  every reply against the expected structure before it is stored
-  (\airref{AIR_Output_Validation}). Each extracted value keeps the passage and
-  page it came from (\airref{AIR_Output_Source}), which the Document Reader
-  (\mref{mReader}) provides.
-\item The Extraction Review module (\mref{mReview}) holds the review state of every extracted
-  value. The workload, policy and graduate attribute checks ask it whether a
-  course is confirmed before they run (\frref{FR_Extract_Review},
-  \airref{AIR_Output_Review}, \uref{ucConfirm}).
-\item The Workload Analysis (\mref{mWorkload}) and Policy Compliance (\mref{mPolicy}) modules
-  compute ban-period conflicts, weight totals and TBD dates without the model
-  (\uref{ucDeterministic}).
-\item The Workload Analysis module gives the number of assessments per cohort and 
-week; it does not compare it with a department threshold.
-\item The Graduate Attribute Check (\mref{mGA}) compares the attributes in a confirmed 
-outline with the master course sheet in code (\airref{AIR_Input_Text},
-  \drref{DR_Confidentiality}).
-\item The Request Controller (\mref{mControl}) asks Access Control (\mref{mAccess}) for the
-  current user and role before calling any other module (\frref{FR_Access_Login}, 
-  \frref{FR_Access_Roles}, \frref{FR_Access_Timeout}, \drref{DR_Access}, \nfrref{NFR_Security}).
-\item The Findings and Override module (\mref{mFindings}) records each accepted 
-finding with the administrator, the reason and the time. The Dashboard module
-  (\mref{mDashboard}) reports what is missing or wrong for each course and
-  whether the term is fully planned.
-\item Only the Data Store (\mref{mStore}) talks to the database, and it keeps 
-outlines, extracted data and findings for the retention period (\drref{DR_Retention}).
-\end{itemize}
-
+\wss{The intention of this section is to document decisions that are made
+  ``between'' the requirements and the design.  To satisfy some requirements,
+  design decisions need to be made.  Rather than make these decisions implicit,
+  they are explicitly recorded here.  For instance, if a program has security
+  requirements, a specific design decision may be made to satisfy those
+  requirements with a password.}
 
 \section{Module Decomposition} \label{SecMD}
 
