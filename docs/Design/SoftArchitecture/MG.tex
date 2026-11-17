@@ -1,7 +1,7 @@
 \documentclass[12pt, titlepage]{article}
 
 \usepackage{fullpage}
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -39,7 +39,18 @@
 \newcommand{\airref}[1]{AIR\ref{SRS-#1}}
 \newcommand{\issue}[1]{\href{https://github.com/shivyam/cas-course-optimization/issues/#1}{\##1}}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{Module Guide for \progname{}} 
 \author{\authname}
@@ -54,8 +65,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov.\ 16, 2026 & 1.0 & Rev $-1$: Initial Version\\
 \bottomrule
 \end{tabularx}
 
@@ -67,22 +77,27 @@ This section records information for easy reference.
 
 \subsection{Abbreviations and Acronyms}
 
+Abbreviations and acronyms defined in the SRS~\citep{TeamBVSH2026SRS} keep the
+meaning given there, including AIR, CAS, CEAB, DR, FR, GA, LC, LLM, NFR, PDF,
+TBD and ULC. This document adds the following:
+
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
-  R & Requirement\\
-  SC & Scientific Computing \\
-  SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  API & Application Programming Interface\\
+  DAG & Directed Acyclic Graph\\
+  DBMS & Database Management System\\
+  HTTP & Hypertext Transfer Protocol\\
+  M & Module\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  OS & Operating System\\
+  REST & Representational State Transfer\\
+  UC & Unlikely Change (the SRS uses UC for Use Case)\\
+  UI & User Interface\\
   \bottomrule
 \end{tabular}\\
 
@@ -105,11 +120,11 @@ software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
 based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
+hides represent likely future changes.  Design for change is valuable here,
 where modifications are frequent, especially during initial development as the
 solution space is explored.  
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Our design follows the rules layed out by Parnas et al.~\citep{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
@@ -276,11 +291,11 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mAccess}:] Access Control Module
 \item [\refstepcounter{mnum} \mthemnum \label{mUI}:] Web UI Module
 \item [\refstepcounter{mnum} \mthemnum \label{mControl}:] Request Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCohort}:] Cohort Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCalendar}:] Academic Calendar Module
 \item [\refstepcounter{mnum} \mthemnum \label{mReader}:] Document Reader Module
 \item [\refstepcounter{mnum} \mthemnum \label{mLLM}:] LLM Client Module
 \item [\refstepcounter{mnum} \mthemnum \label{mStore}:] Data Store Module
-\item [\refstepcounter{mnum} \mthemnum \label{mCohort}:] Cohort Module
-\item [\refstepcounter{mnum} \mthemnum \label{mCalendar}:] Academic Calendar Module
 \end{description}
 
 \begin{table}[h!]
@@ -293,7 +308,7 @@ actually be implemented.
 {Hardware-Hiding Module} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module}
+\multirow{16}{0.3\textwidth}{Behaviour-Hiding Module}
 & Outline Intake (\mref{mIntake})\\
 & Extraction (\mref{mExtract})\\
 & Extraction Review (\mref{mReview})\\
@@ -308,14 +323,14 @@ actually be implemented.
 & Access Control (\mref{mAccess})\\
 & Web UI (\mref{mUI})\\
 & Request Controller (\mref{mControl})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \midrule
 
-\multirow{5}{0.3\textwidth}{Software Decision Module}
+\multirow{3}{0.3\textwidth}{Software Decision Module}
 & Document Reader (\mref{mReader})\\
 & LLM Client (\mref{mLLM})\\
 & Data Store (\mref{mStore})\\
-& Cohort (\mref{mCohort})\\
-& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
@@ -338,12 +353,12 @@ between requirements and modules is listed in Table~\ref{TblRT}.
 %  requirements with a password.}
 
 \begin{itemize}
-\item Only the LLM client (\mref{mLLM}) knows which model is used and how it is called. The current model 
-  used is Gemma 4 E2B, with a model hosted on CAS infrastructure as the
-  fallback. Only public outline text may be sent to Copilot, and no student
-  personal information is sent to any model (\drref{DR_Hosting},
-  \airref{AIR_Input_Privacy}). The models Gemma 4 E2B (\issue{38}), Llama 3.2 3B (\issue{40}), 
-  and Qwen3 4B(\issue{39}) can be swapped in without changing any other module.
+\item Only the LLM client (\mref{mLLM}) knows which model is used and how it is called. The current model
+  is Gemma 4 E2B, a preliminary choice that may change. The model runs on CAS
+  servers, so no outline text leaves CAS infrastructure, and no student
+  personal information is sent to the model (\drref{DR_Hosting},
+  \airref{AIR_Input_Privacy}). The models Gemma 4 E2B (\issue{38}), Llama 3.2 3B (\issue{40}),
+  and Qwen3 4B (\issue{39}) can be swapped in without changing any other module.
 \item The Extraction module (\mref{mExtract}) gives the model the outline text only as data and checks
   every reply against the expected structure before it is stored
   (\airref{AIR_Output_Validation}). Each extracted value keeps the passage and
@@ -376,7 +391,7 @@ outlines, extracted data and findings for the retention period (\drref{DR_Retent
 \section{Module Decomposition} \label{SecMD}
 
 Modules are decomposed according to the principle of ``information hiding''
-proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
+proposed by Parnas et al.~\citep{ParnasEtAl1984}. The \emph{Secrets} field in a module
 decomposition is a brief statement of the design decision hidden by the
 module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
@@ -566,6 +581,31 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
+\subsubsection{Cohort Module (\mref{mCohort})}
+
+\begin{description}
+\item[Secrets:] The department's master course list and how a course code
+  maps to a student cohort.
+\item[Services:] Says whether a course code is one of the department's
+  courses, gives the cohort (program and year level) a course belongs to, and
+  lists the department courses in a cohort. The year level is the first digit
+  of the course number.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Academic Calendar Module (\mref{mCalendar})}
+
+\begin{description}
+\item[Secrets:] The dates of each term: its start and end, its class days, its
+  holidays and recesses, and its examination period.
+\item[Services:] Gives the dates and class days of a term, the week of term a
+  date falls in, and whether a date falls in a holiday, a recess or the
+  examination period. The ban period is worked out by Policy Compliance
+  (\mref{mPolicy}) from the class days.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -580,56 +620,145 @@ decision. Never suggests a date in a restricted period.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Document Reader Module (\mref{mReader})}
+
+\begin{description}
+\item[Secrets:] The library and method used to read the text of a document
+  and to mark passages in it.
+\item[Services:] Returns the text of a course outline page by page, so that
+  each extracted value can name the page it came from. Produces a copy of the
+  outline with given source passages highlighted, so a reviewer can find each
+  value in the original document.
+\item[Implemented By:] \sysname, using PyMuPDF~\citep{PyMuPDF}
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{LLM Client Module (\mref{mLLM})}
+
+\begin{description}
+\item[Secrets:] Which language model is used, where it runs and how it is
+  called.
+\item[Services:] Sends instructions and outline text to the language model as
+  separate inputs and returns the model's reply. Reports when the model is
+  unavailable or does not reply in time. The model runs on CAS servers, so no
+  outline text leaves CAS.
+\item[Implemented By:] \sysname, using Ollama~\citep{Ollama} to run Gemma 4 E2B (tested in spike
+  \href{https://github.com/shivyam/cas-course-optimization/issues/38}{\#38}). This
+  model choice is preliminary and may change.
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Data Store Module (\mref{mStore})}
+
+\begin{description}
+\item[Secrets:] The database management system, the storage schema, and how
+  the original outline files are kept.
+\item[Services:] Saves, loads and queries every stored entity, including the
+  original outline files, and keeps records for the retention period.
+\item[Implemented By:] \sysname, on MongoDB~\citep{MongoDB}
+\item[Type of Module:] Abstract Object
+\end{description}
+
 
 \section{Traceability Matrix} \label{SecTM}
 
 This section shows two traceability matrices: between the modules and the
-requirements and between the modules and the anticipated changes.
+requirements in the SRS~\citep{TeamBVSH2026SRS} (Tables~\ref{TblRT}
+and~\ref{TblRT2}), and between the modules and the anticipated changes
+(Table~\ref{TblACT}). The admin override, course status dashboard and term
+completeness features are not yet requirements in the SRS, so they are traced
+by working name.
 
-% the table should use mref, the requirements should be named, use something
-% like fref
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
 \toprule
-\textbf{Req.} & \textbf{Modules}\\
+\textbf{Functional Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+\frref{FR_Intake_Data} & \mref{mIntake}, \mref{mReader}, \mref{mStore}\\
+\frref{FR_Extract_Assessment} & \mref{mExtract}, \mref{mLLM}\\
+\frref{FR_Extract_LO} & \mref{mExtract}, \mref{mLLM}\\
+\frref{FR_Extract_Flag} & \mref{mExtract}\\
+\frref{FR_Extract_Review} & \mref{mReview}\\
+\frref{FR_Dates_Tentative} & \mref{mSchedule}\\
+\frref{FR_Calendar} & \mref{mWorkload}, \mref{mUI}, \mref{mCohort}\\
+\frref{FR_Work_Cluster} & \mref{mWorkload}, \mref{mCohort}, \mref{mCalendar}\\
+\frref{FR_Work_Policy} & \mref{mWorkload}, \mref{mCalendar}\\
+\frref{FR_Reanalyze} & \mref{mSchedule}, \mref{mWorkload}\\
+\frref{FR_Suggest_Generation} & \mref{mSuggest}, \mref{mCalendar}\\
+\frref{FR_Suggest_NoAuto} & \mref{mSchedule}, \mref{mSuggest}\\
+\frref{FR_Comp_Policy} & \mref{mPolicy}, \mref{mCalendar}\\
+\frref{FR_Comp_Grad} & \mref{mGA}\\
+\frref{FR_Access_Login} & \mref{mAccess}, \mref{mControl}\\
+\frref{FR_Access_Roles} & \mref{mAccess}, \mref{mControl}\\
+\frref{FR_Access_Timeout} & \mref{mAccess}\\
+\frref{FR_Export_CSV} & \mref{mExport}\\
+Admin override (working name) & \mref{mFindings}\\
+Course status dashboard (working name) & \mref{mDashboard}\\
+Term completeness (working name) & \mref{mDashboard}, \mref{mCalendar}\\
 \bottomrule
 \end{tabular}
-\caption{Trace Between Requirements and Modules}
+\caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
+\toprule
+\textbf{Req.} & \textbf{Modules}\\
+\midrule
+\drref{DR_Confidentiality} & \mref{mAccess}, \mref{mStore}\\
+\drref{DR_Hosting} & \mref{mLLM}\\
+\drref{DR_Access} & \mref{mAccess}, \mref{mControl}\\
+\drref{DR_Retention} & \mref{mStore}\\
+\airref{AIR_Input_Text} & \mref{mExtract}, \mref{mReader}\\
+\airref{AIR_Input_Privacy} & \mref{mLLM}\\
+\airref{AIR_Output_Struct} & \mref{mExtract}\\
+\airref{AIR_Output_Source} & \mref{mExtract}, \mref{mReader}\\
+\airref{AIR_Output_Missing} & \mref{mExtract}\\
+\airref{AIR_Output_Review} & \mref{mReview}\\
+\airref{AIR_Output_Validation} & \mref{mExtract}, \mref{mLLM}\\
+\nfrref{NFR_Accuracy} & \mref{mExtract}, \mref{mLLM}, \mref{mPolicy}, \mref{mGA}\\
+\nfrref{NFR_Usability} & \mref{mUI}\\
+\nfrref{NFR_Maintainability} & All modules (decomposition by secrets)\\
+\nfrref{NFR_Portability} & \mref{mHH}, \mref{mUI}\\
+\nfrref{NFR_Installability} & \mref{mHH}, \mref{mLLM}, \mref{mStore}\\
+\nfrref{NFR_Performance} & \mref{mExtract}, \mref{mLLM}, \mref{mStore}\\
+\nfrref{NFR_Reliability} & \mref{mIntake}, \mref{mExtract}, \mref{mLLM}\\
+\nfrref{NFR_Security} & \mref{mAccess}, \mref{mControl}\\
+\nfrref{NFR_Accessibility} & \mref{mUI}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Data, AI and Nonfunctional Requirements and Modules}
+\label{TblRT2}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
+\acref{acLLM} & \mref{mLLM}\\
+\acref{acFormat} & \mref{mReader}\\
+\acref{acPolicy} & \mref{mPolicy}\\
+\acref{acCEAB} & \mref{mGA}\\
+\acref{acGA} & \mref{mExtract}\\
+\acref{acDensity} & \mref{mWorkload}\\
+\acref{acCohort} & \mref{mCohort}\\
+\acref{acCalendar} & \mref{mCalendar}\\
+\acref{acSuggest} & \mref{mSuggest}\\
+\acref{acNotify} & \mref{mDashboard}\\
+\acref{acExport} & \mref{mExport}\\
+\acref{acAuth} & \mref{mAccess}\\
+\acref{acSource} & \mref{mIntake}\\
+\acref{acScope} & \mref{mCohort}\\
+\acref{acDBMS} & \mref{mStore}\\
+\acref{acPrompt} & \mref{mExtract}\\
 \acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acLayout} & \mref{mUI}\\
+\acref{acOverride} & \mref{mFindings}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -652,7 +781,9 @@ because they use modules from the lower levels.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{UsesHierarchy.png} 
+\IfFileExists{UsesHierarchy.png}{%
+  \includegraphics[width=\textwidth]{UsesHierarchy.png}%
+}{}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
@@ -673,7 +804,8 @@ because they use modules from the lower levels.
 \mref{mGA} Graduate Attribute Check & \mref{mReview}, \mref{mFindings}, \mref{mStore}\\
 \mref{mDashboard} Dashboard & \mref{mReview}, \mref{mSchedule}, \mref{mFindings}, \mref{mStore}\\
 \mref{mSuggest} Date Suggestion & \mref{mWorkload}, \mref{mStore}, \mref{mCalendar}\\
-\mref{mReview}, \mref{mFindings}, \mref{mExport}, \mref{mAccess}, \mref{mCohort}, \mref{mCalendar} & \mref{mStore}\\
+\mref{mReview}, \mref{mFindings}, \mref{mExport}, \mref{mAccess} & \mref{mStore}\\
+\mref{mCohort}, \mref{mCalendar} & None (hard-coded data)\\
 \mref{mReader}, \mref{mLLM}, \mref{mStore} & \mref{mHH}\\
 \bottomrule
 \end{tabular}
@@ -888,7 +1020,8 @@ whether material was generated by a human or an AI system.}
 \end{figure}
 \newpage{}
 
-\bibliographystyle {plainnat}
+% Same IEEE style file as the SRS (IEEEtran.bst is not installed in CI).
+\bibliographystyle {../../SRS-IEEE/IEEEtran}
 \bibliography{../../../refs/References}
 
 \end{document}
