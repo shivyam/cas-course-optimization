@@ -139,7 +139,7 @@ provided by the operating system and has no MIS.
 {Hardware-Hiding} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{14}{0.3\textwidth}{Behaviour-Hiding}
+\multirow{16}{0.3\textwidth}{Behaviour-Hiding}
 & Outline Intake (\mref{mIntake})\\
 & Extraction (\mref{mExtract})\\
 & Extraction Review (\mref{mReview})\\
@@ -154,14 +154,14 @@ provided by the operating system and has no MIS.
 & Access Control (\mref{mAccess})\\
 & Web UI (\mref{mUI})\\
 & Request Controller (\mref{mControl})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \midrule
 
-\multirow{5}{0.3\textwidth}{Software Decision}
+\multirow{3}{0.3\textwidth}{Software Decision}
 & Document Reader (\mref{mReader})\\
 & LLM Client (\mref{mLLM})\\
 & Data Store (\mref{mStore})\\
-& Cohort (\mref{mCohort})\\
-& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
@@ -424,8 +424,84 @@ getSchedule & c: CourseID & seq of Assessment & NotFound \\
 
 \newpage
 
-% Harman: MIS of the software decision modules M16 to M18 (Rev -1: Module,
-% Uses and Syntax only).
+% Harman: MIS of Cohort and Academic Calendar (Rev -1: Module, Uses and Syntax
+% only).
+
+\section{MIS of Cohort Module (\mref{mCohort})} \label{mis-mCohort}
+
+\subsection{Module}
+
+Cohort
+
+\subsection{Uses}
+
+None.
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+isDepartmentCourse & k: CourseCode & $\mathbb{B}$ & -- \\
+cohortOf & k: CourseCode & Cohort & UnknownCode \\
+coursesIn & h: Cohort & set of CourseCode & UnknownCohort \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent A cohort is a (program, year level) pair, for example (COMPSCI, 2).
+Only department courses on the master course list belong to a cohort.
+
+\newpage
+
+\section{MIS of Academic Calendar Module (\mref{mCalendar})} \label{mis-mCalendar}
+
+\subsection{Module}
+
+AcademicCalendar
+
+\subsection{Uses}
+
+None.
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+termDates & t: Term & (start: Date, end: Date) & UnknownTerm \\
+classDays & t: Term & seq of Date & UnknownTerm \\
+weekOf & d: Date, t: Term & $\mathbb{N}$ & UnknownTerm, DateOutsideTerm \\
+isRestricted & d: Date & $\mathbb{B}$ & DateOutsideTerm \\
+restrictedPeriods & t: Term & seq of (start: Date, end: Date, kind: String) & UnknownTerm \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textit{isRestricted} is true when the date falls in a holiday, a
+recess or the examination period. The ban period is not included: Policy
+Compliance (\mref{mPolicy}) works it out from \textit{classDays}.
+
+\newpage
+
+% Harman: MIS of the software decision modules (Rev -1: Module, Uses and
+% Syntax only).
 
 \section{MIS of Document Reader Module (\mref{mReader})} \label{mis-mReader}
 
@@ -475,14 +551,7 @@ Hardware-Hiding (\mref{mHH})
 
 \subsubsection{Exported Constants}
 
-\begin{itemize}
-\item \textit{MODEL\_NAME} = Gemma 4 E2B, the model currently in use, tested in spike
-  \href{https://github.com/shivyam/cas-course-optimization/issues/38}{\#38}. This choice is
-  preliminary and may change.
-\item \textit{EXTRACT\_TIME\_LIMIT} = 5 min, the longest time allowed to
-  extract one outline, defined in Appendix C of the
-  SRS~\citep{TeamBVSH2026SRS}.
-\end{itemize}
+None.
 
 \subsubsection{Exported Access Programs}
 
@@ -531,8 +600,8 @@ Hardware-Hiding (\mref{mHH})
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 save & e: Entity & ID & InvalidEntity \\
-load & k: EntityKind, id: ID & Entity & NotFound \\
-query & k: EntityKind, p: Filter & seq of Entity & -- \\
+load & k: EntityKind, id: ID & Entity & UnknownKind, NotFound \\
+query & k: EntityKind, p: Filter & seq of Entity & UnknownKind \\
 saveFile & f: File & ID & -- \\
 loadFile & id: ID & File & NotFound \\
 \hline
@@ -543,7 +612,6 @@ loadFile & id: ID & File & NotFound \\
 same ID. There is no delete program: records are kept for
 \textit{RETENTION\_YEARS}.
 
-% M19 Cohort and M20 Academic Calendar: to be added.
 
 \newpage
 
