@@ -731,17 +731,67 @@ custom hardware and software. Two software interfaces cross a process boundary:
 \end{itemize}
 
 
-\section{Database Design}
+\section{Database Design} \label{SecDB}
 
-\wss{If a database is a significant component of the project, the database
-design should be summarized here.  This section should be filled in with NA if
-it is not appropriate for a given project.}
+The database is a central part of the system. Only the Data Store module
+(\mref{mStore}) reads or writes it (\acref{acDBMS}). Table~\ref{TblEntities}
+lists the stored entities. Each follows the data dictionary in the
+SRS~\citep{TeamBVSH2026SRS}, except Override and AuditEntry, which support the
+admin override feature.
 
-\section{Timeline}
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.25\textwidth} p{0.65\textwidth}}
+\toprule
+\textbf{Entity} & \textbf{Main relations}\\
+\midrule
+User & An administrator or instructor; an instructor teaches many Courses\\
+Course & One CAS course offering in a term; has one or more CourseCodes and one CourseOutline\\
+CourseCode & One listing of a Course; gives the program and year level\\
+CourseOutline & The submitted PDF of a Course; has many Assessments and LearningOutcomes\\
+Assessment & A graded component with a weight and a confirmed, tentative or missing date\\
+LearningOutcome & An outcome with its graduate attributes and review status\\
+MasterCourseRecord & The graduate attributes expected for a CourseCode\\
+AcademicCalendarEntry & A holiday, examination period or other restricted date range\\
+DateRecommendation & A suggested date for an Assessment, its explanation and decision\\
+ComplianceFinding & A policy or graduate attribute problem found in a Course\\
+Override & An administrator's acceptance of a ComplianceFinding, with a reason\\
+AuditEntry & Who changed which value, when, and its previous value\\
+\bottomrule
+\end{tabular}
+\caption{Stored entities}
+\label{TblEntities}
+\end{table}
 
-\wss{Schedule of tasks and who is responsible}
+A cross-listed course, such as SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03,
+is stored as one Course with three CourseCodes, so its outline and assessments
+are stored once. Records are kept for the retention period in
+\drref{DR_Retention}. \todo{Add an ER diagram once the DBMS is chosen.}
 
-\wss{You can point to GitHub if this information is included there}
+\section{Timeline} \label{SecTimeline}
+
+Work is tracked on the project's GitHub board~\citep{TeamBVSH2026DP}.
+Table~\ref{TblTimeline} gives the milestones from the Development
+Plan~\citep{TeamBVSH2026DP}. \todo{Add the owner of each module.}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.25\textwidth} p{0.65\textwidth}}
+\toprule
+\textbf{When} & \textbf{Milestone}\\
+\midrule
+Week 10 & Design Document Rev $-1$ and CD-Fall Rev 0\\
+Weeks 11--12 & Proof of concept demonstration: \mref{mIntake}, \mref{mReader},
+\mref{mExtract}, \mref{mLLM} and the review page\\
+Week 14 & Minimum viable product\\
+Week 16 & Design Document Rev 0 (MIS semantics added)\\
+Weeks 18--19 & Rev 0 demonstration\\
+Week 24 & Final demonstration (Rev 1)\\
+\bottomrule
+\end{tabular}
+\caption{Timeline}
+\label{TblTimeline}
+\end{table}
 
 \section{Generative AI Use Disclosure}
 
