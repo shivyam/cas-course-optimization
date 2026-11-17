@@ -65,8 +65,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov.\ 16, 2026 & 1.0 & Rev $-1$: Initial Version\\
 \bottomrule
 \end{tabularx}
 
@@ -78,22 +77,27 @@ This section records information for easy reference.
 
 \subsection{Abbreviations and Acronyms}
 
+Abbreviations and acronyms defined in the SRS~\citep{TeamBVSH2026SRS} keep the
+meaning given there, including AIR, CAS, CEAB, DR, FR, GA, LC, LLM, NFR, PDF,
+TBD and ULC. This document adds the following:
+
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
-  R & Requirement\\
-  SC & Scientific Computing \\
-  SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  API & Application Programming Interface\\
+  DAG & Directed Acyclic Graph\\
+  DBMS & Database Management System\\
+  HTTP & Hypertext Transfer Protocol\\
+  M & Module\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  OS & Operating System\\
+  REST & Representational State Transfer\\
+  UC & Unlikely Change (the SRS uses UC for Use Case)\\
+  UI & User Interface\\
   \bottomrule
 \end{tabular}\\
 
@@ -116,7 +120,7 @@ software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
 based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
+hides represent likely future changes.  Design for change is valuable here,
 where modifications are frequent, especially during initial development as the
 solution space is explored.  
 
@@ -533,17 +537,49 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Export Module (\mref{mExport})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] The export file format.
+\item[Services:] Writes the confirmed assessment data that an administrator
+  may see to a file, marking tentative dates.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
 \end{description}
 
+\subsubsection{Access Control Module (\mref{mAccess})}
+
+\begin{description}
+\item[Secrets:] How users are identified, how sessions expire and how roles
+  are checked.
+\item[Services:] Logs users in and out, ends a session after a period without
+  activity, and answers whether a user is an administrator and whether a user
+  may change a given course.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Web UI Module (\mref{mUI})}
+
+\begin{description}
+\item[Secrets:] The layout and look of each page.
+\item[Services:] Displays the upload, review, calendar, findings, dashboard
+  and export pages in the McMaster colour scheme and passes each user action to
+  the Request Controller.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Request Controller Module (\mref{mControl})}
+
+\begin{description}
+\item[Secrets:] The order in which modules are called to serve each user
+  request.
+\item[Services:] Receives each request from the web UI, checks the user's
+  session and role, calls the modules that serve it and returns the result.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
 
 \subsubsection{Cohort Module (\mref{mCohort})}
 
@@ -731,34 +767,49 @@ Term completeness (working name) & \mref{mDashboard}, \mref{mCalendar}\\
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
 
-In this section, the uses hierarchy between modules is
-provided. Parnas~\citep{Parnas1978} said of two programs A and B that A {\em uses} B if
-correct execution of B may be necessary for A to complete the task described in
-its specification. That is, A {\em uses} B if there exist situations in which
-the correct functioning of A depends upon the availability of a correct
-implementation of B.  Figure \ref{FigUH} illustrates the use relation between
-the modules. It can be seen that the graph is a directed acyclic graph
-(DAG). Each level of the hierarchy offers a testable and usable subset of the
+In this section, the uses hierarchy between modules is provided. Parnas
+\citep{Parnas1978} said of two programs A and B that A {\em uses} B if correct
+execution of B may be necessary for A to complete the task described in its
+specification. That is, A {\em uses} B if there exist situations in which the
+correct functioning of A depends upon the availability of a correct
+implementation of B. Figure \ref{FigUH} illustrates the use relation between
+the modules, and Table~\ref{TblUses} lists it. An arrow from A to B means that A
+uses B. The graph is a directed acyclic graph (DAG), and every arrow points
+down. Each level of the hierarchy offers a testable and usable subset of the
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
-
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=\textwidth]{UsesHierarchy.png} 
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
 
-%\section*{References}
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.4\textwidth} p{0.5\textwidth}}
+\toprule
+\textbf{Module} & \textbf{Uses}\\
+\midrule
+\mref{mUI} Web UI & \mref{mControl}\\
+\mref{mControl} Request Controller & \mref{mIntake} to \mref{mAccess}\\
+\mref{mIntake} Outline Intake & \mref{mExtract}, \mref{mReader}, \mref{mStore}\\
+\mref{mExtract} Extraction & \mref{mReader}, \mref{mLLM}, \mref{mStore}\\
+\mref{mSchedule} Assessment Schedule & \mref{mReview}, \mref{mWorkload}, \mref{mPolicy}, \mref{mStore}\\
+\mref{mWorkload} Workload Analysis & \mref{mReview}, \mref{mStore}, \mref{mCohort}, \mref{mCalendar}\\
+\mref{mPolicy} Policy Compliance & \mref{mReview}, \mref{mFindings}, \mref{mStore}, \mref{mCalendar}\\
+\mref{mGA} Graduate Attribute Check & \mref{mReview}, \mref{mFindings}, \mref{mStore}\\
+\mref{mDashboard} Dashboard & \mref{mReview}, \mref{mSchedule}, \mref{mFindings}, \mref{mStore}\\
+\mref{mSuggest} Date Suggestion & \mref{mWorkload}, \mref{mStore}, \mref{mCalendar}\\
+\mref{mReview}, \mref{mFindings}, \mref{mExport}, \mref{mAccess} & \mref{mStore}\\
+\mref{mCohort}, \mref{mCalendar} & None (hard-coded data)\\
+\mref{mReader}, \mref{mLLM}, \mref{mStore} & \mref{mHH}\\
+\bottomrule
+\end{tabular}
+\caption{Uses relation between modules}
+\label{TblUses}
+\end{table}
 
 \section{User Interfaces}
 
@@ -810,17 +861,67 @@ custom hardware and software. Two software interfaces cross a process boundary:
 \end{itemize}
 
 
-\section{Database Design}
+\section{Database Design} \label{SecDB}
 
-\wss{If a database is a significant component of the project, the database
-design should be summarized here.  This section should be filled in with NA if
-it is not appropriate for a given project.}
+The database is a central part of the system. Only the Data Store module
+(\mref{mStore}) reads or writes it (\acref{acDBMS}). Table~\ref{TblEntities}
+lists the stored entities. Each follows the data dictionary in the
+SRS~\citep{TeamBVSH2026SRS}, except Override and AuditEntry, which support the
+admin override feature.
 
-\section{Timeline}
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.25\textwidth} p{0.65\textwidth}}
+\toprule
+\textbf{Entity} & \textbf{Main relations}\\
+\midrule
+User & An administrator or instructor; an instructor teaches many Courses\\
+Course & One CAS course offering in a term; has one or more CourseCodes and one CourseOutline\\
+CourseCode & One listing of a Course; gives the program and year level\\
+CourseOutline & The submitted PDF of a Course; has many Assessments and LearningOutcomes\\
+Assessment & A graded component with a weight and a confirmed, tentative or missing date\\
+LearningOutcome & An outcome with its graduate attributes and review status\\
+MasterCourseRecord & The graduate attributes expected for a CourseCode\\
+AcademicCalendarEntry & A holiday, examination period or other restricted date range\\
+DateRecommendation & A suggested date for an Assessment, its explanation and decision\\
+ComplianceFinding & A policy or graduate attribute problem found in a Course\\
+Override & An administrator's acceptance of a ComplianceFinding, with a reason\\
+AuditEntry & Who changed which value, when, and its previous value\\
+\bottomrule
+\end{tabular}
+\caption{Stored entities}
+\label{TblEntities}
+\end{table}
 
-\wss{Schedule of tasks and who is responsible}
+A cross-listed course, such as SFWRENG 4X03, COMPSCI 3X03 and MECHTRON 3X03,
+is stored as one Course with three CourseCodes, so its outline and assessments
+are stored once. Records are kept for the retention period in
+\drref{DR_Retention}. \todo{Add an ER diagram once the DBMS is chosen.}
 
-\wss{You can point to GitHub if this information is included there}
+\section{Timeline} \label{SecTimeline}
+
+Work is tracked on the project's GitHub board~\citep{TeamBVSH2026DP}.
+Table~\ref{TblTimeline} gives the milestones from the Development
+Plan~\citep{TeamBVSH2026DP}. \todo{Add the owner of each module.}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.25\textwidth} p{0.65\textwidth}}
+\toprule
+\textbf{When} & \textbf{Milestone}\\
+\midrule
+Week 10 & Design Document Rev $-1$ and CD-Fall Rev 0\\
+Weeks 11--12 & Proof of concept demonstration: \mref{mIntake}, \mref{mReader},
+\mref{mExtract}, \mref{mLLM} and the review page\\
+Week 14 & Minimum viable product\\
+Week 16 & Design Document Rev 0 (MIS semantics added)\\
+Weeks 18--19 & Rev 0 demonstration\\
+Week 24 & Final demonstration (Rev 1)\\
+\bottomrule
+\end{tabular}
+\caption{Timeline}
+\label{TblTimeline}
+\end{table}
 
 \section{Generative AI Use Disclosure}
 
