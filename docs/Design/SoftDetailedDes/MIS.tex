@@ -35,6 +35,9 @@ urlcolor=cyan          % color of external links
 \externaldocument[MG-]{../SoftArchitecture/MG}
 
 \newcommand{\mref}[1]{M\ref{MG-#1}}
+\newcommand{\frref}[1]{FR\ref{SRS-#1}}
+\newcommand{\nfrref}[1]{NFR\ref{SRS-#1}}
+\newcommand{\drref}[1]{DR\ref{SRS-#1}}
 
 \input{../../Comments.text}
 \input{../../Common.text}
@@ -768,6 +771,231 @@ decide & r: RecID, accept: $\mathbb{B}$, u: User & -- & NotOwner, StaleSuggestio
 \todo{Rev 0}
 
 \subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Export Module (\mref{mExport})} \label{mis-mExport}
+
+\subsection{Module}
+
+Export
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+exportData & t: Term, u: User & File & NotAdmin \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None.
+
+\subsubsection{Environment Variables}
+
+None.
+
+\subsubsection{Assumptions}
+
+None.
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Access Control Module (\mref{mAccess})} \label{mis-mAccess}
+
+\subsection{Module}
+
+AccessControl
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+\item \textit{SESSION\_TIMEOUT}: Inactivity limit before a session expires, 30 minutes (\frref{FR_Access_Timeout}).
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+login & cr: Credentials & Session & InvalidCredentials \\
+logout & s: Session & -- & -- \\
+currentUser & s: Session & User & SessionExpired \\
+canEdit & u: User, c: CourseID & $\mathbb{B}$ & -- \\
+isAdmin & u: User & $\mathbb{B}$ & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+\item sessions: set of (Session, User, lastActive: Time)
+\end{itemize}
+Stored through the Data Store (\mref{mStore}).
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+\item clock: The server's system clock.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+None.
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Web UI Module (\mref{mUI})} \label{mis-mUI}
+
+\subsection{Module}
+
+WebUI
+
+\subsection{Uses}
+
+\mref{mControl}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+showUpload & -- & -- & -- \\
+showReview & c: CourseID & -- & -- \\
+showCalendar & f: CalendarFilter & -- & -- \\
+showFindings & c: CourseID & -- & -- \\
+showDashboard & t: Term & -- & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None.
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+\item window: The user's browser window.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+None.
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Request Controller Module (\mref{mControl})} \label{mis-mControl}
+
+\subsection{Module}
+
+RequestController
+
+\subsection{Uses}
+
+\mref{mIntake}, \mref{mExtract}, \mref{mReview}, \mref{mSchedule}, \mref{mWorkload}, \mref{mPolicy}, \mref{mGA}, \mref{mFindings}, \mref{mDashboard}, \mref{mSuggest}, \mref{mExport}, \mref{mAccess}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+handle & q: Request & Response & SessionExpired, NotAuthorized \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None.
+
+\subsubsection{Environment Variables}
+
+None.
+
+\subsubsection{Assumptions}
+
+None.
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
 \todo{Rev 0}
 
 \newpage
