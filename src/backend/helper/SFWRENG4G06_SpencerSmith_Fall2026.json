@@ -1,0 +1,205 @@
+{
+    "course_outline_filename": "SFWRENG4G06_SpencerSmith_Fall2026.pdf",
+    "course_information": {
+      "term": ["Fall 2026"],
+      "course_code": "SFWRENG 4G06",
+      "course_title": "Software Design IV Design Project",
+      "website": {
+        "link": "https://gitlab.cas.mcmaster.ca/courses/capstone",
+        "source_text": "Most of the course content will be maintained in a public git (CAS GitLab) repository: https://gitlab.cas.mcmaster.ca/courses/capstone",
+        "source_page": 2
+      },
+      "contact": [
+        {
+          "instructor": "Dr. Spencer Smith",
+          "email": "smiths@mcmaster.ca",
+          "source_text": "Dr. Spencer Smith",
+          "source_page": 1,
+          "office_hours": {
+            "source_page": 1,
+            "source_text": "Office Hours: By appointment (see schedule)"
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "C01",
+          "lectures": [],
+          "tutorials": [],
+          "teaching_assistants": [
+            {
+              "has_ta_info": true,
+              "source_text": "Christopher Schankula (schankuc@mcmaster.ca)",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Lucas Dutton (duttonl@mcmaster.ca)",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Rashad Bhuiyan (bhuiyr2@mcmaster.ca)",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Yiding Li (liy443@mcmaster.ca)",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Rebecca Difilippo (difilir@mcmaster.ca)",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Mohamad Mirhoseininejad (mirhos5@mcmaster.ca)",
+              "source_page": 1
+            }
+          ]
+        }
+      ]
+    },
+    "assessments": [
+      {
+        "id": "1",
+        "name": "Team Formed, Project Selected",
+        "type": "deliverable",
+        "source_text": "Team Formed, Project Selected | 0%",
+        "date": null,
+        "weight_percent": 0,
+        "source_page": 6
+      },
+      {
+        "id": "2",
+        "name": "Problem Statement, POC Plan, Development Plan",
+        "type": "deliverable",
+        "source_text": "Problem Statement, POC Plan, Development Plan | 2%",
+        "date": null,
+        "weight_percent": 2,
+        "source_page": 6
+      },
+      {
+        "id": "3",
+        "name": "Req. Doc. and Hazard Analysis Revision 0",
+        "type": "deliverable",
+        "source_text": "Req. Doc. and Hazard Analysis Revision 0 | 7%+",
+        "date": null,
+        "weight_percent": 7,
+        "source_page": 6
+      },
+      {
+        "id": "4",
+        "name": "V&V Plan Revision 0",
+        "type": "deliverable",
+        "source_text": "V&V Plan Revision 0 | 5%",
+        "date": null,
+        "weight_percent": 5,
+        "source_page": 6
+      },
+      {
+        "id": "5",
+        "name": "Design Document Rev -1 and CD-Fall Rev 0",
+        "type": "deliverable",
+        "source_text": "Design Document Rev -1 and CD-Fall Rev 0 | 3%+",
+        "date": null,
+        "weight_percent": 3,
+        "source_page": 6
+      },
+      {
+        "id": "6",
+        "name": "Proof of Concept Demonstration",
+        "type": "demonstration",
+        "source_text": "Proof of Concept Demonstration 5%*",
+        "date": null,
+        "weight_percent": 5,
+        "source_page": 7
+      },
+      {
+        "id": "7",
+        "name": "Design Document Revision 0",
+        "type": "deliverable",
+        "source_text": "Design Document Revision 0 4%+",
+        "date": null,
+        "weight_percent": 4,
+        "source_page": 7
+      },
+      {
+        "id": "8",
+        "name": "Revision 0 Demonstration",
+        "type": "demonstration",
+        "source_text": "Revision 0 Demonstration 10%*",
+        "date": null,
+        "weight_percent": 10,
+        "source_page": 7
+      },
+      {
+        "id": "9",
+        "name": "V&V Report Rev 0 and CD-Winter Rev 0",
+        "type": "deliverable",
+        "source_text": "V&V Report Rev 0 and CD-Winter Rev 0 4%++",
+        "date": null,
+        "weight_percent": 4,
+        "source_page": 7
+      },
+      {
+        "id": "10",
+        "name": "Final Demonstration (Revision 1)",
+        "type": "demonstration",
+        "source_text": "Final Demonstration (Revision 1) 20%*",
+        "date": null,
+        "weight_percent": 20,
+        "source_page": 7
+      },
+      {
+        "id": "11",
+        "name": "EXPO Demonstration",
+        "type": "demonstration",
+        "source_text": "EXPO Demonstration 10%*",
+        "date": null,
+        "weight_percent": 10,
+        "source_page": 7
+      },
+      {
+        "id": "12",
+        "name": "Final Documentation (Revision 1)",
+        "type": "deliverable",
+        "source_text": "Final Documentation (Revision 1) 30%*,#",
+        "date": null,
+        "weight_percent": 30,
+        "source_page": 7
+      }
+    ],
+    "materials": {
+      "has_materials": true,
+      "source_text": "5 Required Materials",
+      "source_page": 3
+    },
+    "learning_outcomes": [
+      {
+        "id": "LO1",
+        "text": "You can find the learning objectives in the course repo.",
+        "source_page": 2
+      }
+    ],
+    "graduate_attributes": [],
+    "policies": {
+      "genai": {
+        "has_genai": true,
+        "source_text": "Generative Artificial Intelligence (AI) is permitted in this course for all deliverables.",
+        "source_page": 15
+      },
+      "advisory": {
+        "has_advisory": true,
+        "source_text": "12.3 Academic Integrity",
+        "source_page": 11
+      },
+      "discrimination": {
+        "has_discrimination": true,
+        "source_text": "The Faculty of Engineering is concerned with ensuring an environment that is free of all adverse discrimination.",
+        "source_page": 11
+      }
+    }
+  }
+

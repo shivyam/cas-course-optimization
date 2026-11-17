@@ -1,0 +1,273 @@
+{
+    "course_outline_filename": "SFWRENG3DB3_FeiChiang_Fall2026.pdf",
+    "course_information": {
+      "term": ["Fall 2026"],
+      "course_code": "SFWRENG 3DB3",
+      "course_title": "Databases",
+      "website": {
+        "link": "",
+        "source_text": "Any changes to the schedule or course delivery will be communicated on the course announcements section on Avenue to Learn and/or MS Teams.",
+        "source_page": 4
+      },
+      "contact": [
+        {
+          "instructor": "Fei Chiang",
+          "email": "fchiang@mcmaster.ca",
+          "source_text": "Professor: Fei Chiang",
+          "source_page": 1,
+          "office_hours": {
+            "source_page": 1,
+            "source_text": "Office hours: Thurs 3:30 4:30pm, or by appointment."
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "C01",
+          "lectures": [
+            {
+              "has_location": false,
+              "source_text": "Tues at 11:30am - 12:20pm",
+              "source_page": 1
+            },
+            {
+              "has_location": false,
+              "source_text": "Thurs at 2:30pm - 3:20pm",
+              "source_page": 1
+            },
+            {
+              "has_location": false,
+              "source_text": "Fri at 11:30am - 12:20pm",
+              "source_page": 1
+            }
+          ],
+          "tutorials": [
+            {
+              "section": "T01",
+              "has_location": false,
+              "source_text": "(T01) Fri 10:30am - 11:20am",
+              "source_page": 1
+            },
+            {
+              "section": "T02",
+              "has_location": false,
+              "source_text": "(T02) Thurs 12:30pm - 1:20pm",
+              "source_page": 1
+            },
+            {
+              "section": "T03",
+              "has_location": false,
+              "source_text": "(T03) Tues 12:30pm - 1:20pm",
+              "source_page": 1
+            }
+          ],
+          "teaching_assistants": [
+            {
+              "has_ta_info": true,
+              "source_text": "Nishttha Sharma sharmn99@mcmaster.ca",
+              "source_page": 1
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Wongyu Kim kimw30@mcmaster.ca",
+              "source_page": 2
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Nick Yang yangc194@mcmaster.ca",
+              "source_page": 2
+            },
+            {
+              "has_ta_info": true,
+              "source_text": "Ursula Chui chuiu@mcmaster.ca",
+              "source_page": 2
+            }
+          ]
+        }
+      ]
+    },
+    "assessments": [
+      {
+        "id": "1",
+        "name": "A1",
+        "type": "assignment",
+        "source_text": "A1 (12%): due late Sept/early Oct",
+        "date": null,
+        "weight_percent": 12,
+        "source_page": 2
+      },
+      {
+        "id": "2",
+        "name": "A2",
+        "type": "assignment",
+        "source_text": "A2 (14%): due late Oct/early Nov",
+        "date": null,
+        "weight_percent": 14,
+        "source_page": 2
+      },
+      {
+        "id": "3",
+        "name": "A3",
+        "type": "assignment",
+        "source_text": "A3 (14%): due date may be during the last week of classes.",
+        "date": null,
+        "weight_percent": 14,
+        "source_page": 2
+      },
+      {
+        "id": "4",
+        "name": "Midterm",
+        "type": "midterm",
+        "source_text": "Midterm: 20% (scheduled for Fri. Oct. 23, 2026 during lecture time).",
+        "date": "2026-10-23",
+        "weight_percent": 20,
+        "source_page": 2
+      },
+      {
+        "id": "5",
+        "name": "Final Exam",
+        "type": "final_exam",
+        "source_text": "Final Exam: 40%",
+        "date": null,
+        "weight_percent": 40,
+        "source_page": 2
+      }
+    ],
+    "materials": {
+      "has_materials": true,
+      "source_text": "Textbook: The required textbook for this course is \"Database Management Systems\" (3rd edition) by R. Ramakrishnan, J. Gehrke.",
+      "source_page": 2
+    },
+    "learning_outcomes": [
+      {
+        "id": "LO1",
+        "text": "The significance of the ER model and list its main components.",
+        "source_page": 2
+      },
+      {
+        "id": "LO2",
+        "text": "When views, indexes, and constraints should be used, and describe the performance considerations associated with each construct.",
+        "source_page": 2
+      },
+      {
+        "id": "LO3",
+        "text": "Differences among indexing schemes, and when they're applicable.",
+        "source_page": 2
+      },
+      {
+        "id": "LO4",
+        "text": "The problems caused by redundancy in database design.",
+        "source_page": 2
+      },
+      {
+        "id": "LO5",
+        "text": "The 4 transaction properties that DBMS guarantee.",
+        "source_page": 2
+      },
+      {
+        "id": "LO6",
+        "text": "Several data-intensive sustainability issues.",
+        "source_page": 2
+      },
+      {
+        "id": "LO7",
+        "text": "The different locking protocols used in a DBMS and their properties and behaviour.",
+        "source_page": 3
+      },
+      {
+        "id": "LO8",
+        "text": "Deadlock prevention and detection mechanisms.",
+        "source_page": 3
+      },
+      {
+        "id": "LO9",
+        "text": "Use a relational database management system to load data into tables, and to write SQL to retrieve desired data records.",
+        "source_page": 3
+      },
+      {
+        "id": "LO10",
+        "text": "Write a query using relational algebra.",
+        "source_page": 3
+      },
+      {
+        "id": "LO11",
+        "text": "Develop an E-R model for a given application. Translate a given E-R model to a relational model.",
+        "source_page": 3
+      },
+      {
+        "id": "LO12",
+        "text": "Given a data instance, identify whether it's normalized as (3NF, or BCNF), and whether a decomposition is dependency preserving or a lossless join. If not, describe the normalization/decomposition steps.",
+        "source_page": 3
+      },
+      {
+        "id": "LO13",
+        "text": "Identify when anomalies can occur in interleaved transactions.",
+        "source_page": 3
+      },
+      {
+        "id": "LO14",
+        "text": "Identify a serializable schedule.",
+        "source_page": 3
+      },
+      {
+        "id": "LO15",
+        "text": "Detect deadlocks given a series of transactions.",
+        "source_page": 3
+      }
+    ],
+    "graduate_attributes": [
+      {
+        "code": "1.4",
+        "name": "Competence in Specialized Engineering knowledge",
+        "level": ["#1", "#2","#3","#4","#5","#6","#7","#8"],
+        "source_text": "Graduate Attribute Indicator 1.4: Competence in Specialized Engineering knowledge (#1 - #8)",
+        "source_page": 3
+      },
+      {
+        "code": "2.1",
+        "name": "Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem",
+        "level": ["#2","#3","#4","#11"],
+        "source_text": "Graduate Attribute Indicator 2.1: Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem (#2, 3, 4, 11)",
+        "source_page": 3
+      },
+      {
+        "code": "2.2",
+        "name": "Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem",
+        "level": ["#9","#10","#11","#12"],
+        "source_text": "Graduate Attribute Indicator 2.2: Identifies and states reasonable assumptions and suitable engineering fundamentals, before proposing a solution path to a problem (#9, 10, 11, 12)",
+        "source_page": 3
+      },
+      {
+        "code": "4.3",
+        "name": "Develops models/prototypes; tests, evaluates, and iterates as appropriate",
+        "level": ["#9", "#10","#11", "#13", "#14"],
+        "source_text": "Graduate Attribute Indicator 4.3: Develops models/prototypes; tests, evaluates, and iterates as appropriate (#9, 10, 11, 13, 14)",
+        "source_page": 4
+      },
+      {
+        "code": "5.1",
+        "name": "Evaluates engineering tools, identifies their limitations, and selects, adapts, or extends them appropriately",
+        "level": ["#9","#10"],
+        "source_text": "Graduate Attribute Indicator 5.1: Evaluates engineering tools, identifies their limitations, and selects, adapts, or extends them appropriately (#9, 10)",
+        "source_page": 4
+      }
+    ],
+    "policies": {
+      "genai": {
+        "has_genai": true,
+        "source_text": "While students may use foundation models for brainstorming, the submitted content, anal-ysis, and conclusion must be independently developed by the student.",
+        "source_page": 7
+      },
+      "advisory": {
+        "has_advisory": true,
+        "source_text": "4.1 Academic Integrity",
+        "source_page": 6
+      },
+      "discrimination": {
+        "has_discrimination": true,
+        "source_text": "The Faculty of Engineering is concerned with ensuring an environment that is free of all adverse discrimination.",
+        "source_page": 8
+      }
+    }
+  }
+  

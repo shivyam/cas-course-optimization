@@ -1,0 +1,174 @@
+{
+  "course_outline_filename": "COMPSCI2GA3_BojanNokovic_Fall2026.pdf",
+  "course_information": {
+    "term": ["Fall 2026"],
+    "course_code": "COMPSCI 2GA3",
+    "course_title": "Computer Architecture",
+    "website": {
+      "link": "",
+      "source_text": "Additional References: All additional references will be posted at the course website on Avenue",
+      "source_page": 2
+    },
+    "contact": [
+      {
+        "instructor": "Dr. Bojan Nokovic, P.Eng.",
+        "email": "nokovib@mcmaster.ca",
+        "source_text": "Dr. Bojan Nokovic, P.Eng. Email: nokovib@mcmaster.ca",
+        "source_page": 1,
+        "office_hours": {
+          "source_page": 1,
+          "source_text": "Office Hours: By appointment"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "section": "C01",
+        "lectures": [
+          {
+            "has_location": false,
+            "source_text": "Lectures: Three lectures per week on Tu. Th. Fr. Location and time is provided on Mosaic.",
+            "source_page": 1
+          }
+        ],
+        "tutorials": [
+          {
+            "has_location": false,
+            "source_text": "Tutorials: Every week, starting September 08, there will be one-hour tutorial.",
+            "source_page": 1
+          }
+        ],
+        "teaching_assistants": [
+          {
+            "has_ta_info": true,
+            "source_text": "Name: Gulati Abhinav Email: gulata15@mcmaster.ca",
+            "source_page": 1
+          },
+          {
+            "has_ta_info": true,
+            "source_text": "Name: Chowdhary Jatin Email: chowdhaj@mcmaster.ca",
+            "source_page": 1
+          },
+          {
+            "has_ta_info": true,
+            "source_text": "Name: Grady Rueffer Email: ruefferg@mcmaster.ca",
+            "source_page": 1
+          },
+          {
+            "has_ta_info": true,
+            "source_text": "Name: Rashad Bhuiyan Email: bhuiyr2@mcmaster.ca",
+            "source_page": 1
+          },
+          {
+            "has_ta_info": true,
+            "source_text": "Name: Valeria Ramirez Osorio Email: ramirev@mcmaster.ca",
+            "source_page": 1
+          }
+        ]
+      }
+    ]
+  },
+  "assessments": [
+    {
+      "id": "1",
+      "name": "Midterm 1",
+      "type": "midterm",
+      "source_text": "Midterm 1 - Fr. Oct. 23, 2026; 2:30 PM TO 3:20 PM",
+      "date": "2026-10-23",
+      "weight_percent": 15,
+      "source_page": 2
+    },
+    {
+      "id": "2",
+      "name": "Midterm 2",
+      "type": "midterm",
+      "source_text": "Midterm 2 - Fr. Nov. 27, 2026; 2:30 PM TO 3:20 PM",
+      "date": "2026-11-27",
+      "weight_percent": 15,
+      "source_page": 2
+    },
+    {
+      "id": "3",
+      "name": "Assignments",
+      "type": "assignment",
+      "source_text": "Assignments: (4 homework assignments worth 5% each) 20%",
+      "date": null,
+      "weight_percent": 20,
+      "source_page": 2
+    },
+    {
+      "id": "4",
+      "name": "Final exam",
+      "type": "final_exam",
+      "source_text": "Final exam: (2 hours) 50%",
+      "date": null,
+      "weight_percent": 50,
+      "source_page": 2
+    }
+  ],
+  "materials": {
+    "has_materials": true,
+    "source_text": "Required Materials and Texts",
+    "source_page": 2
+  },
+  "learning_outcomes": [
+    {
+      "id": "LO1",
+      "text": "Understand how are programs written in a high-level language, such as C, translated into the language of the hardware, and how does the hardware execute the resulting program.",
+      "source_page": 6
+    },
+    {
+      "id": "LO2",
+      "text": "Know and understand RISC-V Instruction set architecture (ISA): functionality and use of resources (registers and memory) of a machine-level instruction",
+      "source_page": 6
+    },
+    {
+      "id": "LO3",
+      "text": "The instruction classes for data movement, arithmetic/logical operations, and flow control",
+      "source_page": 6
+    },
+    {
+      "id": "LO4",
+      "text": "Processor and system performance",
+      "source_page": 6
+    },
+    {
+      "id": "LO5",
+      "text": "Sustainability and performance effects of power consumption",
+      "source_page": 6
+    },
+    {
+      "id": "LO6",
+      "text": "Performance enhancement through instruction pipelining",
+      "source_page": 6
+    },
+    {
+      "id": "LO7",
+      "text": "The memory hierarchy, composing memory and cache mapping techniques.",
+      "source_page": 6
+    },
+    {
+      "id": "LO8",
+      "text": "Be able to read and write programs in RISC-V assembly language and measure the performance of components in a CPU system.",
+      "source_page": 6
+    }
+  ],
+  "graduate_attributes": [],
+  "policies": {
+    "genai": {
+      "has_genai": true,
+      "source_text": "Please be advised that the use of Generative Artificial Intelligence (AI) is up to the discretion of individual faculty.",
+      "source_page": 5
+    },
+    "advisory": {
+      "has_advisory": true,
+      "source_text": "Academic Integrity",
+      "source_page": 3
+    },
+    "discrimination": {
+      "has_discrimination": true,
+      "source_text": "The Faculty of Engineering is concerned with ensuring an environment that is free of all adverse discrimination. ",
+      "source_page": 5
+    }
+  }
+}
