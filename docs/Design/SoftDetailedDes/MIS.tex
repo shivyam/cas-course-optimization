@@ -31,10 +31,10 @@ urlcolor=cyan          % color of external links
 
 \usepackage{array}
 
-\externaldocument{../../SRS/SRS}
+\externaldocument[SRS-]{../../SRS-IEEE/SRS}
 \externaldocument[MG-]{../SoftArchitecture/MG}
-% Module numbers from the MG, e.g. \mref{mReader} gives M16.
-\providecommand{\mref}[1]{M\ref{MG-#1}}
+
+\newcommand{\mref}[1]{M\ref{MG-#1}}
 
 \input{../../Comments.text}
 \input{../../Common.text}
@@ -125,7 +125,9 @@ described by giving their type signature followed by their specification.
 
 \section{Module Decomposition}
 
-The following table is taken directly from the Module Guide document for this project.
+The following table is taken directly from the Module
+Guide~\citep{TeamBVSH2026MG}. The Hardware-Hiding module (\mref{mHH}) is
+provided by the operating system and has no MIS.
 
 \begin{table}[h!]
 \centering
@@ -170,32 +172,33 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Outline Intake Module (\mref{mIntake})} \label{mis-mIntake}
 
 \subsection{Module}
 
-\wss{Short name for the module}
+OutlineIntake
 
 \subsection{Uses}
 
+\mref{mExtract}, \mref{mReader}, \mref{mStore}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
+\begin{itemize}
+\item \textit{MAX\_UPLOAD\_SIZE}: Largest outline file accepted, 5 MB.
+\end{itemize}
+
 \subsubsection{Exported Access Programs}
 
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+submit & files: seq of File, u: User & seq of OutlineID & UnsupportedFormat, FileTooLarge, EmptyFile, NotAuthorized \\
+getOutline & id: OutlineID & Outline & NotFound \\
 \hline
 \end{tabular}
 \end{center}
@@ -204,42 +207,220 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+% None.
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+% None.
+\todo{Rev 0}
+
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% Each submitted file is one course outline.
+\todo{Rev 0}
+
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
-\end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Extraction Module (\mref{mExtract})} \label{mis-mExtract}
+
+\subsection{Module}
+
+Extraction
+
+\subsection{Uses}
+
+\mref{mReader}, \mref{mLLM}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+extract & id: OutlineID & CourseRecord & ModelUnavailable, ExtractionTimeout, InvalidModelOutput \\
+missingFields & c: CourseID & seq of Finding & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+
+\subsubsection{Assumptions}
+
+% The text returned by the Document Reader (\mref{mReader}) is in reading order.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+
+\newpage
+
+\section{MIS of Extraction Review Module (\mref{mReview})} \label{mis-mReview}
+
+\subsection{Module}
+
+ExtractionReview
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+getForReview & c: CourseID & CourseRecord & NotFound \\
+correct & v: ValueID, x: Value, u: User & -- & NotFound, NotAuthorized \\
+confirm & c: CourseID, u: User & -- & NotAuthorized, UnreviewedValues \\
+isConfirmed & c: CourseID & $\mathbb{B}$ & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item reviewStatus: ValueID $\rightarrow$ \{extracted, corrected, confirmed\}
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% None.
+\todo{Rev 0}
+
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Assessment Schedule Module (\mref{mSchedule})} \label{mis-mSchedule}
+
+\subsection{Module}
+
+AssessmentSchedule
+
+\subsection{Uses}
+
+\mref{mReview}, \mref{mWorkload}, \mref{mPolicy}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+setTentativeDate & a: AssessmentID, d: Date, u: User & -- & NotOwner, DateOutsideTerm \\
+approveDate & a: AssessmentID, d: Date, u: User & -- & NotOwner \\
+getSchedule & c: CourseID & seq of Assessment & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item tentative: AssessmentID $\rightarrow$ Date
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+
+\subsubsection{Assumptions}
+
+% Only the instructor of a course changes its dates (\uref{ucAuthority}).
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+
+\subsubsection{Local Functions}
+
+% \todo{Rev 0, as needed.}
+\todo{Rev 0}
 
 \newpage
 
