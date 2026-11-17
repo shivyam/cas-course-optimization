@@ -416,6 +416,69 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
+\subsubsection{Workload Analysis Module (\mref{mWorkload})}
+
+\begin{description}
+\item[Secrets:] How assessment density per cohort and week is computed.
+\item[Services:] Gives the number of assessments due in each week of term for each cohort, and
+lists assessments that fall in restricted periods such as the ban period or the examination period.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Policy Compliance Module (\mref{mPolicy})}
+
+\begin{description}
+\item[Secrets:] The McMaster and CAS course outline policy rules
+\item[Services:] Checks a confirmed outline against the policy: required sections, weights totalling
+100\% (including bonus marks), single-weight limits, ban-period rules and dates marked
+TBD. Records each problem as a finding.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Graduate Attribute Check Module (\mref{mGA})}
+
+\begin{description}
+\item[Secrets:] The CEAB graduate attribute list and how it is compared with the master course
+sheet.
+\item[Services:] Flags graduate attributes in a confirmed outline that are missing from, or do not
+match, the master course sheet, and says when a course has no row in the sheet.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Findings and Override Module (\mref{mFindings})}
+
+\begin{description}
+\item[Secrets:] How findings, accepted findings and their reasons are recorded and audited.
+\item[Services:] Lists the findings for each course. Lets an administrator accept a finding with a
+reason, which is kept in the audit trail.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Dashboard Module (\mref{mDashboard})}
+
+\begin{description}
+\item[Secrets:] How the status of a course and of a term is summarized.
+\item[Services:] Presents, for each course the user may see, what is missing, which findings are open
+and which values are unconfirmed. Shows whether the term is fully planned before it starts.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Date Suggestion Module (\mref{mSuggest})}
+
+\begin{description}
+\item[Secrets:] The method used to choose alternative dates.
+\item[Services:] Only when an instructor asks, suggests alternative dates for an assessment that
+is in a conflict or marked TBD, each with an explanation, and records the instructor’s
+decision. Never suggests a date in a restricted period.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
 \subsubsection{Input Format Module (\mref{mInput})}
 
 \begin{description}
