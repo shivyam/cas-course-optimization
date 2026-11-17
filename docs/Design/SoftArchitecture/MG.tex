@@ -571,10 +571,10 @@ As there is no hardware component in the system, there is no communication betwe
 custom hardware and software. Two software interfaces cross a process boundary:
 
 \begin{itemize}
-  \item Web UI to backend: The browser sends HTTP requests to a REST API served under 
+  \item Web UI to Backend: The browser sends HTTP requests to a REST API served under 
   the path \texttt{/api} by the Request Controller (\mref{mControl}), built on 
   FastAPI. Responses are structured data that the Web UI (\mref{mUI}) displays.
-  \item Backend to language model: The LLM Client (\mref{mLLM}) sends
+  \item Backend to LLM: The LLM Client (\mref{mLLM}) sends
   prompts over HTTP to a model service running on the same CAS server. No 
   request leaves CAS infrastructure.
 \end{itemize}
