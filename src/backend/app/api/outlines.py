@@ -25,17 +25,26 @@ ALLOWED_CONTENT_TYPES = {
 }
 
 
-def extract_pdf_text(contents: bytes) -> str:
-    """Extract text from a PDF's contents."""
+def read_pdf_pages(contents: bytes) -> list[tuple[int, str]]:
+    """Extract text from a PDF's contents page by page.
+
+    Returns (page number, text) pairs with pages numbered from 1, so that the
+    LLM extraction step can say which page each extracted value came from.
+    """
     try:
         document = pymupdf.open(stream=contents, filetype="pdf")
-        text = "\n\n".join(page.get_text() for page in document).strip()
+        pages = [(number, page.get_text()) for number, page in enumerate(document, 1)]
     except pymupdf.FileDataError as error:
         raise ValueError("The uploaded file is not a valid PDF.") from error
     finally:
         if "document" in locals():
             document.close()
-    return text
+    return pages
+
+
+def extract_pdf_text(contents: bytes) -> str:
+    """Extract text from a PDF's contents as one string (pages joined)."""
+    return "\n\n".join(text for _, text in read_pdf_pages(contents)).strip()
 
 
 def save_extracted_text(filename: str, text: str) -> Path:

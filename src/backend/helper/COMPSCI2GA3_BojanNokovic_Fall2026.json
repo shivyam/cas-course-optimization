@@ -89,15 +89,42 @@
     },
     {
       "id": "3",
-      "name": "Assignments",
+      "name": "Assignment 1",
       "type": "assignment",
       "source_text": "Assignments: (4 homework assignments worth 5% each) 20%",
       "date": null,
-      "weight_percent": 20,
+      "weight_percent": 5,
       "source_page": 2
     },
     {
       "id": "4",
+      "name": "Assignment 2",
+      "type": "assignment",
+      "source_text": "Assignments: (4 homework assignments worth 5% each) 20%",
+      "date": null,
+      "weight_percent": 5,
+      "source_page": 2
+    },
+    {
+      "id": "5",
+      "name": "Assignment 3",
+      "type": "assignment",
+      "source_text": "Assignments: (4 homework assignments worth 5% each) 20%",
+      "date": null,
+      "weight_percent": 5,
+      "source_page": 2
+    },
+    {
+      "id": "6",
+      "name": "Assignment 4",
+      "type": "assignment",
+      "source_text": "Assignments: (4 homework assignments worth 5% each) 20%",
+      "date": null,
+      "weight_percent": 5,
+      "source_page": 2
+    },
+    {
+      "id": "7",
       "name": "Final exam",
       "type": "final_exam",
       "source_text": "Final exam: (2 hours) 50%",
