@@ -181,7 +181,7 @@ AuditEntry & (user, time, value or finding changed, previous value, reason)\\
 DateRecommendation & (assessment, suggested date, explanation, decision)\\
 CourseCode & A course code, such as SFWRENG 4X03\\
 Cohort & (program, year level), for example (COMPSCI, 2)\\
-Date, Week, Term & A calendar date; a week of term; a term, such as Winter 2027\\
+Date, Time, Week, Term & A calendar date; a time of day; a week of term; a term, such as Winter 2027\\
 Status & (missing values: $\mathbb{N}$, open findings: $\mathbb{N}$, unconfirmed values: $\mathbb{N}$)\\
 CalendarFilter & The courses, year levels and programs to show\\
 Request, Response & A request from the Web UI (\mref{mUI}) and the reply to it\\
@@ -254,7 +254,7 @@ OutlineIntake
 \subsubsection{Exported Constants}
 
 \begin{itemize}
-\item \textit{MAX\_UPLOAD\_SIZE}: Largest outline file accepted, 5 MB.
+\item \textit{MAX\_UPLOAD\_SIZE}: Largest outline file accepted, 10 MB.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -282,12 +282,10 @@ getOutline & id: OutlineID & Outline & NotFound \\
 % None.
 \todo{Rev 0}
 
-
 \subsubsection{Assumptions}
 
 % Each submitted file is one course outline.
 \todo{Rev 0}
-
 
 \subsubsection{Access Routine Semantics}
 
@@ -337,12 +335,10 @@ missingFields & c: CourseID & seq of Finding & NotFound \\
 % None.
 \todo{Rev 0}
 
-
 \subsubsection{Environment Variables}
 
 % None.
 \todo{Rev 0}
-
 
 \subsubsection{Assumptions}
 
@@ -353,7 +349,6 @@ missingFields & c: CourseID & seq of Finding & NotFound \\
 
 % \todo{Rev 0: transition, output and exception for each access program.}
 \todo{Rev 0}
-
 
 \subsubsection{Local Functions}
 
@@ -385,6 +380,7 @@ None.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 getForReview & c: CourseID & CourseRecord & NotFound \\
 correct & v: ValueID, x: Value, u: User & -- & NotFound, NotAuthorized \\
 confirm & c: CourseID, u: User & -- & NotAuthorized, UnreviewedValues \\
@@ -403,7 +399,6 @@ isConfirmed & c: CourseID & $\mathbb{B}$ & NotFound \\
 % Stored through the Data Store (\mref{mStore}).
 \todo{Rev 0}
 
-
 \subsubsection{Environment Variables}
 
 % None.
@@ -411,15 +406,13 @@ isConfirmed & c: CourseID & $\mathbb{B}$ & NotFound \\
 
 \subsubsection{Assumptions}
 
-% None.
+% The access program \textit{init} is called before any other access program of this module.
 \todo{Rev 0}
-
 
 \subsubsection{Access Routine Semantics}
 
 % \todo{Rev 0: transition, output and exception for each access program.}
 \todo{Rev 0}
-
 
 \subsubsection{Local Functions}
 
@@ -450,6 +443,7 @@ None.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 setTentativeDate & a: AssessmentID, d: Date, u: User & -- & NotOwner, DateOutsideTerm \\
 approveDate & a: AssessmentID, d: Date, u: User & -- & NotOwner \\
 getSchedule & c: CourseID & seq of Assessment & NotFound \\
@@ -472,17 +466,15 @@ getSchedule & c: CourseID & seq of Assessment & NotFound \\
 % None.
 \todo{Rev 0}
 
-
 \subsubsection{Assumptions}
 
-% Only the instructor of a course changes its dates (\uref{ucAuthority}).
+% The access program \textit{init} is called before any other access program of this module.
 \todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
 % \todo{Rev 0: transition, output and exception for each access program.}
 \todo{Rev 0}
-
 
 \subsubsection{Local Functions}
 
@@ -521,9 +513,13 @@ reanalyze & c: CourseID & -- & NotFound \\
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -573,9 +569,13 @@ checkPolicy & c: CourseID & seq of Finding & NotConfirmed, NotFound \\
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -619,9 +619,13 @@ checkGA & c: CourseID & seq of Finding & NotConfirmed, NoMasterRecord \\
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -655,6 +659,7 @@ None.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 record & f: Finding & FindingID & -- \\
 findings & c: CourseID & seq of Finding & NotFound \\
 override & f: FindingID, r: String, u: User & -- & NotAdmin, EmptyReason, NotFound \\
@@ -666,12 +671,22 @@ auditTrail & c: CourseID & seq of AuditEntry & NotAdmin \\
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% \begin{itemize}
+% \item findingSet: set of Finding
+% \item audit: seq of AuditEntry
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
 \todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
@@ -712,9 +727,13 @@ termCompleteness & t: Term & $\mathbb{R}$ (share of courses fully planned) & -- 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -750,6 +769,7 @@ DateSuggestion
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 suggest & a: AssessmentID, u: User & seq of DateRecommendation & NotOwner, NoConflict \\
 decide & r: RecID, accept: $\mathbb{B}$, u: User & -- & NotOwner, StaleSuggestion \\
 \hline
@@ -759,12 +779,21 @@ decide & r: RecID, accept: $\mathbb{B}$, u: User & -- & NotOwner, StaleSuggestio
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% \begin{itemize}
+% \item recommendations: seq of DateRecommendation
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
 \todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
@@ -808,15 +837,18 @@ exportData & t: Term, u: User & File & NotAdmin \\
 
 \subsubsection{State Variables}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Assumptions}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
@@ -853,6 +885,7 @@ AccessControl
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 login & cr: Credentials & Session & InvalidCredentials \\
 logout & s: Session & -- & -- \\
 currentUser & s: Session & User & SessionExpired \\
@@ -866,20 +899,23 @@ isAdmin & u: User & $\mathbb{B}$ & -- \\
 
 \subsubsection{State Variables}
 
-\begin{itemize}
-\item sessions: set of (Session, User, lastActive: Time)
-\end{itemize}
-Stored through the Data Store (\mref{mStore}).
+% \begin{itemize}
+% \item sessions: set of (Session, User, lastActive: Time)
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-\begin{itemize}
-\item clock: The server's system clock.
-\end{itemize}
+% \begin{itemize}
+% \item clock: The server's system clock.
+% \end{itemize}
+\todo{Rev 0}
 
 \subsubsection{Assumptions}
 
-None.
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
@@ -927,17 +963,20 @@ showDashboard & t: Term & -- & -- \\
 
 \subsubsection{State Variables}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-\begin{itemize}
-\item window: The user's browser window.
-\end{itemize}
+% \begin{itemize}
+% \item window: The user's browser window.
+% \end{itemize}
+\todo{Rev 0}
 
 \subsubsection{Assumptions}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
@@ -981,15 +1020,18 @@ handle & q: Request & Response & SessionExpired, NotAuthorized \\
 
 \subsubsection{State Variables}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Assumptions}
 
-None.
+% None.
+\todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
@@ -1040,9 +1082,13 @@ Only department courses on the master course list belong to a cohort.
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None. The master course list is hard-coded and does not change while the system runs.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -1081,7 +1127,7 @@ None.
 \hline
 termDates & t: Term & (start: Date, end: Date) & UnknownTerm \\
 classDays & t: Term & seq of Date & UnknownTerm \\
-weekOf & d: Date, t: Term & $\mathbb{N}$ & UnknownTerm, DateOutsideTerm \\
+weekOf & d: Date, t: Term & Week & UnknownTerm, DateOutsideTerm \\
 isRestricted & d: Date & $\mathbb{B}$ & DateOutsideTerm \\
 restrictedPeriods & t: Term & seq of (start: Date, end: Date, kind: String) & UnknownTerm \\
 \hline
@@ -1095,9 +1141,13 @@ Compliance (\mref{mPolicy}) works it out from \textit{classDays}.
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None. The term dates are hard-coded and do not change while the system runs.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -1149,9 +1199,15 @@ outline and the passages in \textit{s} that could not be found on their page.
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item files: the server's file system, where outline files are read and highlighted copies are written.
+% \end{itemize}
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -1201,9 +1257,15 @@ always passed to the model as data, never as instructions.
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% None.
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item model: the language model service on the CAS server.
+% \end{itemize}
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
@@ -1244,6 +1306,7 @@ Hardware-Hiding (\mref{mHH})
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
+init & -- & -- & -- \\
 save & e: Entity & ID & InvalidEntity \\
 load & k: EntityKind, id: ID & Entity & UnknownKind, NotFound \\
 query & k: EntityKind, p: Filter & seq of Entity & UnknownKind \\
@@ -1260,12 +1323,23 @@ same ID. There is no delete program: records are kept for
 \subsection{Semantics}
 
 \subsubsection{State Variables}
+
+% \begin{itemize}
+% \item records: set of Entity
+% \item files: set of (ID, File)
+% \end{itemize}
 \todo{Rev 0}
 
 \subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item db: the MongoDB database server.
+% \end{itemize}
 \todo{Rev 0}
 
 \subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
 \todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
