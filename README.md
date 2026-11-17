@@ -104,8 +104,13 @@ During development, Vite forwards every `/api` request to the backend on port 80
 
 ### Run both servers with one command
 
-After completing the backend and frontend setup above, run this from the repository root:
+To run both the frontend and the backend, navigate to the `src` directory:
 
+```bash
+cd src
+```
+
+and run the command:
 ```bash
 npm run full
 ```

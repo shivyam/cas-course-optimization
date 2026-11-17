@@ -3,9 +3,9 @@ import { existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const backendDir = join(rootDir, 'src', 'backend')
-const frontendDir = join(rootDir, 'src', 'frontend')
+const srcDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const backendDir = join(srcDir, 'backend')
+const frontendDir = join(srcDir, 'frontend')
 const backendPython = process.platform === 'win32'
   ? join(backendDir, '.venv', 'Scripts', 'python.exe')
   : join(backendDir, '.venv', 'bin', 'python')

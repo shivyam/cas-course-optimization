@@ -1,5 +1,5 @@
 {
-  "name": "cas-course-optimization",
+  "name": "cas-course-optimization-src",
   "private": true,
   "scripts": {
     "full": "node scripts/dev.mjs"
