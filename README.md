@@ -102,6 +102,16 @@ Open <http://localhost:5173>. The landing page says **Backend is reachable** whe
 
 During development, Vite forwards every `/api` request to the backend on port 8000, so the frontend never needs the backend's address.
 
+### Run both servers with one command
+
+After completing the backend and frontend setup above, run this from the repository root:
+
+```bash
+make dev
+```
+
+This starts the backend at <http://127.0.0.1:8000> and the frontend at <http://localhost:5173>. Press `Ctrl+C` to stop both servers.
+
 ## Linting and Tests
 
 CI runs these same checks on every pull request (see `.github/workflows/ci.yml`). Run them before you push.
