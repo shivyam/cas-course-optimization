@@ -669,9 +669,22 @@ All planned wireframes are included in Appendix~\ref{app:wireframes}.
 
 \section{Design of Communication Protocols}
 
-\wss{If there is communication between hardware and software, it may be necessary 
-to explain the design of the communication protocol.  This section should be filled 
-in with NA if it is not appropriate for a given project.}
+%\wss{If there is communication between hardware and software, it may be necessary 
+%to explain the design of the communication protocol.  This section should be filled 
+%in with NA if it is not appropriate for a given project.}
+
+As there is no hardware component in the system, there is no communication between 
+custom hardware and software. Two software interfaces cross a process boundary:
+
+\begin{itemize}
+  \item Web UI to Backend: The browser sends HTTP requests to a REST API served under 
+  the path \texttt{/api} by the Request Controller (\mref{mControl}), built on 
+  FastAPI. Responses are structured data that the Web UI (\mref{mUI}) displays.
+  \item Backend to LLM: The LLM Client (\mref{mLLM}) sends
+  prompts over HTTP to a model service running on the same CAS server. No 
+  request leaves CAS infrastructure.
+\end{itemize}
+
 
 \section{Database Design}
 
