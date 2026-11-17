@@ -1,9 +1,18 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router'
+import PageHeader from '../components/layout/PageHeader.tsx'
+
+type OutlinePreviewItem = {
+  filename: string
+  sizeBytes: number
+  text: string
+}
 
 type OutlinePreviewState = {
   filename?: string
   sizeBytes?: number
   text?: string
+  outlines?: OutlinePreviewItem[]
 }
 
 function OutlinePreviewPage() {
@@ -11,37 +20,85 @@ function OutlinePreviewPage() {
   // Upload results are passed through router state; direct visits intentionally
   // render a safe empty state instead of attempting to read missing data.
   const state = (location.state as OutlinePreviewState | null) ?? null
-  const text = state?.text ?? ''
+
+  const outlines: OutlinePreviewItem[] =
+    state?.outlines ??
+    (state?.filename
+      ? [
+          {
+            filename: state.filename,
+            sizeBytes: state.sizeBytes ?? 0,
+            text: state.text ?? '',
+          },
+        ]
+      : [])
+
+  const [activeIndex, setActiveIndex] = useState(0)
+  const active = outlines[activeIndex] ?? null
+  const text = active?.text ?? ''
 
   return (
-    <section className="mx-auto max-w-5xl space-y-8">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-mcmaster-maroon">
-            Extracted outline
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-950">
-            {state?.filename ?? 'Course outline text'}
-          </h1>
-          <p className="text-mcmaster-grey">
-            {state?.sizeBytes
-              ? `${(state.sizeBytes / 1024 / 1024).toFixed(2)} MB`
-              : 'Upload an outline to view its extracted text.'}
-          </p>
-        </div>
+    <section>
+      <PageHeader
+        eyebrow="Extracted outline"
+        title={
+          outlines.length > 1
+            ? `${outlines.length} course outlines uploaded`
+            : (active?.filename ?? 'Course outline text')
+        }
+        description={
+          outlines.length > 1
+            ? 'Select an outline below to review its extracted text.'
+            : active?.sizeBytes
+              ? `${(active.sizeBytes / 1024 / 1024).toFixed(2)} MB extracted from the uploaded PDF.`
+              : 'Upload an outline to view its extracted text.'
+        }
+      />
+
+      <div className="mb-4 flex flex-wrap gap-3">
+        <Link
+          to="/admin/outline-review"
+          className="rounded-lg border border-mcmaster-maroon px-4 py-2 text-sm font-semibold text-mcmaster-maroon hover:bg-mcmaster-maroon hover:text-white"
+        >
+          Upload more outlines
+        </Link>
         <Link
           to="/admin"
-          className="w-fit rounded-lg border border-mcmaster-maroon px-4 py-2 text-sm font-semibold text-mcmaster-maroon hover:bg-mcmaster-maroon hover:text-white"
+          className="rounded-lg border border-cas-border px-4 py-2 text-sm font-semibold text-cas-muted hover:text-cas-ink"
         >
-          Upload another outline
+          Administrator dashboard
         </Link>
-      </header>
+      </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-        <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-4">
+      {outlines.length > 1 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {outlines.map((outline, index) => (
+            <button
+              key={`${outline.filename}-${index}`}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                index === activeIndex
+                  ? 'border-mcmaster-maroon bg-cas-tint font-semibold text-mcmaster-maroon'
+                  : 'border-cas-border bg-white text-cas-ink hover:border-mcmaster-maroon'
+              }`}
+            >
+              <span className="block max-w-56 truncate">{outline.filename}</span>
+              <span className="text-xs text-cas-muted">
+                {(outline.sizeBytes / 1024 / 1024).toFixed(2)} MB
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="rounded-lg border border-cas-border bg-white p-4 shadow-sm sm:p-6">
+        <div className="mb-4 flex items-center justify-between border-b border-cas-border pb-4">
           <div>
-            <h2 className="font-semibold text-gray-950">Full extracted text</h2>
-            <p className="mt-1 text-sm text-mcmaster-grey">
+            <h2 className="font-semibold text-cas-ink">
+              {active?.filename ?? 'Full extracted text'}
+            </h2>
+            <p className="mt-1 text-sm text-cas-muted">
               Review the content before using it for course planning.
             </p>
           </div>
@@ -49,8 +106,7 @@ function OutlinePreviewPage() {
             Extraction complete
           </span>
         </div>
-        {/* A bounded, scrollable container prevents long outlines from expanding the page indefinitely. */}
-        <pre className="h-[min(65vh,680px)] overflow-y-auto whitespace-pre-wrap rounded-xl bg-gray-50 p-5 text-sm leading-7 text-gray-800">
+        <pre className="h-[min(65vh,680px)] overflow-y-auto whitespace-pre-wrap rounded-xl bg-cas-surface p-5 text-sm leading-7 text-cas-ink">
           {text || 'No text was found in this PDF.'}
         </pre>
       </div>
