@@ -781,7 +781,9 @@ because they use modules from the lower levels.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{UsesHierarchy.png} 
+\IfFileExists{UsesHierarchy.png}{%
+  \includegraphics[width=\textwidth]{UsesHierarchy.png}%
+}{}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
