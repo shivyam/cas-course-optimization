@@ -652,7 +652,22 @@ because they use modules from the lower levels.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{UsesHierarchy.pdf}
+\begin{tabular}{c}
+\mref{mUI} Web UI\\
+$\downarrow$\\
+\mref{mControl} Request Controller\\
+$\downarrow$\\
+\mref{mIntake} Outline Intake \quad
+\mref{mSchedule} Assessment Schedule\\
+$\downarrow$\\
+\mref{mExtract} Extraction \quad
+\mref{mReview} Extraction Review \quad
+\mref{mWorkload} Workload Analysis\\
+$\downarrow$\\
+\mref{mReader} Document Reader \quad
+\mref{mStore} Data Store \quad
+\mref{mHH} Hardware-Hiding
+\end{tabular}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
