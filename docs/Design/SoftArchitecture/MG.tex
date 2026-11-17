@@ -192,7 +192,25 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mIntake}:] Outline Intake Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExtract}:] Extraction Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReview}:] Extraction Review Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSchedule}:] Assessment Schedule Module
+\item [\refstepcounter{mnum} \mthemnum \label{mWorkload}:] Workload Analysis Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPolicy}:] Policy Compliance Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGA}:] Graduate Attribute Check Module
+\item [\refstepcounter{mnum} \mthemnum \label{mFindings}:] Findings and Override Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDashboard}:] Dashboard Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSuggest}:] Date Suggestion Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExport}:] Export Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAccess}:] Access Control Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUI}:] Web UI Module
+\item [\refstepcounter{mnum} \mthemnum \label{mControl}:] Request Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{mReader}:] Document Reader Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLLM}:] LLM Client Module
+\item [\refstepcounter{mnum} \mthemnum \label{mStore}:] Data Store Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCohort}:] Cohort Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCalendar}:] Academic Calendar Module
 \end{description}
 
 
@@ -203,22 +221,32 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module}
+& Outline Intake (\mref{mIntake})\\
+& Extraction (\mref{mExtract})\\
+& Extraction Review (\mref{mReview})\\
+& Assessment Schedule (\mref{mSchedule})\\
+& Workload Analysis (\mref{mWorkload})\\
+& Policy Compliance (\mref{mPolicy})\\
+& Graduate Attribute Check (\mref{mGA})\\
+& Findings and Override (\mref{mFindings})\\
+& Dashboard (\mref{mDashboard})\\
+& Date Suggestion (\mref{mSuggest})\\
+& Export (\mref{mExport})\\
+& Access Control (\mref{mAccess})\\
+& Web UI (\mref{mUI})\\
+& Request Controller (\mref{mControl})\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{5}{0.3\textwidth}{Software Decision Module}
+& Document Reader (\mref{mReader})\\
+& LLM Client (\mref{mLLM})\\
+& Data Store (\mref{mStore})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
@@ -305,7 +333,46 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Document Reader Module (\mref{mReader})}
+
+\begin{description}
+\item[Secrets:] The library and method used to read the text of a document
+  and to mark passages in it.
+\item[Services:] Returns the text of a course outline page by page, so that
+  each extracted value can name the page it came from. Produces a copy of the
+  outline with given source passages highlighted, so a reviewer can find each
+  value in the original document.
+\item[Implemented By:] PyMuPDF~\citep{PyMuPDF}
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{LLM Client Module (\mref{mLLM})}
+
+\begin{description}
+\item[Secrets:] Which language model is used, where it runs and how it is
+  called.
+\item[Services:] Sends instructions and outline text to the language model as
+  separate inputs and returns the model's reply. Reports when the model is
+  unavailable or does not reply in time. The model runs on CAS servers, so no
+  outline text leaves CAS.
+\item[Implemented By:] Ollama~\citep{Ollama}, running Gemma 4 E2B (tested in spike
+  \href{https://github.com/shivyam/cas-course-optimization/issues/38}{\#38}). This
+  model choice is preliminary and may change.
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Data Store Module (\mref{mStore})}
+
+\begin{description}
+\item[Secrets:] The database management system, the storage schema, and how
+  the original outline files are kept.
+\item[Services:] Saves, loads and queries every stored entity, including the
+  original outline files, and keeps records for the retention period.
+\item[Implemented By:] MongoDB~\citep{MongoDB}
+\item[Type of Module:] Abstract Object
+\end{description}
+
+% M19 Cohort and M20 Academic Calendar: to be added.
 
 \section{Traceability Matrix} \label{SecTM}
 

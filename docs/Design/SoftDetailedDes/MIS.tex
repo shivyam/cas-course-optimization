@@ -32,6 +32,9 @@ urlcolor=cyan          % color of external links
 \usepackage{array}
 
 \externaldocument{../../SRS/SRS}
+\externaldocument[MG-]{../SoftArchitecture/MG}
+% Module numbers from the MG, e.g. \mref{mReader} gives M16.
+\providecommand{\mref}[1]{M\ref{MG-#1}}
 
 \input{../../Comments.text}
 \input{../../Common.text}
@@ -131,21 +134,32 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+{Hardware-Hiding} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding}
+& Outline Intake (\mref{mIntake})\\
+& Extraction (\mref{mExtract})\\
+& Extraction Review (\mref{mReview})\\
+& Assessment Schedule (\mref{mSchedule})\\
+& Workload Analysis (\mref{mWorkload})\\
+& Policy Compliance (\mref{mPolicy})\\
+& Graduate Attribute Check (\mref{mGA})\\
+& Findings and Override (\mref{mFindings})\\
+& Dashboard (\mref{mDashboard})\\
+& Date Suggestion (\mref{mSuggest})\\
+& Export (\mref{mExport})\\
+& Access Control (\mref{mAccess})\\
+& Web UI (\mref{mUI})\\
+& Request Controller (\mref{mControl})\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{5}{0.3\textwidth}{Software Decision}
+& Document Reader (\mref{mReader})\\
+& LLM Client (\mref{mLLM})\\
+& Data Store (\mref{mStore})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \bottomrule
 
 \end{tabular}
@@ -226,6 +240,129 @@ The following table is taken directly from the Module Guide document for this pr
   They are not necessarily something that is going to be implemented
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
+
+\newpage
+
+% Harman: MIS of the software decision modules M16 to M18 (Rev -1: Module,
+% Uses and Syntax only).
+
+\section{MIS of Document Reader Module (\mref{mReader})} \label{mis-mReader}
+
+\subsection{Module}
+
+DocumentReader
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+readText & f: File & seq of (page: $\mathbb{N}$, text: String) & UnreadableDocument, UnsupportedFormat \\
+highlight & f: File, s: seq of (page: $\mathbb{N}$, text: String) & (File, seq of (page: $\mathbb{N}$, text: String)) & UnreadableDocument, UnsupportedFormat \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The output of \textit{highlight} is the highlighted copy of the
+outline and the passages in \textit{s} that could not be found on their page.
+
+\newpage
+
+\section{MIS of LLM Client Module (\mref{mLLM})} \label{mis-mLLM}
+
+\subsection{Module}
+
+LLMClient
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+\item \textit{MODEL\_NAME} = Gemma 4 E2B, the model currently in use, tested in spike
+  \href{https://github.com/shivyam/cas-course-optimization/issues/38}{\#38}. This choice is
+  preliminary and may change.
+\item \textit{EXTRACT\_TIME\_LIMIT} = 5 min, the longest time allowed to
+  extract one outline, defined in Appendix C of the
+  SRS~\citep{TeamBVSH2026SRS}.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+complete & i: String, d: String & String & ModelUnavailable, Timeout \\
+isAvailable & -- & $\mathbb{B}$ & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent In \textit{complete}, \textit{i} holds the instructions and
+\textit{d} holds the outline text. They are kept apart so that outline text is
+always passed to the model as data, never as instructions.
+
+\newpage
+
+\section{MIS of Data Store Module (\mref{mStore})} \label{mis-mStore}
+
+\subsection{Module}
+
+DataStore
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+\item \textit{RETENTION\_YEARS} = 10, the retention period for outlines,
+  extracted data and findings, from the data requirements of the
+  SRS~\citep{TeamBVSH2026SRS}.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+save & e: Entity & ID & InvalidEntity \\
+load & k: EntityKind, id: ID & Entity & NotFound \\
+query & k: EntityKind, p: Filter & seq of Entity & -- \\
+saveFile & f: File & ID & -- \\
+loadFile & id: ID & File & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textit{save} adds a new entity or replaces a stored one with the
+same ID. There is no delete program: records are kept for
+\textit{RETENTION\_YEARS}.
+
+% M19 Cohort and M20 Academic Calendar: to be added.
 
 \newpage
 
