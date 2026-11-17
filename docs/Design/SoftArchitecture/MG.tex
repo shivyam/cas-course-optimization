@@ -60,7 +60,7 @@
 
 \pagenumbering{roman}
 
-\section{Revision History}
+\section{Revision History} \label{SecRevHist}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
@@ -71,7 +71,7 @@ Nov.\ 16, 2026 & 1.0 & Rev $-1$: Initial Version\\
 
 \newpage
 
-\section{Reference Material}
+\section{Reference Material} \label{SecRefMat}
 
 This section records information for easy reference. 
 
@@ -113,7 +113,7 @@ TBD and ULC. This document adds the following:
 
 \pagenumbering{arabic}
 
-\section{Introduction}
+\section{Introduction} \label{SecIntro}
 
 Decomposing a system into modules is a commonly accepted approach to developing
 software.  A module is a work assignment for a programmer or programming
@@ -404,7 +404,7 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules (\mref{mHH})} \label{SecMDhh}
 
 \begin{description}
 \item[Secrets:]The data structure and algorithm used to implement the virtual
@@ -415,7 +415,7 @@ to be implemented.
 \item[Implemented By:] OS
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
+\subsection{Behaviour-Hiding Module} \label{SecMDbh}
 
 \begin{description}
 \item[Secrets:] The contents of the required behaviours.
@@ -427,7 +427,7 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Outline Intake Module (\mref{mIntake})}
+\subsubsection{Outline Intake Module (\mref{mIntake})} \label{SecMD-mIntake}
 
 \begin{description}
 \item[Secrets:] How submitted files are checked, named and kept.
@@ -462,7 +462,7 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Assessment Schedule Module (\mref{mSchedule})}
+\subsubsection{Assessment Schedule Module (\mref{mSchedule})} \label{SecMD-mSchedule}
 
 \begin{description}
 \item[Secrets:] How tentative and confirmed dates are kept for each assessment.
@@ -474,7 +474,7 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Workload Analysis Module (\mref{mWorkload})}
+\subsubsection{Workload Analysis Module (\mref{mWorkload})} \label{SecMD-mWorkload}
 
 \begin{description}
 \item[Secrets:] How assessment density per cohort and week is computed.
@@ -526,7 +526,7 @@ and which values are unconfirmed. Shows whether the term is fully planned before
 \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Date Suggestion Module (\mref{mSuggest})}
+\subsubsection{Date Suggestion Module (\mref{mSuggest})} \label{SecMD-mSuggest}
 
 \begin{description}
 \item[Secrets:] The method used to choose alternative dates.
@@ -537,7 +537,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Export Module (\mref{mExport})}
+\subsubsection{Export Module (\mref{mExport})} \label{SecMD-mExport}
 
 \begin{description}
 \item[Secrets:] The export file format.
@@ -570,7 +570,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Request Controller Module (\mref{mControl})}
+\subsubsection{Request Controller Module (\mref{mControl})} \label{SecMD-mControl}
 
 \begin{description}
 \item[Secrets:] The order in which modules are called to serve each user
@@ -581,7 +581,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Cohort Module (\mref{mCohort})}
+\subsubsection{Cohort Module (\mref{mCohort})} \label{SecMD-mCohort}
 
 \begin{description}
 \item[Secrets:] The department's master course list and how a course code
@@ -594,7 +594,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Academic Calendar Module (\mref{mCalendar})}
+\subsubsection{Academic Calendar Module (\mref{mCalendar})} \label{SecMD-mCalendar}
 
 \begin{description}
 \item[Secrets:] The dates of each term: its start and end, its class days, its
@@ -607,7 +607,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
-\subsection{Software Decision Module}
+\subsection{Software Decision Module} \label{SecMDsd}
 
 \begin{description}
 \item[Secrets:] The design decision based on mathematical theorems, physical
@@ -620,7 +620,7 @@ decision. Never suggests a date in a restricted period.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Document Reader Module (\mref{mReader})}
+\subsubsection{Document Reader Module (\mref{mReader})} \label{SecMD-mReader}
 
 \begin{description}
 \item[Secrets:] The library and method used to read the text of a document
@@ -648,7 +648,7 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Data Store Module (\mref{mStore})}
+\subsubsection{Data Store Module (\mref{mStore})} \label{SecMD-mStore}
 
 \begin{description}
 \item[Secrets:] The database management system, the storage schema, and how
@@ -813,7 +813,7 @@ because they use modules from the lower levels.
 \label{TblUses}
 \end{table}
 
-\section{User Interfaces}
+\section{User Interfaces} \label{SecUI}
 
 The system is used through a web browser (\uref{ucWeb}). Pages follow the
 McMaster University colour scheme. Table~\ref{TblPages} lists the pages and their purpose. 
@@ -844,7 +844,7 @@ Export & Download confirmed assessment data\\
 All planned wireframes are included in Appendix~\ref{app:wireframes}.
 
 
-\section{Design of Communication Protocols}
+\section{Design of Communication Protocols} \label{SecComms}
 
 %\wss{If there is communication between hardware and software, it may be necessary 
 %to explain the design of the communication protocol.  This section should be filled 
@@ -927,36 +927,43 @@ Week 24 & Final demonstration (Rev 1)\\
 
 \section{Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
+% \wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
-
+The following AI tools were used:
+\begin{itemize}
+    \item Grok (version 4.7)
+    \item Claude (Anthropic), Claude Opus 5.5 model
+    \item ChatGPT (OpenAI), GPT-4-turbo model
+    \item GitHub Copilot (version 1.79.0)
+\end{itemize}
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+The tools were used in the following manner:
+\begin{itemize}
+    \item Grok was used to fix formatting issues and address pull request comments
+    in Sections \ref{SecMD-mExport}--\ref{SecMD-mControl}, \ref{SecUse}, \ref{SecDB} and \ref{SecTimeline}.
+    \item Claude was used to review and refine the document, suggesting
+    improvements to structure and clarity, and assisting with grammar and style. It
+    was used to primarily refine the Sections \ref{SecRefMat}, \ref{SecMH}, \ref{SecConnection}, \ref{SecMD-mCohort}, \ref{SecMD-mCalendar}, \ref{SecMD-mReader}--\ref{SecMD-mStore} and \ref{SecTM}.
+    \item ChatGPT and Copilot were used for formatting and grammar suggestions, and
+    to assist with the writing of the Sections \ref{SecRevHist}, \ref{SecRefMat}, \ref{SecIntro}, \ref{SecChange}, \ref{SecMH}, \ref{SecConnection}, \ref{SecMD}, \ref{SecMDhh}, \ref{SecMDbh}, \ref{SecMD-mIntake}--\ref{SecMD-mSuggest}, \ref{SecMDsd}, \ref{SecTM}, \ref{SecUse}, \ref{SecUI}, \ref{SecComms} and Appendix~\ref{app:wireframes}.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+% \wss{\begin{itemize}
+%     \item Describe how the team checked AI-generated or AI-assisted material
+%     before including it in the document.
+%     \item In particular, verify factual claims, technical assertions,
+%     requirements, calculations, references, and other information for which an
+%     AI system may produce incorrect or fabricated results.
+%     \item \textbf{The team is responsible for the accuracy, completeness,
+% consistency, and appropriateness of the submitted document, regardless of
+% whether material was generated by a human or an AI system.}
+% \end{itemize}}
+Any output by LLM models was reviewed thoroughly and modified before its suggestions were added to the document. Course materials and deliverable requirements were manually reviewed to ensure that all technical assertions, requirements, and references were accurate and complete.
 
 \appendix
 
