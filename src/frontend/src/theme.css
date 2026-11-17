@@ -2,7 +2,7 @@
 @import 'tailwindcss';
 
 /*
- * McMaster brand colours (heritage palette).
+ * McMaster brand colours + wireframe UI tokens.
  * Confirm exact values against the McMaster brand guidelines before release.
  *
  * Each --color-* token becomes a Tailwind utility, e.g.
@@ -10,11 +10,24 @@
  */
 @theme {
   --color-mcmaster-maroon: #7a003c;
-  --color-mcmaster-gold: #fdbf57;
+  --color-mcmaster-gold: #ffd54b;
   --color-mcmaster-grey: #5e6a71;
+  --color-cas-ink: #172433;
+  --color-cas-muted: #617083;
+  --color-cas-border: #dee2e8;
+  --color-cas-surface: #f7f8fa;
+  --color-cas-warning: #fff4dc;
+  --color-cas-tint: #f4e9ef;
+  --color-cas-faint: #fafafb;
+  --color-cas-soft: #8d98a4;
 }
 
 /* Base page styles shared by every route. */
 body {
-  @apply bg-white text-gray-900 antialiased;
+  @apply bg-white text-cas-ink antialiased;
+}
+
+/* Consistent focus rings for keyboard users across mock screens. */
+:where(a, button, input, select, textarea):focus-visible {
+  @apply outline-2 outline-offset-2 outline-mcmaster-maroon;
 }
