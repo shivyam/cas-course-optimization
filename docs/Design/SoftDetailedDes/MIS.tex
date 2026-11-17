@@ -35,6 +35,9 @@ urlcolor=cyan          % color of external links
 \externaldocument[MG-]{../SoftArchitecture/MG}
 
 \newcommand{\mref}[1]{M\ref{MG-#1}}
+\newcommand{\frref}[1]{FR\ref{SRS-#1}}
+\newcommand{\nfrref}[1]{NFR\ref{SRS-#1}}
+\newcommand{\drref}[1]{DR\ref{SRS-#1}}
 
 \input{../../Comments.text}
 \input{../../Common.text}
@@ -786,7 +789,7 @@ AccessControl
 \subsubsection{Exported Constants}
 
 \begin{itemize}
-\item \textit{SESSION\_TIMEOUT}: Inactivity limit (\frref{FR_Access_Timeout}).
+\item \textit{SESSION\_TIMEOUT}: Inactivity limit before a session expires, 30 minutes (\frref{FR_Access_Timeout}).
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
