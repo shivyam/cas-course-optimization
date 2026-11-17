@@ -1,12 +1,13 @@
 \documentclass[12pt, titlepage]{article}
 
 \usepackage{fullpage}
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{xr}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -18,6 +19,7 @@
 
 \input{../../Comments.text}
 \input{../../Common.text}
+\externaldocument[SRS-]{../../SRS-IEEE/SRS}
 \newcommand{\sysname}{The ASSURE Project}
 
 \newcounter{acnum}
@@ -31,8 +33,24 @@
 \newcounter{mnum}
 \newcommand{\mthemnum}{M\themnum}
 \newcommand{\mref}[1]{M\ref{#1}}
+\newcommand{\frref}[1]{FR\ref{SRS-#1}}
+\newcommand{\nfrref}[1]{NFR\ref{SRS-#1}}
+\newcommand{\drref}[1]{DR\ref{SRS-#1}}
+\newcommand{\airref}[1]{AIR\ref{SRS-#1}}
+\newcommand{\issue}[1]{\href{https://github.com/shivyam/cas-course-optimization/issues/#1}{\##1}}
+
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
 
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{Module Guide for \progname{}} 
 \author{\authname}
@@ -102,7 +120,7 @@ hides represent likely future changes.  Design for change is valuable in SC,
 where modifications are frequent, especially during initial development as the
 solution space is explored.  
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Our design follows the rules layed out by Parnas et al.~\citep{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
@@ -333,7 +351,7 @@ between requirements and modules is listed in Table~\ref{TblRT}.
 \section{Module Decomposition} \label{SecMD}
 
 Modules are decomposed according to the principle of ``information hiding''
-proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
+proposed by Parnas et al.~\citep{ParnasEtAl1984}. The \emph{Secrets} field in a module
 decomposition is a brief statement of the design decision hidden by the
 module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
@@ -510,51 +528,102 @@ to be implemented.
 \section{Traceability Matrix} \label{SecTM}
 
 This section shows two traceability matrices: between the modules and the
-requirements and between the modules and the anticipated changes.
+requirements in the SRS~\citep{TeamBVSH2026SRS} (Tables~\ref{TblRT}
+and~\ref{TblRT2}), and between the modules and the anticipated changes
+(Table~\ref{TblACT}). The admin override, course status dashboard and term
+completeness features are not yet requirements in the SRS, so they are traced
+by working name.
 
-% the table should use mref, the requirements should be named, use something
-% like fref
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
 \toprule
-\textbf{Req.} & \textbf{Modules}\\
+\textbf{Functional Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+\frref{FR_Intake_Data} & \mref{mIntake}, \mref{mReader}, \mref{mStore}\\
+\frref{FR_Extract_Assessment} & \mref{mExtract}, \mref{mLLM}\\
+\frref{FR_Extract_LO} & \mref{mExtract}, \mref{mLLM}\\
+\frref{FR_Extract_Flag} & \mref{mExtract}\\
+\frref{FR_Extract_Review} & \mref{mReview}\\
+\frref{FR_Dates_Tentative} & \mref{mSchedule}\\
+\frref{FR_Calendar} & \mref{mWorkload}, \mref{mUI}, \mref{mCohort}\\
+\frref{FR_Work_Cluster} & \mref{mWorkload}, \mref{mCohort}, \mref{mCalendar}\\
+\frref{FR_Work_Policy} & \mref{mWorkload}, \mref{mCalendar}\\
+\frref{FR_Reanalyze} & \mref{mSchedule}, \mref{mWorkload}\\
+\frref{FR_Suggest_Generation} & \mref{mSuggest}, \mref{mCalendar}\\
+\frref{FR_Suggest_NoAuto} & \mref{mSchedule}, \mref{mSuggest}\\
+\frref{FR_Comp_Policy} & \mref{mPolicy}, \mref{mCalendar}\\
+\frref{FR_Comp_Grad} & \mref{mGA}\\
+\frref{FR_Access_Login} & \mref{mAccess}, \mref{mControl}\\
+\frref{FR_Access_Roles} & \mref{mAccess}, \mref{mControl}\\
+\frref{FR_Access_Timeout} & \mref{mAccess}\\
+\frref{FR_Export_CSV} & \mref{mExport}\\
+Admin override (working name) & \mref{mFindings}\\
+Course status dashboard (working name) & \mref{mDashboard}\\
+Term completeness (working name) & \mref{mDashboard}, \mref{mCalendar}\\
 \bottomrule
 \end{tabular}
-\caption{Trace Between Requirements and Modules}
+\caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
+\toprule
+\textbf{Req.} & \textbf{Modules}\\
+\midrule
+\drref{DR_Confidentiality} & \mref{mAccess}, \mref{mStore}\\
+\drref{DR_Hosting} & \mref{mLLM}\\
+\drref{DR_Access} & \mref{mAccess}, \mref{mControl}\\
+\drref{DR_Retention} & \mref{mStore}\\
+\airref{AIR_Input_Text} & \mref{mExtract}, \mref{mReader}\\
+\airref{AIR_Input_Privacy} & \mref{mLLM}\\
+\airref{AIR_Output_Struct} & \mref{mExtract}\\
+\airref{AIR_Output_Source} & \mref{mExtract}, \mref{mReader}\\
+\airref{AIR_Output_Missing} & \mref{mExtract}\\
+\airref{AIR_Output_Review} & \mref{mReview}\\
+\airref{AIR_Output_Validation} & \mref{mExtract}, \mref{mLLM}\\
+\nfrref{NFR_Accuracy} & \mref{mExtract}, \mref{mLLM}, \mref{mPolicy}, \mref{mGA}\\
+\nfrref{NFR_Usability} & \mref{mUI}\\
+\nfrref{NFR_Maintainability} & All modules (decomposition by secrets)\\
+\nfrref{NFR_Portability} & \mref{mHH}, \mref{mUI}\\
+\nfrref{NFR_Installability} & \mref{mHH}, \mref{mLLM}, \mref{mStore}\\
+\nfrref{NFR_Performance} & \mref{mExtract}, \mref{mLLM}, \mref{mStore}\\
+\nfrref{NFR_Reliability} & \mref{mIntake}, \mref{mExtract}, \mref{mLLM}\\
+\nfrref{NFR_Security} & \mref{mAccess}, \mref{mControl}\\
+\nfrref{NFR_Accessibility} & \mref{mUI}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Data, AI and Nonfunctional Requirements and Modules}
+\label{TblRT2}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{0.38\textwidth} p{0.52\textwidth}}
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
+\acref{acLLM} & \mref{mLLM}\\
+\acref{acFormat} & \mref{mReader}\\
+\acref{acPolicy} & \mref{mPolicy}\\
+\acref{acCEAB} & \mref{mGA}\\
+\acref{acGA} & \mref{mExtract}\\
+\acref{acDensity} & \mref{mWorkload}\\
+\acref{acCohort} & \mref{mCohort}\\
+\acref{acCalendar} & \mref{mCalendar}\\
+\acref{acSuggest} & \mref{mSuggest}\\
+\acref{acNotify} & \mref{mDashboard}\\
+\acref{acExport} & \mref{mExport}\\
+\acref{acAuth} & \mref{mAccess}\\
+\acref{acSource} & \mref{mIntake}\\
+\acref{acScope} & \mref{mCohort}\\
+\acref{acDBMS} & \mref{mStore}\\
+\acref{acPrompt} & \mref{mExtract}\\
 \acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acLayout} & \mref{mUI}\\
+\acref{acOverride} & \mref{mFindings}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -564,7 +633,7 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \section{Use Hierarchy Between Modules} \label{SecUse}
 
 In this section, the uses hierarchy between modules is
-provided. \citet{Parnas1978} said of two programs A and B that A {\em uses} B if
+provided. Parnas~\citep{Parnas1978} said of two programs A and B that A {\em uses} B if
 correct execution of B may be necessary for A to complete the task described in
 its specification. That is, A {\em uses} B if there exist situations in which
 the correct functioning of A depends upon the availability of a correct
@@ -736,7 +805,8 @@ whether material was generated by a human or an AI system.}
 \end{figure}
 \newpage{}
 
-\bibliographystyle {plainnat}
+% Same IEEE style file as the SRS (IEEEtran.bst is not installed in CI).
+\bibliographystyle {../../SRS-IEEE/IEEEtran}
 \bibliography{../../../refs/References}
 
 \end{document}

@@ -2,7 +2,7 @@
 
 \usepackage{amsmath, mathtools}
 
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -39,7 +39,18 @@ urlcolor=cyan          % color of external links
 \input{../../Comments.text}
 \input{../../Common.text}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{Module Interface Specification for \progname{}}
 
@@ -91,10 +102,10 @@ found at \url{...}.  \wss{provide the url for your repo}
 \wss{You should describe your notation.  You can use what is below as
   a starting point.}
 
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
+The structure of the MIS for modules comes from Hoffman and Strooper~\citep{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
+Ghezzi et al.~\citep{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
+Hoffman and Strooper~\citep{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
 multiple assignment statement and conditional rules follow the form $(c_1
 \Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
 
@@ -615,7 +626,8 @@ same ID. There is no delete program: records are kept for
 
 \newpage
 
-\bibliographystyle {plainnat}
+% Same IEEE style file as the SRS (IEEEtran.bst is not installed in CI).
+\bibliographystyle {../../SRS-IEEE/IEEEtran}
 \bibliography {../../../refs/References}
 
 \newpage
