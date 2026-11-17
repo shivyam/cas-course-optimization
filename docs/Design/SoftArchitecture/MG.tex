@@ -341,12 +341,48 @@ The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
 between requirements and modules is listed in Table~\ref{TblRT}.
 
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
+%\wss{The intention of this section is to document decisions that are made
+%  ``between'' the requirements and the design.  To satisfy some requirements,
+%  design decisions need to be made.  Rather than make these decisions implicit,
+%  they are explicitly recorded here.  For instance, if a program has security
+%  requirements, a specific design decision may be made to satisfy those
+%  requirements with a password.}
+
+\begin{itemize}
+\item Only the LLM client (\mref{mLLM}) knows which model is used and how it is called. The current model
+  is Gemma 4 E2B, a preliminary choice that may change. The model runs on CAS
+  servers, so no outline text leaves CAS infrastructure, and no student
+  personal information is sent to the model (\drref{DR_Hosting},
+  \airref{AIR_Input_Privacy}). The models Gemma 4 E2B (\issue{38}), Llama 3.2 3B (\issue{40}),
+  and Qwen3 4B (\issue{39}) can be swapped in without changing any other module.
+\item The Extraction module (\mref{mExtract}) gives the model the outline text only as data and checks
+  every reply against the expected structure before it is stored
+  (\airref{AIR_Output_Validation}). Each extracted value keeps the passage and
+  page it came from (\airref{AIR_Output_Source}), which the Document Reader
+  (\mref{mReader}) provides.
+\item The Extraction Review module (\mref{mReview}) holds the review state of every extracted
+  value. The workload, policy and graduate attribute checks ask it whether a
+  course is confirmed before they run (\frref{FR_Extract_Review},
+  \airref{AIR_Output_Review}, \uref{ucConfirm}).
+\item The Workload Analysis (\mref{mWorkload}) and Policy Compliance (\mref{mPolicy}) modules
+  compute ban-period conflicts, weight totals and TBD dates without the model
+  (\uref{ucDeterministic}).
+\item The Workload Analysis module gives the number of assessments per cohort and 
+week; it does not compare it with a department threshold.
+\item The Graduate Attribute Check (\mref{mGA}) compares the attributes in a confirmed 
+outline with the master course sheet in code (\airref{AIR_Input_Text},
+  \drref{DR_Confidentiality}).
+\item The Request Controller (\mref{mControl}) asks Access Control (\mref{mAccess}) for the
+  current user and role before calling any other module (\frref{FR_Access_Login}, 
+  \frref{FR_Access_Roles}, \frref{FR_Access_Timeout}, \drref{DR_Access}, \nfrref{NFR_Security}).
+\item The Findings and Override module (\mref{mFindings}) records each accepted 
+finding with the administrator, the reason and the time. The Dashboard module
+  (\mref{mDashboard}) reports what is missing or wrong for each course and
+  whether the term is fully planned.
+\item Only the Data Store (\mref{mStore}) talks to the database, and it keeps 
+outlines, extracted data and findings for the retention period (\drref{DR_Retention}).
+\end{itemize}
+
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -430,6 +466,69 @@ to be implemented.
   own courses, records approved date changes, and asks for the affected
   analysis to be re-run after every change. It never changes a date without the
   instructor's approval.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Workload Analysis Module (\mref{mWorkload})}
+
+\begin{description}
+\item[Secrets:] How assessment density per cohort and week is computed.
+\item[Services:] Gives the number of assessments due in each week of term for each cohort, and
+lists assessments that fall in restricted periods such as the ban period or the examination period.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Policy Compliance Module (\mref{mPolicy})}
+
+\begin{description}
+\item[Secrets:] The McMaster and CAS course outline policy rules
+\item[Services:] Checks a confirmed outline against the policy: required sections, weights totalling
+100\% (including bonus marks), single-weight limits, ban-period rules and dates marked
+TBD. Records each problem as a finding.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Graduate Attribute Check Module (\mref{mGA})}
+
+\begin{description}
+\item[Secrets:] The CEAB graduate attribute list and how it is compared with the master course
+sheet.
+\item[Services:] Flags graduate attributes in a confirmed outline that are missing from, or do not
+match, the master course sheet, and says when a course has no row in the sheet.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Findings and Override Module (\mref{mFindings})}
+
+\begin{description}
+\item[Secrets:] How findings, accepted findings and their reasons are recorded and audited.
+\item[Services:] Lists the findings for each course. Lets an administrator accept a finding with a
+reason, which is kept in the audit trail.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Dashboard Module (\mref{mDashboard})}
+
+\begin{description}
+\item[Secrets:] How the status of a course and of a term is summarized.
+\item[Services:] Presents, for each course the user may see, what is missing, which findings are open
+and which values are unconfirmed. Shows whether the term is fully planned before it starts.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Date Suggestion Module (\mref{mSuggest})}
+
+\begin{description}
+\item[Secrets:] The method used to choose alternative dates.
+\item[Services:] Only when an instructor asks, suggests alternative dates for an assessment that
+is in a conflict or marked TBD, each with an explanation, and records the instructor’s
+decision. Never suggests a date in a restricted period.
 \item[Implemented By:] \sysname
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -694,9 +793,22 @@ All planned wireframes are included in Appendix~\ref{app:wireframes}.
 
 \section{Design of Communication Protocols}
 
-\wss{If there is communication between hardware and software, it may be necessary 
-to explain the design of the communication protocol.  This section should be filled 
-in with NA if it is not appropriate for a given project.}
+%\wss{If there is communication between hardware and software, it may be necessary 
+%to explain the design of the communication protocol.  This section should be filled 
+%in with NA if it is not appropriate for a given project.}
+
+As there is no hardware component in the system, there is no communication between 
+custom hardware and software. Two software interfaces cross a process boundary:
+
+\begin{itemize}
+  \item Web UI to Backend: The browser sends HTTP requests to a REST API served under 
+  the path \texttt{/api} by the Request Controller (\mref{mControl}), built on 
+  FastAPI. Responses are structured data that the Web UI (\mref{mUI}) displays.
+  \item Backend to LLM: The LLM Client (\mref{mLLM}) sends
+  prompts over HTTP to a model service running on the same CAS server. No 
+  request leaves CAS infrastructure.
+\end{itemize}
+
 
 \section{Database Design}
 

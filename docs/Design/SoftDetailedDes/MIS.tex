@@ -90,12 +90,23 @@ See SRS Documentation at \wss{give url}
 
 \section{Introduction}
 
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+%The following document details the Module Interface Specifications for
+%\wss{Fill in your project name and description}
 
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+%Complementary documents include the System Requirement Specifications
+%and Module Guide.  The full documentation and implementation can be
+%found at \url{...}.  \wss{provide the url for your repo}
+
+The following document details the Module Interface Specifications for the ASSURE Project. 
+The system collects assessment information from CAS course outlines, shows both confirmed 
+and tentative assessment dates in a shared calendar, shows how many assessments each 
+student cohort has per week, and checks each outline against McMaster's course 
+outline policy~\citep{McMasterUCMP2025} and the CEAB graduate attributes~\citep{CEAB2025}.\\
+
+\noindent Complementary documents include the System Requirement Specifications and Module Guide.
+The full documentation and implementation can be found at
+\url{https://github.com/shivyam/cas-course-optimization}.
+
 
 \section{Notation}
 
@@ -434,6 +445,291 @@ getSchedule & c: CourseID & seq of Assessment & NotFound \\
 \todo{Rev 0}
 
 \newpage
+
+% Section 10
+\section{MIS of Workload Analysis Module (\mref{mWorkload})} \label{mis-mWorkload}
+
+\subsection{Module}
+WorkloadAnalysis
+
+\subsection{Uses}
+\mref{mReview}, \mref{mStore}, \mref{mCohort}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+weeklyDensity & k: Cohort, t: Term & seq of (Week, $\mathbb{N}$) & UnknownCohort \\
+restrictedConflicts & c: CourseID & seq of Finding & NotFound \\
+reanalyze & c: CourseID & -- & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 11
+\section{MIS of Policy Compliance Module (\mref{mPolicy})} \label{mis-mPolicy}
+
+\subsection{Module}
+PolicyCompliance
+
+\subsection{Uses}
+\mref{mReview}, \mref{mFindings}, \mref{mStore}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{WEIGHT\_TOTAL}: policy value from SRS Appendix C.
+\item \textit{MAX\_SINGLE\_WEIGHT}: policy value from SRS Appendix C.
+\item \textit{BAN\_CLASS\_DAYS}: policy value from SRS Appendix C.
+\item \textit{BAN\_WEIGHT\_LIMIT}: policy value from SRS Appendix C.
+\item \textit{EARLY\_FEEDBACK\_L2}: policy value from SRS Appendix C.
+\item \textit{EARLY\_FEEDBACK\_L3}: policy value from SRS Appendix C.
+\item \textit{OUTLINE\_LEAD\_TIME}: policy value from SRS Appendix C.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+checkPolicy & c: CourseID & seq of Finding & NotConfirmed, NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 12
+\section{MIS of Graduate Attribute Check Module (\mref{mGA})} \label{mis-mGA}
+
+\subsection{Module}
+GACheck
+
+\subsection{Uses}
+\mref{mReview}, \mref{mFindings}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{GA\_LIST}: The twelve CEAB graduate attributes~\citep{CEAB2025}.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+checkGA & c: CourseID & seq of Finding & NotConfirmed, NoMasterRecord \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 13
+\section{MIS of Findings and Override Module (\mref{mFindings})} \label{mis-mFindings}
+
+\subsection{Module}
+Findings
+
+\subsection{Uses}
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+record & f: Finding & FindingID & -- \\
+findings & c: CourseID & seq of Finding & NotFound \\
+override & f: FindingID, r: String, u: User & -- & NotAdmin, EmptyReason, NotFound \\
+auditTrail & c: CourseID & seq of AuditEntry & NotAdmin \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 14
+\section{MIS of Dashboard Module (\mref{mDashboard})} \label{mis-mDashboard}
+
+\subsection{Module}
+Dashboard
+
+\subsection{Uses}
+\mref{mReview}, \mref{mSchedule}, \mref{mFindings}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+visibleCourses & u: User & seq of CourseID & -- \\
+courseStatus & c: CourseID & Status & NotFound \\
+termCompleteness & t: Term & $\mathbb{R}$ (share of courses fully planned) & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 15
+\section{MIS of Date Suggestion Module (\mref{mSuggest})} \label{mis-mSuggest}
+
+\subsection{Module}
+DateSuggestion
+
+\subsection{Uses}
+\mref{mWorkload}, \mref{mStore}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{MIN\_ALTERNATIVES}: Fewest dates offered per request, from SRS Appendix C.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+suggest & a: AssessmentID, u: User & seq of DateRecommendation & NotOwner, NoConflict \\
+decide & r: RecID, accept: $\mathbb{B}$, u: User & -- & NotOwner, StaleSuggestion \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
 
 % Harman: MIS of Cohort and Academic Calendar (Rev -1: Module, Uses and Syntax
 % only).
