@@ -522,18 +522,49 @@ decision. Never suggests a date in a restricted period.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Export Module (\mref{mExport})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] The export file format.
+\item[Services:] Writes the confirmed assessment data that an administrator
+  may see to a file, marking tentative dates.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Access Control Module (\mref{mAccess})}
+
+\begin{description}
+\item[Secrets:] How users are identified, how sessions expire and how roles
+  are checked.
+\item[Services:] Logs users in and out, ends a session after a period without
+  activity, and answers whether a user is an administrator and whether a user
+  may change a given course.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Web UI Module (\mref{mUI})}
+
+\begin{description}
+\item[Secrets:] The layout and look of each page.
+\item[Services:] Displays the upload, review, calendar, findings, dashboard
+  and export pages in the McMaster colour scheme and passes each user action to
+  the Request Controller.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Request Controller Module (\mref{mControl})}
+
+\begin{description}
+\item[Secrets:] The order in which modules are called to serve each user
+  request.
+\item[Services:] Receives each request from the web UI, checks the user's
+  session and role, calls the modules that serve it and returns the result.
+\item[Implemented By:] \sysname
+\item[Type of Module:] Library
+\end{description}
 
 
 \subsection{Software Decision Module}
