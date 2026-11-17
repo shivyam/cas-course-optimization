@@ -1,0 +1,195 @@
+
+  {
+    "course_outline_filename": "COMPSCI3VA3-SwatiMishra_Fall2026.pdf",
+    "course_information": {
+      "term": ["Fall 2026"],
+      "course_code": "COMPSCI 3VA3",
+      "course_title": "Information Visualization and Visual Analytics",
+      "website": {
+        "link": "https://swati-mishra.com",
+        "source_text": "Course Website | Course Page and Avenue to Learn",
+        "source_page": 1
+      },
+      "contact": [
+        {
+          "instructor": "Dr. Swati Mishra",
+          "email": "mishrs23@mcmaster.ca",
+          "source_text": "Dr. Swati Mishra",
+          "source_page": 1,
+          "office_hours": {
+            "source_page": 1,
+            "source_text": "Office hours will be announced on Avenue to Learn in the first week of classes."
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "C01",
+          "lectures": [
+            {
+              "has_location": false,
+              "source_text": "Lecture 1 | Tuesday, 12:30 p.m. – 1:20 p.m.",
+              "source_page": 1
+            },
+            {
+              "has_location": false,
+              "source_text": "Lecture 2 | Wednesday, 12:30 p.m. 1:20 p.m.",
+              "source_page": 1
+            },
+            {
+              "has_location": false,
+              "source_text": "Lecture 3 | Friday, 12:30 p.m. – 1:20 p.m.",
+              "source_page": 1
+            }
+          ],
+          "tutorials": [
+            {
+              "has_location": false,
+              "source_text": "Tutorial | Monday, 4:30 pm - 6:20 pm",
+              "source_page": 1
+            }
+          ],
+          "teaching_assistants": [
+            {
+              "has_ta_info": false,
+              "source_text": "",
+              "source_page": 1
+            }
+          ]
+        }
+      ]
+    },
+"assessments": [
+      {
+        "id": "1",
+        "name": "Assignment 1",
+        "type": "assignment",
+        "source_text": "Assignments (A1-A3) | Three Individual Assignments (5% each) | 15% | [See schedule]",
+        "date": null,
+        "weight_percent": 5,
+        "source_page": 3
+      },
+      {
+        "id": "2",
+        "name": "Assignment 2",
+        "type": "assignment",
+        "source_text": "Assignments (A1-A3) | Three Individual Assignments (5% each) | 15% | [See schedule]",
+        "date": null,
+        "weight_percent": 5,
+        "source_page": 3
+      },
+      {
+        "id": "3",
+        "name": "Assignment 3",
+        "type": "assignment",
+        "source_text": "Assignments (A1-A3) | Three Individual Assignments (5% each) | 15% | [See schedule]",
+        "date": null,
+        "weight_percent": 5,
+        "source_page": 3
+      },
+      {
+        "id": "4",
+        "name": "Assignment 4",
+        "type": "assignment",
+        "source_text": "Assignments (A4-A6) | Three Group Assignments (10% each) | 30% | [See schedule]",
+        "date": null,
+        "weight_percent": 10,
+        "source_page": 3
+      },
+      {
+        "id": "5",
+        "name": "Assignment 5",
+        "type": "assignment",
+        "source_text": "Assignments (A4-A6) | Three Group Assignments (10% each) | 30% | [See schedule]",
+        "date": null,
+        "weight_percent": 10,
+        "source_page": 3
+      },
+      {
+        "id": "6",
+        "name": "Assignment 6",
+        "type": "assignment",
+        "source_text": "Assignments (A4-A6) | Three Group Assignments (10% each) | 30% | [See schedule]",
+        "date": null,
+        "weight_percent": 10,
+        "source_page": 3
+      },
+      {
+        "id": "7",
+        "name": "Midterm",
+        "type": "midterm",
+        "source_text": "Midterm | Theory and problem solving (1) | 25% | 9-Oct-2026",
+        "date": "2026-10-09",
+        "weight_percent": 25,
+        "source_page": 3
+      },
+      {
+        "id": "8",
+        "name": "Final Exam",
+        "type": "final_exam",
+        "source_text": "Final Exam | Theory and problem solving (2) | 30% | During Final Exam Week",
+        "date": null,
+        "weight_percent": 30,
+        "source_page": 3
+      }
+    ],
+   
+    "materials": {
+      "has_materials": true,
+      "source_text": "4. Materials and Fees",
+      "source_page": 3
+    },
+    "learning_outcomes": [
+      {
+        "id": "LO1",
+        "text": "Explain the perceptual and cognitive foundations of visual encoding, including pre-attentive processing, memory, attention and the effectiveness ranking of visual channels.",
+        "source_page": 2
+      },
+      {
+        "id": "LO2",
+        "text": "Decompose a complex problem into data and task abstractions and select and defend appropriate encodings and layouts for tabular, temporal, network, tree-structured, scalar-field, vector-field and spatial data.",
+        "source_page": 2
+      },
+      {
+        "id": "LO3",
+        "text": "Implement interactive, data-driven visualizations for the web using a declarative or data-binding visualization library, including selection, filtering, navigation, brushing and linking, and coordinated multiple views that support an identified analysis task.",
+        "source_page": 2
+      },
+      {
+        "id": "LO4",
+        "text": "Apply aggregation, clustering and dimensionality-reduction techniques to make large datasets tractable for visual analysis and describe the distortions each technique introduces.",
+        "source_page": 2
+      },
+      {
+        "id": "LO5",
+        "text": "Critique and evaluate visualization designs against established design principles and through appropriate evaluation methods and communicate the findings and resulting insights to a technical audience in writing and in an oral presentation.",
+        "source_page": 2
+      }
+    ],
+    "graduate_attributes": [
+      {
+        "code": "1",
+        "name": "A Knowledge Base for Engineering",
+        "level": "",
+        "source_text": "Graduate Attribute 1: A Knowledge Base for Engineering",
+        "source_page": 2
+      }
+    ],
+    "policies": {
+      "genai": {
+        "has_genai": true,
+        "source_text": "Use of GenAI tools is prohibited in this class.",
+        "source_page": 8
+      },
+      "advisory": {
+        "has_advisory": true,
+        "source_text": "Academic Integrity",
+        "source_page": 6
+      },
+      "discrimination": {
+        "has_discrimination": true,
+        "source_text": "The Faculty of Engineering is committed to creating an environment in which students of all genders, cultures, ethnicities, races, sexual orientations, abilities, and socioeconomic backgrounds have equal access to education and are welcomed and treated fairly.",
+        "source_page": 8
+      }
+    }
+  }
