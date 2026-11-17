@@ -107,7 +107,7 @@ During development, Vite forwards every `/api` request to the backend on port 80
 After completing the backend and frontend setup above, run this from the repository root:
 
 ```bash
-make dev
+npm run full
 ```
 
 This starts the backend at <http://127.0.0.1:8000> and the frontend at <http://localhost:5173>. Press `Ctrl+C` to stop both servers.

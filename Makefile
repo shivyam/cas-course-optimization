@@ -25,10 +25,6 @@ endef
 # Default target: Compile all .tex files if no specific target is given
 all: $(patsubst %.tex, %.pdf, $(wildcard **/*.tex))
 
-# Start the backend and frontend development servers together.
-dev:
-	./scripts/dev.sh
-
 # Rule for compiling .md to .pdf.
 # NOTE: this rule is deliberately listed BEFORE the .tex rule. When a folder
 # contains both Foo.md and Foo.tex, GNU make picks the first matching pattern
@@ -49,4 +45,4 @@ dev:
 clean:
 	find . -name "*.aux" -o -name "*.log" -o -name "*.pdf" -o -name "*.toc" -o -name "*.out" -o -name "*.bbl" -o -name "*.blg" -exec rm -f {} +
 
-.PHONY: all clean dev
+.PHONY: all clean
