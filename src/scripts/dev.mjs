@@ -28,6 +28,7 @@ const backend = spawn(backendPython, ['-m', 'uvicorn', 'app.main:app', '--reload
 const frontend = spawn(npmCommand, ['run', 'dev'], {
   cwd: frontendDir,
   stdio: 'inherit',
+  shell: process.platform === 'win32',
 })
 
 let shuttingDown = false
