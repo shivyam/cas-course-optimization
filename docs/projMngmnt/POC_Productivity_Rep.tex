@@ -17,60 +17,68 @@
 \begin{document}
 
 \maketitle
+\sloppy
 
 This document summarizes the contributions of each team member up to the POC
 Demo.  The time period of interest is the time between the beginning of the term
 and the POC demo.
 
-\wss{Please do not delete sections or modify the table formats.  Standardization
-helps the instructors and TAs to review these documents. You may add sections to
-the report.}
-
-\wss{Remove the instructor guidelines/comments in the final version.}
-
-\wss{Fill in the requested information, like project url, TA name, supervisor name, etc.}
+\noindent \textbf{Project repository:}
+\url{https://github.com/shivyam/cas-course-optimization}
 
 \section{Demo Plans}
 
-\wss{What is your feasibility risk?}
+The main feasibility risk for this project is extracting reliable information
+from CAS course outlines. Outlines do not follow a single format, and some
+information may be missing or incomplete (for example, ``Midterm Date: TBD'').
+Every other feature (the shared calendar, conflict detection, scheduling
+suggestions and compliance checking) depends on this information, so if
+assessment dates or weights are extracted incorrectly, the rest of the system
+will also be unreliable.
 
-\wss{What will you be demonstrating}
+\bigskip
+\noindent The PoC demonstration shows one course outline going through the
+whole extraction pipeline:
+
+\begin{enumerate}
+  \item A PDF course outline is uploaded through the web application.
+  \item The backend extracts the text from the PDF with PyMuPDF.
+  \item A locally hosted open-weight model, run through Ollama, returns JSON in
+  a fixed schema: the name, type, date (or TBD) and weight of each assessment,
+  the source passage for each assessment, the learning outcomes, and a list of
+  missing fields.
+  \item The backend checks that the JSON matches the schema and that each
+  source passage appears in the extracted text.
+  \item The frontend displays the assessments in a table, with the source
+  passage beside each value and missing or TBD values clearly flagged.
+\end{enumerate}
+
+\noindent We will also report the pipeline's accuracy on a small set of real
+outlines scored against our answer key, and show how the pipeline behaves when
+an instruction is inserted into an outline (prompt injection).
 
 \section{Team Meeting Attendance}
 
-\wss{For each team member how many team meetings have they attended over the
-time period of interest.  This number should be determined from the meeting
-issues in the team's repo.  The first entry in the table should be the total
-number of team meetings held by the team.}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{ll}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 12\\
+Harmanpreet Sagar & 12\\
+Shivya Mehta & 12\\
+Anindita Bornomala & 12\\
+Vanessa Lai & 12\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The team meets once before and once after each of the six supervisor and stakeholder meetings, to prepare and then to follow up on the action items. All four team members attended every team meeting.
 
 \section{Supervisor/Stakeholder Meeting Attendance}
 
-\wss{For each team member how many supervisor/stakeholder team meetings have
-they attended over the time period of interest.  This number should be determined
-from the supervisor meeting issues in the team's repo.  The first entry in the
-table should be the total number of supervisor and team meetings held by the
-team.  If there is no supervisor, there will usually be meetings with
-stakeholders (potential users) that can serve a similar purpose.}
-
-\noindent \textbf{Supervisor's Name: } [fill in this information]
+\noindent \textbf{Supervisor's Name: } Matt Vonk and Connie Carrabs
 
 \begin{table}[H]
 \centering
@@ -78,17 +86,20 @@ stakeholders (potential users) that can serve a similar purpose.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 6\\
+Harmanpreet Sagar & 6\\
+Shivya Mehta & 6\\
+Anindita Bornomala & 6\\
+Vanessa Lai & 6\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The six meetings were four supervisor meetings with Matt Vonk and Connie Carrabs
+(October 2 \href{https://github.com/shivyam/cas-course-optimization/issues/25}{\#25}, October 20 \href{https://github.com/shivyam/cas-course-optimization/issues/179}{\#179}, November 3 \href{https://github.com/shivyam/cas-course-optimization/issues/181}{\#181} and
+November 17 \href{https://github.com/shivyam/cas-course-optimization/issues/182}{\#182}) and two stakeholder meetings with the CAS Associate
+Chairs for Undergraduate Studies (Dr.~Smith on October 6 \href{https://github.com/shivyam/cas-course-optimization/issues/26}{\#26} and
+Dr.~Mosser on October 26 \href{https://github.com/shivyam/cas-course-optimization/issues/180}{\#180}). All four members attended every meeting.
 
 \section{Lecture Attendance}
 
