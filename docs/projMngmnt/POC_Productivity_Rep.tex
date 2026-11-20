@@ -189,9 +189,22 @@ members and are counted in the Assigned column once closed.
 
 \section{CICD via GitHub Actions}
 
-\wss{Say how CICD technology is used and will be used in your project.}
+The repository uses two GitHub Actions workflows:
 
-\wss{Provide links to your CICD yaml files}
+\begin{itemize}
+  \item \href{https://github.com/shivyam/cas-course-optimization/blob/main/.github/workflows/ci.yml}{\texttt{ci.yml}}
+  lints and tests the Python backend and the frontend on every pull request
+  and every push to \texttt{main}. The two jobs run in parallel and must both
+  pass before a change is merged, which supports our charter rule that
+  automated checks pass before code reaches \texttt{main}.
+  \item \href{https://github.com/shivyam/cas-course-optimization/blob/main/.github/workflows/latex-pages.yml}{\texttt{latex-pages.yml}}
+  compiles the LaTeX documentation and commits the generated PDFs, so the
+  reviewed PDFs always match the source.
+\end{itemize}
+
+\noindent Going forward, we plan to extend the CI to run the extraction pipeline
+against our answer-key outlines, so that changes to prompts or models that
+reduce extraction accuracy are caught automatically.
 
 \section{Custom Documents (CDs)}
 
