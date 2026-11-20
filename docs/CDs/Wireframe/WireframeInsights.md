@@ -1,5 +1,5 @@
 The wireframe mockups are attached and can be found in the "Wireframe" folder. 
 
-After presenting the mockups to Matt Vonk and Connie Carrabs (CAS Admin, our primary stakeholders), we received no negative feedback and confirmation of the direction they wanted to head in. 
+After presenting the mockups to Matt Vonk and Connie Carrabs (CAS Admin, our primary stakeholders), we received no negative feedback and confirmation of the direction they wanted to head in. We explained that the PDF upload mockup (02a. Course Outline Upload) was already implemented in the frontend and is a part of our current PDF extraction pipeline. The other mockups, while conceptual, are what we plan on implementing after we develop our core backend functions.
 
-Insight discussions with the stakeholders will take place after the deliverable deadline on Tuesday, as a result this segment will be updated right after (consideration provided by the TA).
+During our discussion, Matt noted two features he would like that were not explicitly shown in the mockups: the ability to upload several course outlines in a batch upload (the PDF upload view allows only one at a time at the moment), and the capability to upload various formats of course outlines (ex., PDF, LaTeX, Word document, etc.). Our team has taken note of these points, and as mentioned in previous documents, we plan to implement these features.
