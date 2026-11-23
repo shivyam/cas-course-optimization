@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import PageHeader from '../components/layout/PageHeader.tsx'
 
 type OutlinePreviewItem = {
