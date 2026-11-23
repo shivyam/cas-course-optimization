@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
-import type { ChangeEvent, DragEvent } from 'react'
+import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router'
-import PageHeader from '../components/layout/PageHeader.tsx'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
 const maxBatchFiles = 50
@@ -184,141 +183,173 @@ function OutlineReviewPage() {
     }
   }
 
-  return (
-    <section>
-      <PageHeader
-        eyebrow="Administration"
-        title="Course outline upload & review"
-        description="Upload one or more PDF course outlines to extract text for planning review."
-      />
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    void handleUpload()
+  }
 
-      <div className="mb-4 space-y-4 rounded-lg border border-cas-border bg-cas-surface p-4 sm:p-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0">
-            <p className="text-base font-semibold text-cas-ink">
-              {selectedFiles.length
-                ? `${selectedFiles.length} PDF${selectedFiles.length === 1 ? '' : 's'} selected`
-                : 'No outlines selected'}
-            </p>
-            <p className="mt-1 text-xs text-cas-muted">
-              Max {maxBatchFiles} files · 10 MB each · PDF only
-            </p>
+  return (
+    <section className="mx-auto max-w-6xl space-y-4">
+      <header className="space-y-2">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-mcmaster-maroon">
+          Administration
+        </p>
+        <h1 className="text-3xl font-bold tracking-tight text-cas-ink">Course outlines</h1>
+        <p className="max-w-2xl text-base leading-7 text-cas-muted">
+          Add course outlines to prepare them for text extraction and assessment planning.
+        </p>
+      </header>
+
+      <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
+        <div className="min-w-0 space-y-4">
+          <form
+          className="rounded-2xl border border-cas-border bg-white p-6 shadow-sm sm:p-8"
+          onSubmit={handleSubmit}
+          >
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-cas-ink">Upload PDFs</h2>
+              <p className="mt-1 text-sm text-cas-muted">
+                Maximum {maxBatchFiles} files, 10 MB each
+              </p>
+            </div>
+            <span className="rounded-full bg-mcmaster-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mcmaster-maroon">
+              PDF only
+            </span>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <input
-              ref={fileInputRef}
-              id="outline-pdfs"
-              type="file"
-              accept="application/pdf,.pdf"
-              multiple
-              className="sr-only"
-              onChange={handleFileChange}
-            />
+
+          <input
+            ref={fileInputRef}
+            id="outline-pdfs"
+            type="file"
+            accept="application/pdf,.pdf"
+            multiple
+            className="sr-only"
+            onChange={handleFileChange}
+          />
+          <label
+            htmlFor="outline-pdfs"
+            onDragEnter={(event) => {
+              event.preventDefault()
+              setIsDragging(true)
+            }}
+            onDragOver={(event) => event.preventDefault()}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            className={`flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 text-center transition ${
+              isDragging
+                ? 'border-mcmaster-maroon bg-mcmaster-maroon/5'
+                : 'border-cas-border bg-cas-surface hover:border-mcmaster-maroon hover:bg-mcmaster-maroon/5'
+            }`}
+          >
+            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-mcmaster-maroon text-2xl text-white">
+              +
+            </span>
+            <span className="font-semibold text-cas-ink">Drop your PDFs here</span>
+            <span className="mt-1 text-sm text-cas-muted">
+              or <span className="font-semibold text-mcmaster-maroon">browse files</span>
+            </span>
+          </label>
+
+          <div className="mt-6 flex w-full items-center justify-center">
             <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
+              type="submit"
               disabled={uploadState === 'uploading'}
-              className="h-10 rounded-lg border border-cas-border bg-white px-4 text-sm font-semibold text-mcmaster-maroon disabled:opacity-60"
+              className="rounded-lg bg-mcmaster-maroon px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-mcmaster-maroon/90 focus:outline-none focus:ring-2 focus:ring-mcmaster-gold focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Browse PDFs
-            </button>
-            <button
-              type="button"
-              onClick={handleUpload}
-              disabled={uploadState === 'uploading' || !selectedFiles.length}
-              className="h-10 rounded-lg bg-mcmaster-maroon px-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {uploadState === 'uploading'
-                ? `Uploading ${selectedFiles.length}…`
-                : selectedFiles.length > 1
-                  ? `Upload ${selectedFiles.length} outlines`
-                  : 'Upload outline'}
+              {uploadState === 'uploading' ? 'Uploading…' : 'Next →'}
             </button>
           </div>
+
+          {uploadMessage && (
+            <p
+              role="status"
+              className={`mt-4 rounded-lg px-4 py-3 text-sm font-medium ${
+                uploadState === 'error' || uploadState === 'partial'
+                  ? 'bg-red-50 text-red-700'
+                  : 'bg-green-50 text-green-700'
+              }`}
+            >
+              {uploadMessage}
+            </p>
+          )}
+          </form>
+
+          {selectedFiles.length > 0 && (
+            <section className="rounded-2xl border border-cas-border bg-white p-5 shadow-sm sm:p-6">
+            <h2 className="text-lg font-semibold text-cas-ink">Uploaded course outlines</h2>
+            <p className="mt-1 text-sm text-cas-muted">
+              Review or remove files before uploading them for extraction.
+            </p>
+            <ul className="mt-4 space-y-2">
+              {selectedFiles.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between gap-4 rounded-lg border border-cas-border bg-cas-surface p-4"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
+                      PDF
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-cas-ink">
+                        {item.file.name}
+                      </p>
+                      <p className="text-xs text-cas-muted">{formatFileSize(item.file.size)}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(item.id)}
+                    disabled={uploadState === 'uploading'}
+                    className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+            </section>
+          )}
         </div>
 
-        <label
-          htmlFor="outline-pdfs"
-          onDragEnter={(event) => {
-            event.preventDefault()
-            setIsDragging(true)
-          }}
-          onDragOver={(event) => event.preventDefault()}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          className={`flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 text-center transition ${
-            isDragging
-              ? 'border-mcmaster-maroon bg-mcmaster-maroon/5'
-              : 'border-cas-border bg-white hover:border-mcmaster-maroon'
-          }`}
-        >
-          <span className="font-semibold text-cas-ink">Drop one or many PDFs here</span>
-          <span className="mt-1 text-sm text-cas-muted">
-            or use Browse PDFs to select multiple files
-          </span>
-        </label>
-
-        {selectedFiles.length > 0 && (
-          <ul className="space-y-2">
-            {selectedFiles.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-center justify-between gap-3 rounded-lg border border-cas-border bg-white px-3 py-2"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-cas-ink">
-                    {item.file.name}
-                  </p>
-                  <p className="text-xs text-cas-muted">
-                    {formatFileSize(item.file.size)}
-                  </p>
+        <aside className="rounded-2xl bg-mcmaster-maroon p-6 text-white shadow-sm sm:p-8 lg:self-start lg:h-fit">
+          <p className="text-sm font-semibold uppercase tracking-[0.15em] text-mcmaster-gold">
+            What happens next?
+          </p>
+          <ol className="mt-6 space-y-6">
+            {[
+              ['01', 'Upload & validate', 'Add your current outline as a PDF (up to 10 MB).'],
+              [
+                '02',
+                'Extract & organize',
+                'Assessments, dates, weights and outcomes are organized automatically.',
+              ],
+              [
+                '03',
+                'Review & approve',
+                'Check source evidence, correct values and approve the extraction.',
+              ],
+              [
+                '04',
+                'Check policy & CEAB',
+                'Review policy warnings and verify accreditation mappings.',
+              ],
+              [
+                '05',
+                'Plan together',
+                'See cohort conflicts in the calendar, then review date',
+              ],
+            ].map(([number, title, description]) => (
+              <li key={number} className="flex gap-3">
+                <span className="text-sm font-bold text-mcmaster-gold">{number}</span>
+                <div>
+                  <h3 className="font-semibold">{title}</h3>
+                  <p className="mt-1 text-sm leading-6 text-white/75">{description}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeFile(item.id)}
-                  disabled={uploadState === 'uploading'}
-                  className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
-                >
-                  Remove
-                </button>
               </li>
             ))}
-          </ul>
-        )}
-      </div>
-
-      {uploadMessage && (
-        <p
-          role="status"
-          className={`mb-4 rounded-lg px-4 py-3 text-sm ${
-            uploadState === 'error' || uploadState === 'partial'
-              ? 'bg-red-50 text-red-700'
-              : 'bg-green-50 text-green-700'
-          }`}
-        >
-          {uploadMessage}
-        </p>
-      )}
-
-      <div className="grid gap-6 xl:grid-cols-2">
-        <article className="rounded-lg border border-cas-border bg-white p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-cas-ink">Extracted assessments</h2>
-          <p className="mt-1 text-sm text-cas-muted">
-            Assessment rows will appear here after extraction and review are connected.
-          </p>
-          <div className="mt-6 rounded-lg border border-dashed border-cas-border bg-cas-surface px-4 py-10 text-center text-sm text-cas-muted">
-            No extracted assessments yet
-          </div>
-        </article>
-
-        <aside className="rounded-lg border border-cas-border bg-white p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-cas-ink">Source evidence</h2>
-          <p className="mt-1 text-sm text-cas-muted">
-            Citation text for a selected assessment will appear here.
-          </p>
-          <div className="mt-6 rounded-lg border border-dashed border-cas-border bg-cas-surface px-4 py-10 text-center text-sm text-cas-muted">
-            No source citation selected
-          </div>
+          </ol>
         </aside>
       </div>
     </section>
