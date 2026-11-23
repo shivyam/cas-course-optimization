@@ -40,7 +40,7 @@ describe('App', () => {
 
   it.each([
     ['/admin', 'Administrator dashboard'],
-    ['/admin/outline-review', 'Course outline upload & review'],
+    ['/admin/outline-review', 'Course outlines'],
     ['/admin/calendar', 'Shared academic calendar'],
     ['/admin/policy', 'Policy compliance & CEAB'],
     ['/instructor', 'Workload conflicts & recommendations'],
