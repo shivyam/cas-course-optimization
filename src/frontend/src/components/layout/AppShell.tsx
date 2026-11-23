@@ -33,7 +33,14 @@ function workspaceTabClass({ isActive }: { isActive: boolean }) {
 function AppShell() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const { pathname } = useLocation()
-  const roleLabel = pathname.startsWith('/instructor') ? 'Faculty professor' : 'CAS Admin'
+  const isInstructorView = pathname.startsWith('/instructor')
+  const roleLabel = isInstructorView ? 'Faculty professor' : 'CAS Admin'
+  const visibleWorkspaceTabs = workspaceTabs.filter(
+    (tab) =>
+      (isInstructorView
+        ? !['/admin', '/admin/outline-review', '/admin/policy'].includes(tab.to)
+        : tab.to !== '/instructor'),
+  )
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -50,9 +57,11 @@ function AppShell() {
               <NavLink to="/" end className={mainNavClass}>
                 Home
               </NavLink>
-              <NavLink to="/admin" className={mainNavClass}>
-                Admin
-              </NavLink>
+              {!isInstructorView && (
+                <NavLink to="/admin" end className={mainNavClass}>
+                  Admin
+                </NavLink>
+              )}
               <NavLink to="/instructor" className={mainNavClass}>
                 Instructor
               </NavLink>
@@ -87,13 +96,16 @@ function AppShell() {
             >
               Home
             </NavLink>
-            <NavLink
-              to="/admin"
-              className={mainNavClass}
-              onClick={() => setMobileNavOpen(false)}
-            >
-              Admin
-            </NavLink>
+            {!isInstructorView && (
+              <NavLink
+                to="/admin"
+                end
+                className={mainNavClass}
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Admin
+              </NavLink>
+            )}
             <NavLink
               to="/instructor"
               className={mainNavClass}
@@ -110,7 +122,7 @@ function AppShell() {
           className="mx-auto flex max-w-[1440px] gap-4 overflow-x-auto px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-6 sm:px-8 [&::-webkit-scrollbar]:hidden"
           aria-label="Workspace"
         >
-          {workspaceTabs.map((tab) => (
+          {visibleWorkspaceTabs.map((tab) => (
             <NavLink key={tab.to} to={tab.to} end={tab.end} className={workspaceTabClass}>
               {tab.label}
             </NavLink>
