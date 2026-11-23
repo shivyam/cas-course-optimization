@@ -35,11 +35,10 @@ function AppShell() {
   const { pathname } = useLocation()
   const isInstructorView = pathname.startsWith('/instructor')
   const roleLabel = isInstructorView ? 'Faculty professor' : 'CAS Admin'
-  const visibleWorkspaceTabs = workspaceTabs.filter(
-    (tab) =>
-      (isInstructorView
-        ? !['/admin', '/admin/outline-review', '/admin/policy'].includes(tab.to)
-        : tab.to !== '/instructor'),
+  const visibleWorkspaceTabs = workspaceTabs.filter((tab) =>
+    isInstructorView
+      ? !['/admin', '/admin/outline-review', '/admin/policy'].includes(tab.to)
+      : tab.to !== '/instructor',
   )
 
   return (

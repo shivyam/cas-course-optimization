@@ -194,7 +194,9 @@ function OutlineReviewPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-mcmaster-maroon">
           Administration
         </p>
-        <h1 className="text-3xl font-bold tracking-tight text-cas-ink">Course outlines</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-cas-ink">
+          Course outlines
+        </h1>
         <p className="max-w-2xl text-base leading-7 text-cas-muted">
           Add course outlines to prepare them for text extraction and assessment planning.
         </p>
@@ -203,112 +205,117 @@ function OutlineReviewPage() {
       <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
         <div className="min-w-0 space-y-4">
           <form
-          className="rounded-2xl border border-cas-border bg-white p-6 shadow-sm sm:p-8"
-          onSubmit={handleSubmit}
+            className="rounded-2xl border border-cas-border bg-white p-6 shadow-sm sm:p-8"
+            onSubmit={handleSubmit}
           >
-          <div className="mb-6 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-cas-ink">Upload PDFs</h2>
-              <p className="mt-1 text-sm text-cas-muted">
-                Maximum {maxBatchFiles} files, 10 MB each
-              </p>
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-cas-ink">Upload PDFs</h2>
+                <p className="mt-1 text-sm text-cas-muted">
+                  Maximum {maxBatchFiles} files, 10 MB each
+                </p>
+              </div>
+              <span className="rounded-full bg-mcmaster-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mcmaster-maroon">
+                PDF only
+              </span>
             </div>
-            <span className="rounded-full bg-mcmaster-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mcmaster-maroon">
-              PDF only
-            </span>
-          </div>
 
-          <input
-            ref={fileInputRef}
-            id="outline-pdfs"
-            type="file"
-            accept="application/pdf,.pdf"
-            multiple
-            className="sr-only"
-            onChange={handleFileChange}
-          />
-          <label
-            htmlFor="outline-pdfs"
-            onDragEnter={(event) => {
-              event.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragOver={(event) => event.preventDefault()}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={handleDrop}
-            className={`flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 text-center transition ${
-              isDragging
-                ? 'border-mcmaster-maroon bg-mcmaster-maroon/5'
-                : 'border-cas-border bg-cas-surface hover:border-mcmaster-maroon hover:bg-mcmaster-maroon/5'
-            }`}
-          >
-            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-mcmaster-maroon text-2xl text-white">
-              +
-            </span>
-            <span className="font-semibold text-cas-ink">Drop your PDFs here</span>
-            <span className="mt-1 text-sm text-cas-muted">
-              or <span className="font-semibold text-mcmaster-maroon">browse files</span>
-            </span>
-          </label>
-
-          <div className="mt-6 flex w-full items-center justify-center">
-            <button
-              type="submit"
-              disabled={uploadState === 'uploading'}
-              className="rounded-lg bg-mcmaster-maroon px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-mcmaster-maroon/90 focus:outline-none focus:ring-2 focus:ring-mcmaster-gold focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {uploadState === 'uploading' ? 'Uploading…' : 'Next →'}
-            </button>
-          </div>
-
-          {uploadMessage && (
-            <p
-              role="status"
-              className={`mt-4 rounded-lg px-4 py-3 text-sm font-medium ${
-                uploadState === 'error' || uploadState === 'partial'
-                  ? 'bg-red-50 text-red-700'
-                  : 'bg-green-50 text-green-700'
+            <input
+              ref={fileInputRef}
+              id="outline-pdfs"
+              type="file"
+              accept="application/pdf,.pdf"
+              multiple
+              className="sr-only"
+              onChange={handleFileChange}
+            />
+            <label
+              htmlFor="outline-pdfs"
+              onDragEnter={(event) => {
+                event.preventDefault()
+                setIsDragging(true)
+              }}
+              onDragOver={(event) => event.preventDefault()}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              className={`flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 text-center transition ${
+                isDragging
+                  ? 'border-mcmaster-maroon bg-mcmaster-maroon/5'
+                  : 'border-cas-border bg-cas-surface hover:border-mcmaster-maroon hover:bg-mcmaster-maroon/5'
               }`}
             >
-              {uploadMessage}
-            </p>
-          )}
+              <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-mcmaster-maroon text-2xl text-white">
+                +
+              </span>
+              <span className="font-semibold text-cas-ink">Drop your PDFs here</span>
+              <span className="mt-1 text-sm text-cas-muted">
+                or{' '}
+                <span className="font-semibold text-mcmaster-maroon">browse files</span>
+              </span>
+            </label>
+
+            <div className="mt-6 flex w-full items-center justify-center">
+              <button
+                type="submit"
+                disabled={uploadState === 'uploading'}
+                className="rounded-lg bg-mcmaster-maroon px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-mcmaster-maroon/90 focus:outline-none focus:ring-2 focus:ring-mcmaster-gold focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {uploadState === 'uploading' ? 'Uploading…' : 'Next →'}
+              </button>
+            </div>
+
+            {uploadMessage && (
+              <p
+                role="status"
+                className={`mt-4 rounded-lg px-4 py-3 text-sm font-medium ${
+                  uploadState === 'error' || uploadState === 'partial'
+                    ? 'bg-red-50 text-red-700'
+                    : 'bg-green-50 text-green-700'
+                }`}
+              >
+                {uploadMessage}
+              </p>
+            )}
           </form>
 
           {selectedFiles.length > 0 && (
             <section className="rounded-2xl border border-cas-border bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="text-lg font-semibold text-cas-ink">Uploaded course outlines</h2>
-            <p className="mt-1 text-sm text-cas-muted">
-              Review or remove files before uploading them for extraction.
-            </p>
-            <ul className="mt-4 space-y-2">
-              {selectedFiles.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex items-center justify-between gap-4 rounded-lg border border-cas-border bg-cas-surface p-4"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
-                      PDF
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-cas-ink">
-                        {item.file.name}
-                      </p>
-                      <p className="text-xs text-cas-muted">{formatFileSize(item.file.size)}</p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(item.id)}
-                    disabled={uploadState === 'uploading'}
-                    className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
+              <h2 className="text-lg font-semibold text-cas-ink">
+                Uploaded course outlines
+              </h2>
+              <p className="mt-1 text-sm text-cas-muted">
+                Review or remove files before uploading them for extraction.
+              </p>
+              <ul className="mt-4 space-y-2">
+                {selectedFiles.map((item) => (
+                  <li
+                    key={item.id}
+                    className="flex items-center justify-between gap-4 rounded-lg border border-cas-border bg-cas-surface p-4"
                   >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
+                        PDF
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-cas-ink">
+                          {item.file.name}
+                        </p>
+                        <p className="text-xs text-cas-muted">
+                          {formatFileSize(item.file.size)}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(item.id)}
+                      disabled={uploadState === 'uploading'}
+                      className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
         </div>
@@ -319,7 +326,11 @@ function OutlineReviewPage() {
           </p>
           <ol className="mt-6 space-y-6">
             {[
-              ['01', 'Upload & validate', 'Add your current outline as a PDF (up to 10 MB).'],
+              [
+                '01',
+                'Upload & validate',
+                'Add your current outline as a PDF (up to 10 MB).',
+              ],
               [
                 '02',
                 'Extract & organize',
