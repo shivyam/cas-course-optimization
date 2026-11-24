@@ -5,6 +5,25 @@ import { useNavigate } from 'react-router'
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
 const maxBatchFiles = 50
 const maxFileSizeBytes = 10 * 1024 * 1024
+const workflowSteps = [
+  ['01', 'Upload & validate', 'Add your current outline as a PDF (up to 10 MB).'],
+  [
+    '02',
+    'Extract & organize',
+    'Assessments, dates, weights and outcomes are organized automatically.',
+  ],
+  [
+    '03',
+    'Review & approve',
+    'Check source evidence, correct values and approve the extraction.',
+  ],
+  [
+    '04',
+    'Check policy & CEAB',
+    'Review policy warnings and verify accreditation mappings.',
+  ],
+  ['05', 'Plan together', 'See cohort conflicts in the calendar, then review date'],
+] as const
 
 type UploadState = 'idle' | 'uploading' | 'error' | 'partial'
 
@@ -325,33 +344,7 @@ function OutlineReviewPage() {
             What happens next?
           </p>
           <ol className="mt-6 space-y-6">
-            {[
-              [
-                '01',
-                'Upload & validate',
-                'Add your current outline as a PDF (up to 10 MB).',
-              ],
-              [
-                '02',
-                'Extract & organize',
-                'Assessments, dates, weights and outcomes are organized automatically.',
-              ],
-              [
-                '03',
-                'Review & approve',
-                'Check source evidence, correct values and approve the extraction.',
-              ],
-              [
-                '04',
-                'Check policy & CEAB',
-                'Review policy warnings and verify accreditation mappings.',
-              ],
-              [
-                '05',
-                'Plan together',
-                'See cohort conflicts in the calendar, then review date',
-              ],
-            ].map(([number, title, description]) => (
+            {workflowSteps.map(([number, title, description]) => (
               <li key={number} className="flex gap-3">
                 <span className="text-sm font-bold text-mcmaster-gold">{number}</span>
                 <div>
