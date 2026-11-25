@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+
+if [ -x "$repo_root/src/backend/.venv/bin/python" ]; then
+  backend_python="$repo_root/src/backend/.venv/bin/python"
+elif [ -x "$repo_root/src/backend/.venv/Scripts/python.exe" ]; then
+  backend_python="$repo_root/src/backend/.venv/Scripts/python.exe"
+elif [ -x "$repo_root/.venv/bin/python" ]; then
+  backend_python="$repo_root/.venv/bin/python"
+elif [ -x "$repo_root/.venv/Scripts/python.exe" ]; then
+  backend_python="$repo_root/.venv/Scripts/python.exe"
+else
+  backend_python="${PYTHON:-python3}"
+fi
+
+printf '%s\n' 'Running backend tests...'
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m pytest); then
+  printf '%s\n' "Backend tests failed. Run: cd src/backend && $backend_python -m pytest"
+  exit 1
+fi
+
+printf '%s\n' 'Checking backend lint...'
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m ruff check .); then
+  printf '%s\n' "Backend lint failed. Run: cd src/backend && $backend_python -m ruff check ."
+  exit 1
+fi
+
+printf '%s\n' 'Checking backend formatting...'
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m ruff format --check .); then
+  printf '%s\n' "Backend formatting failed. Run: cd src/backend && $backend_python -m ruff format ."
+  exit 1
+fi
+
+printf '%s\n' 'Checking frontend lint...'
+if ! (cd "$repo_root/src/frontend" && npm run lint:eslint); then
+  printf '%s\n' 'Frontend lint failed. Run: cd src/frontend && npm run lint:eslint'
+  exit 1
+fi
+
+printf '%s\n' 'Checking frontend formatting...'
+if ! (cd "$repo_root/src/frontend" && npm run format:check); then
+  printf '%s\n' 'Frontend formatting failed. Run: cd src/frontend && npm run format'
+  exit 1
+fi
+
+printf '%s\n' 'Running frontend tests...'
+if ! (cd "$repo_root/src/frontend" && npm test); then
+  printf '%s\n' 'Frontend tests failed. Run: cd src/frontend && npm test'
+  exit 1
+fi
+
+printf '%s\n' 'Backend and frontend formatting checks and tests passed.'
