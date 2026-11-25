@@ -34,7 +34,7 @@ function OutlineWorkflowStepper({ currentStep }: OutlineWorkflowStepperProps) {
                   {index + 1}
                 </span>
                 <span
-                    className={`mt-1 text-[10px] font-semibold leading-3 ${
+                  className={`mt-1 text-[10px] font-semibold leading-3 ${
                     isCurrent ? 'text-mcmaster-maroon' : 'text-cas-muted'
                   }`}
                 >

@@ -101,7 +101,9 @@ function FileSummary({ file }: { file: UploadedOutline }) {
       </span>
       <span className="min-w-0">
         <span className="block truncate text-sm font-semibold">{file.filename}</span>
-        <span className="block text-xs text-cas-muted">{formatFileSize(file.sizeBytes)}</span>
+        <span className="block text-xs text-cas-muted">
+          {formatFileSize(file.sizeBytes)}
+        </span>
       </span>
     </>
   )
