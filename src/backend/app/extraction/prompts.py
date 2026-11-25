@@ -6,6 +6,12 @@ The outline text is never put in these strings; the LLM client sends it as a
 separate message so it is treated as data, not as instructions.
 """
 
+# Examples in the prompts below are invented on purpose ("Five labs",
+# "Dr. Jane Doe", "MATH 1ZA3"). Earlier versions used text copied from the
+# five reference outlines, which partly showed the model the answers and
+# made their scores look better than on a new outline. The comments still
+# say which outline each rule came from.
+
 # Sent as the system message on every call. It is identical for all steps on
 # purpose, so Ollama can reuse the outline it has already read (see llm_client).
 # The trailing backslashes join lines inside the string; they are not in the text.
@@ -35,18 +41,18 @@ empty string as the schema allows.
 # about 10 lines below the instructor's name and the model missed it.
 HEADER = """Task: extract the course header.
 - term: every term the course runs in, using the outline's own term names, \
-e.g. ["Fall 2026"]. Never a date like "August 27, 2026". A full-year course \
+e.g. ["Fall 2026"]. Never a date like "September 3, 2026". A full-year course \
 that says "Term 1" and "Term 2" runs in the fall and the following winter: \
 write ["Fall 2026", "Winter 2027"] (with the outline's years).
-- course_code, e.g. "COMPSCI 2CO3"; course_title.
+- course_code, e.g. "MATH 1ZA3"; course_title.
 - website: the main course website (e.g. Avenue to Learn, a course GitLab \
 or the course web page) and the line that names it. Not a bookstore or \
 textbook link.
 - contact: one entry per instructor, including the instructors of every \
-section (e.g. under "Details specific to section C02"). Teaching assistants \
+section (e.g. under a heading such as "Section C02"). Teaching assistants \
 are not instructors; leave them out.
 - instructor: the name exactly as the outline writes it, including any title \
-or designation (e.g. "Dr. Bojan Nokovic, P.Eng."), but nothing added such as \
+or designation (e.g. "Dr. Jane Doe, P.Eng."), but nothing added such as \
 the section. email: their email. source_text: only the one line naming them.
 - office_hours: the line starting "Office hours" in that instructor's part of \
 the outline. It is often several lines below the instructor's name, after the \
@@ -77,11 +83,11 @@ has_ta_info is true when a TA is named."""
 ASSESSMENTS = """Task: list every graded assessment.
 - One entry per individual item, never one entry for a group, whenever the \
 outline gives the number of items or names them:
-  - "Eight assignments, 7.25% each" -> eight entries (Assignment 1 ... \
-Assignment 8), each with its own deadline if deadlines are listed.
-  - A range such as "Assignments (A1-A3) 15%" -> three entries (Assignment 1, \
-Assignment 2, Assignment 3). If only the group's total weight is given, \
-divide it equally (15% / 3 = 5 each).
+  - "Five labs, 4% each" -> five entries (Lab 1 ... Lab 5), each with its \
+own deadline if deadlines are listed.
+  - A range such as "Quizzes (Q1-Q4) 20%" -> four entries (Quiz 1, Quiz 2, \
+Quiz 3, Quiz 4). If only the group's total weight is given, divide it \
+equally (20% / 4 = 5 each).
   - Only keep one entry for a group when the outline does not say how many \
 items it has.
 - type: one of assignment, lab, quiz, midterm, final_exam, project, \
@@ -89,11 +95,11 @@ participation, deliverable, demonstration, other.
 - date: YYYY-MM-DD when a day and month are written. If the year is missing, \
 use the year of the course term. null if there is no date.
 - weight_percent: the item's own weight as a number (10% -> 10), or null. \
-When only the best few count (e.g. "the best seven of eight count, 7.25% \
+When only the best few count (e.g. "the best four of five labs count, 5% \
 each"), still give every item that weight.
-- source_text: copy only the date exactly as written (e.g. "October 9"), or \
+- source_text: copy only the date exactly as written (e.g. "March 12"), or \
 the weight text if it has no date. Do not add words from elsewhere in the \
-line, such as "The deadlines are as follows:"."""
+line, such as "Due dates are:"."""
 
 # Step 4. Only "is it there and where": the heading or first line is enough for
 # a reviewer to find the section, and short quotes are found more reliably.
