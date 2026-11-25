@@ -26,7 +26,8 @@ from pathlib import Path
 # accept exactly the same files.
 from app.api.outlines import MAX_FILE_SIZE_BYTES, read_pdf_pages
 from app.extraction import llm_client
-from app.extraction.extractor import InvalidModelOutputError, extract
+from app.extraction.extractor import extract
+from app.extraction.model_steps import InvalidModelOutputError
 
 # Same repo-level data/ folder the text extraction uses; it is git-ignored, so
 # extracted outline data is never committed by accident.

@@ -11,21 +11,22 @@ from pathlib import Path
 
 import pytest
 
-from app.extraction.extractor import (
-    STEPS,
-    ExtractionReport,
-    InvalidModelOutputError,
+from app.extraction.extractor import extract
+from app.extraction.llm_client import Completion
+from app.extraction.model_steps import STEPS, InvalidModelOutputError
+from app.extraction.output_builder import (
     attribute_code_number,
     build_website,
     clean_email,
     clean_terms,
+)
+from app.extraction.quote_search import (
     closest_pdf_text,
-    extract,
     find_page,
     find_page_after,
     shortened_quote,
 )
-from app.extraction.llm_client import Completion
+from app.extraction.report import ExtractionReport
 from app.extraction.schemas import Header, ollama_schema
 
 # The agreed output shape (from #138). Our output must have the same keys.
