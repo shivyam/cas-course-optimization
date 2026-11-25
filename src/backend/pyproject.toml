@@ -16,6 +16,8 @@ dependencies = [
 
 [project.scripts]
 cas-extract-outline = "app.cli:main"
+# LLM extraction of an outline PDF to JSON (needs Ollama running locally).
+cas-llm-extract = "app.extraction.cli:main"
 
 # Tools only needed for development and CI, not for running the app.
 [project.optional-dependencies]
