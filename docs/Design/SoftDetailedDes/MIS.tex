@@ -2,7 +2,7 @@
 
 \usepackage{amsmath, mathtools}
 
-\usepackage[round]{natbib}
+\usepackage[numbers,square,sort&compress]{natbib}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -31,12 +31,29 @@ urlcolor=cyan          % color of external links
 
 \usepackage{array}
 
-\externaldocument{../../SRS/SRS}
+\externaldocument[SRS-]{../../SRS-IEEE/SRS}
+\externaldocument[MG-]{../SoftArchitecture/MG}
+
+\newcommand{\mref}[1]{M\ref{MG-#1}}
+\newcommand{\frref}[1]{FR\ref{SRS-#1}}
+\newcommand{\nfrref}[1]{NFR\ref{SRS-#1}}
+\newcommand{\drref}[1]{DR\ref{SRS-#1}}
 
 \input{../../Comments.text}
 \input{../../Common.text}
 
+% IEEEtran.bst control: write repeated author names in full instead of a dash.
+% \bstctlcite is defined by the IEEEtran class; article needs it here.
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack\@for\@citeb:=#2\do{%
+  \edef\@citeb{\expandafter\@firstofone\@citeb}%
+  \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title{Module Interface Specification for \progname{}}
 
@@ -48,23 +65,34 @@ urlcolor=cyan          % color of external links
 
 \pagenumbering{roman}
 
-\section{Revision History}
+\section{Revision History} \label{SecRevHist}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov.\ 16, 2026 & 1.0 & Initial Version\\
 \bottomrule
 \end{tabularx}
 
 ~\newpage
 
-\section{Symbols, Abbreviations and Acronyms}
+\section{Symbols, Abbreviations and Acronyms} \label{SecSymbols}
 
-See SRS Documentation at \wss{give url}
+Symbols, abbreviations and acronyms defined in the SRS~\citep{TeamBVSH2026SRS}
+(for example AIR, CAS, CEAB, DR, FR, GA, LLM, NFR and PDF) and in the
+MG~\citep{TeamBVSH2026MG} (for example AC, M and UC) keep their meaning there.
+This document adds the following:
 
-\wss{Also add any additional symbols, abbreviations or acronyms}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l}
+  \toprule
+  \textbf{symbol} & \textbf{description}\\
+  \midrule
+  MIS & Module Interface Specification\\
+  $\mathbb{B}$ & Boolean: true or false\\
+  -- & No input, no output or no exception\\
+  \bottomrule
+\end{tabular}
 
 \newpage
 
@@ -74,24 +102,32 @@ See SRS Documentation at \wss{give url}
 
 \pagenumbering{arabic}
 
-\section{Introduction}
+\section{Introduction} \label{SecIntro}
 
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+%The following document details the Module Interface Specifications for
+%\wss{Fill in your project name and description}
 
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+%Complementary documents include the System Requirement Specifications
+%and Module Guide.  The full documentation and implementation can be
+%found at \url{...}.  \wss{provide the url for your repo}
 
-\section{Notation}
+The following document details the Module Interface Specifications for the ASSURE Project. 
+The system collects assessment information from CAS course outlines, shows both confirmed 
+and tentative assessment dates in a shared calendar, shows how many assessments each 
+student cohort has per week, and checks each outline against McMaster's course 
+outline policy~\citep{McMasterUCMP2025} and the CEAB graduate attributes~\citep{CEAB2025}.\\
 
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
+\noindent Complementary documents include the System Requirement Specifications and Module Guide.
+The full documentation and implementation can be found at
+\url{https://github.com/shivyam/cas-course-optimization}.
 
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
+
+\section{Notation} \label{SecNotation}
+
+The structure of the MIS for modules comes from Hoffman and Strooper~\citep{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
+Ghezzi et al.~\citep{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
+Hoffman and Strooper~\citep{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
 multiple assignment statement and conditional rules follow the form $(c_1
 \Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
 
@@ -104,6 +140,7 @@ The following table summarizes the primitive data types used by \progname.
 \toprule 
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
+boolean & $\mathbb{B}$ & true or false\\
 character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
@@ -120,9 +157,44 @@ different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
 
-\section{Module Decomposition}
+The following abstract types are used by the access programs. Their fields
+follow the data dictionary of the SRS~\citep{TeamBVSH2026SRS}; how they are
+stored is the secret of the Data Store (\mref{mStore}).
 
-The following table is taken directly from the Module Guide document for this project.
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{10.1cm}}
+\toprule
+\textbf{Type} & \textbf{Description}\\
+\midrule
+CourseID, OutlineID, AssessmentID, FindingID, RecID, ValueID, ID & Identifiers given out by the Data Store (\mref{mStore})\\
+User & A user and their role in \{administrator, instructor\}\\
+Session & A logged-in session\\
+Credentials & What a user gives to log in\\
+File & An uploaded or generated file and its name\\
+Outline & A submitted course outline and the course it belongs to\\
+Value & One extracted value, with its source passage and page\\
+Assessment & (name, type, date or missing, weight, tentative: $\mathbb{B}$)\\
+CourseRecord & The assessments and learning outcomes extracted from one outline\\
+Finding & (course, kind, message, source passage, accepted: $\mathbb{B}$)\\
+AuditEntry & (user, time, value or finding changed, previous value, reason)\\
+DateRecommendation & (assessment, suggested date, explanation, decision)\\
+CourseCode & A course code, such as SFWRENG 4X03\\
+Cohort & (program, year level), for example (COMPSCI, 2)\\
+Date, Time, Week, Term & A calendar date; a time of day; a week of term; a term, such as Winter 2027\\
+Status & (missing values: $\mathbb{N}$, open findings: $\mathbb{N}$, unconfirmed values: $\mathbb{N}$)\\
+CalendarFilter & The courses, year levels and programs to show\\
+Request, Response & A request from the Web UI (\mref{mUI}) and the reply to it\\
+Entity, EntityKind, Filter & A stored record, its kind, and a condition on its fields\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\section{Module Decomposition} \label{SecMD}
+
+The following table is taken directly from the Module
+Guide~\citep{TeamBVSH2026MG}. The Hardware-Hiding module (\mref{mHH}) is
+provided by the operating system and has no MIS.
 
 \begin{table}[h!]
 \centering
@@ -131,21 +203,32 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+{Hardware-Hiding} & Hardware-Hiding (\mref{mHH})\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{16}{0.3\textwidth}{Behaviour-Hiding}
+& Outline Intake (\mref{mIntake})\\
+& Extraction (\mref{mExtract})\\
+& Extraction Review (\mref{mReview})\\
+& Assessment Schedule (\mref{mSchedule})\\
+& Workload Analysis (\mref{mWorkload})\\
+& Policy Compliance (\mref{mPolicy})\\
+& Graduate Attribute Check (\mref{mGA})\\
+& Findings and Override (\mref{mFindings})\\
+& Dashboard (\mref{mDashboard})\\
+& Date Suggestion (\mref{mSuggest})\\
+& Export (\mref{mExport})\\
+& Access Control (\mref{mAccess})\\
+& Web UI (\mref{mUI})\\
+& Request Controller (\mref{mControl})\\
+& Cohort (\mref{mCohort})\\
+& Academic Calendar (\mref{mCalendar})\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{3}{0.3\textwidth}{Software Decision}
+& Document Reader (\mref{mReader})\\
+& LLM Client (\mref{mLLM})\\
+& Data Store (\mref{mStore})\\
 \bottomrule
 
 \end{tabular}
@@ -156,32 +239,33 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Outline Intake Module (\mref{mIntake})} \label{mis-mIntake}
 
 \subsection{Module}
 
-\wss{Short name for the module}
+OutlineIntake
 
 \subsection{Uses}
 
+\mref{mExtract}, \mref{mReader}, \mref{mStore}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
+\begin{itemize}
+\item \textit{MAX\_UPLOAD\_SIZE}: Largest outline file accepted, 10 MB.
+\end{itemize}
+
 \subsubsection{Exported Access Programs}
 
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+submit & files: seq of File, u: User & seq of OutlineID & UnsupportedFormat, FileTooLarge, EmptyFile, NotAuthorized \\
+getOutline & id: OutlineID & Outline & NotFound \\
 \hline
 \end{tabular}
 \end{center}
@@ -190,46 +274,1084 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+% None.
+\todo{Rev 0}
 
 \subsubsection{Environment Variables}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+% None.
+\todo{Rev 0}
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% Each submitted file is one course outline.
+\todo{Rev 0}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
-\end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\todo{Rev 0}
 
 \newpage
 
-\bibliographystyle {plainnat}
+\section{MIS of Extraction Module (\mref{mExtract})} \label{mis-mExtract}
+
+\subsection{Module}
+
+Extraction
+
+\subsection{Uses}
+
+\mref{mReader}, \mref{mLLM}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+extract & id: OutlineID & CourseRecord & ModelUnavailable, ExtractionTimeout, InvalidModelOutput \\
+missingFields & c: CourseID & seq of Finding & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The text returned by the Document Reader (\mref{mReader}) is in reading order.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+
+\newpage
+
+\section{MIS of Extraction Review Module (\mref{mReview})} \label{mis-mReview}
+
+\subsection{Module}
+
+ExtractionReview
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+getForReview & c: CourseID & CourseRecord & NotFound \\
+correct & v: ValueID, x: Value, u: User & -- & NotFound, NotAuthorized \\
+confirm & c: CourseID, u: User & -- & NotAuthorized, UnreviewedValues \\
+isConfirmed & c: CourseID & $\mathbb{B}$ & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item reviewStatus: ValueID $\rightarrow$ \{extracted, corrected, confirmed\}
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Assessment Schedule Module (\mref{mSchedule})} \label{mis-mSchedule}
+
+\subsection{Module}
+
+AssessmentSchedule
+
+\subsection{Uses}
+
+\mref{mReview}, \mref{mWorkload}, \mref{mPolicy}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+setTentativeDate & a: AssessmentID, d: Date, u: User & -- & NotOwner, DateOutsideTerm \\
+approveDate & a: AssessmentID, d: Date, u: User & -- & NotOwner \\
+getSchedule & c: CourseID & seq of Assessment & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item tentative: AssessmentID $\rightarrow$ Date
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+% \todo{Rev 0: transition, output and exception for each access program.}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+% \todo{Rev 0, as needed.}
+\todo{Rev 0}
+
+\newpage
+
+% Section 10
+\section{MIS of Workload Analysis Module (\mref{mWorkload})} \label{mis-mWorkload}
+
+\subsection{Module}
+WorkloadAnalysis
+
+\subsection{Uses}
+\mref{mReview}, \mref{mStore}, \mref{mCohort}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+weeklyDensity & k: Cohort, t: Term & seq of (Week, $\mathbb{N}$) & UnknownCohort \\
+restrictedConflicts & c: CourseID & seq of Finding & NotFound \\
+reanalyze & c: CourseID & -- & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 11
+\section{MIS of Policy Compliance Module (\mref{mPolicy})} \label{mis-mPolicy}
+
+\subsection{Module}
+PolicyCompliance
+
+\subsection{Uses}
+\mref{mReview}, \mref{mFindings}, \mref{mStore}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{WEIGHT\_TOTAL}: policy value from SRS Appendix C.
+\item \textit{MAX\_SINGLE\_WEIGHT}: policy value from SRS Appendix C.
+\item \textit{BAN\_CLASS\_DAYS}: policy value from SRS Appendix C.
+\item \textit{BAN\_WEIGHT\_LIMIT}: policy value from SRS Appendix C.
+\item \textit{EARLY\_FEEDBACK\_L2}: policy value from SRS Appendix C.
+\item \textit{EARLY\_FEEDBACK\_L3}: policy value from SRS Appendix C.
+\item \textit{OUTLINE\_LEAD\_TIME}: policy value from SRS Appendix C.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+checkPolicy & c: CourseID & seq of Finding & NotConfirmed, NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 12
+\section{MIS of Graduate Attribute Check Module (\mref{mGA})} \label{mis-mGA}
+
+\subsection{Module}
+GACheck
+
+\subsection{Uses}
+\mref{mReview}, \mref{mFindings}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{GA\_LIST}: The twelve CEAB graduate attributes~\citep{CEAB2025}.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+checkGA & c: CourseID & seq of Finding & NotConfirmed, NoMasterRecord \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 13
+\section{MIS of Findings and Override Module (\mref{mFindings})} \label{mis-mFindings}
+
+\subsection{Module}
+Findings
+
+\subsection{Uses}
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+record & f: Finding & FindingID & -- \\
+findings & c: CourseID & seq of Finding & NotFound \\
+override & f: FindingID, r: String, u: User & -- & NotAdmin, EmptyReason, NotFound \\
+auditTrail & c: CourseID & seq of AuditEntry & NotAdmin \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item findingSet: set of Finding
+% \item audit: seq of AuditEntry
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 14
+\section{MIS of Dashboard Module (\mref{mDashboard})} \label{mis-mDashboard}
+
+\subsection{Module}
+Dashboard
+
+\subsection{Uses}
+\mref{mReview}, \mref{mSchedule}, \mref{mFindings}, \mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None.
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+visibleCourses & u: User & seq of CourseID & -- \\
+courseStatus & c: CourseID & Status & NotFound \\
+termCompleteness & t: Term & $\mathbb{R}$ (share of courses fully planned) & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Section 15
+\section{MIS of Date Suggestion Module (\mref{mSuggest})} \label{mis-mSuggest}
+
+\subsection{Module}
+DateSuggestion
+
+\subsection{Uses}
+\mref{mWorkload}, \mref{mStore}, \mref{mCalendar}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \textit{MIN\_ALTERNATIVES}: Fewest dates offered per request, from SRS Appendix C.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+suggest & a: AssessmentID, u: User & seq of DateRecommendation & NotOwner, NoConflict \\
+decide & r: RecID, accept: $\mathbb{B}$, u: User & -- & NotOwner, StaleSuggestion \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item recommendations: seq of DateRecommendation
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+
+\section{MIS of Export Module (\mref{mExport})} \label{mis-mExport}
+
+\subsection{Module}
+
+Export
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+exportData & t: Term, u: User & File & NotAdmin \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Access Control Module (\mref{mAccess})} \label{mis-mAccess}
+
+\subsection{Module}
+
+AccessControl
+
+\subsection{Uses}
+
+\mref{mStore}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+\item \textit{SESSION\_TIMEOUT}: Inactivity limit before a session expires, 30 minutes (\frref{FR_Access_Timeout}).
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+login & cr: Credentials & Session & InvalidCredentials \\
+logout & s: Session & -- & -- \\
+currentUser & s: Session & User & SessionExpired \\
+canEdit & u: User, c: CourseID & $\mathbb{B}$ & -- \\
+isAdmin & u: User & $\mathbb{B}$ & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item sessions: set of (Session, User, lastActive: Time)
+% \end{itemize}
+% Stored through the Data Store (\mref{mStore}).
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item clock: The server's system clock.
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Web UI Module (\mref{mUI})} \label{mis-mUI}
+
+\subsection{Module}
+
+WebUI
+
+\subsection{Uses}
+
+\mref{mControl}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+showUpload & -- & -- & -- \\
+showReview & c: CourseID & -- & -- \\
+showCalendar & f: CalendarFilter & -- & -- \\
+showFindings & c: CourseID & -- & -- \\
+showDashboard & t: Term & -- & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item window: The user's browser window.
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Request Controller Module (\mref{mControl})} \label{mis-mControl}
+
+\subsection{Module}
+
+RequestController
+
+\subsection{Uses}
+
+\mref{mIntake}, \mref{mExtract}, \mref{mReview}, \mref{mSchedule}, \mref{mWorkload}, \mref{mPolicy}, \mref{mGA}, \mref{mFindings}, \mref{mDashboard}, \mref{mSuggest}, \mref{mExport}, \mref{mAccess}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+handle & q: Request & Response & SessionExpired, NotAuthorized \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+
+\todo{Rev 0}
+
+\newpage
+
+% Harman: MIS of Cohort and Academic Calendar (Rev -1: Module, Uses and Syntax
+% only).
+
+\section{MIS of Cohort Module (\mref{mCohort})} \label{mis-mCohort}
+
+\subsection{Module}
+
+Cohort
+
+\subsection{Uses}
+
+None.
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+isDepartmentCourse & k: CourseCode & $\mathbb{B}$ & -- \\
+cohortOf & k: CourseCode & Cohort & UnknownCode \\
+coursesIn & h: Cohort & set of CourseCode & UnknownCohort \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent A cohort is a (program, year level) pair, for example (COMPSCI, 2).
+Only department courses on the master course list belong to a cohort.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None. The master course list is hard-coded and does not change while the system runs.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Academic Calendar Module (\mref{mCalendar})} \label{mis-mCalendar}
+
+\subsection{Module}
+
+AcademicCalendar
+
+\subsection{Uses}
+
+None.
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{4.1cm} >{\raggedright\arraybackslash}p{3.8cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+termDates & t: Term & (start: Date, end: Date) & UnknownTerm \\
+classDays & t: Term & seq of Date & UnknownTerm \\
+weekOf & d: Date, t: Term & Week & UnknownTerm, DateOutsideTerm \\
+isRestricted & d: Date & $\mathbb{B}$ & DateOutsideTerm \\
+restrictedPeriods & t: Term & seq of (start: Date, end: Date, kind: String) & UnknownTerm \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textit{isRestricted} is true when the date falls in a holiday, a
+recess or the examination period. The ban period is not included: Policy
+Compliance (\mref{mPolicy}) works it out from \textit{classDays}.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None. The term dates are hard-coded and do not change while the system runs.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Harman: MIS of the software decision modules (Rev -1: Module, Uses and
+% Syntax only).
+
+\section{MIS of Document Reader Module (\mref{mReader})} \label{mis-mReader}
+
+\subsection{Module}
+
+DocumentReader
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+readText & f: File & seq of (page: $\mathbb{N}$, text: String) & UnreadableDocument, UnsupportedFormat \\
+highlight & f: File, s: seq of (page: $\mathbb{N}$, text: String) & (File, seq of (page: $\mathbb{N}$, text: String)) & UnreadableDocument, UnsupportedFormat \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The output of \textit{highlight} is the highlighted copy of the
+outline and the passages in \textit{s} that could not be found on their page.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item files: the server's file system, where outline files are read and highlighted copies are written.
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of LLM Client Module (\mref{mLLM})} \label{mis-mLLM}
+
+\subsection{Module}
+
+LLMClient
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None.
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+complete & i: String, d: String & String & ModelUnavailable, Timeout \\
+isAvailable & -- & $\mathbb{B}$ & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent In \textit{complete}, \textit{i} holds the instructions and
+\textit{d} holds the outline text. They are kept apart so that outline text is
+always passed to the model as data, never as instructions.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% None.
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item model: the language model service on the CAS server.
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+\section{MIS of Data Store Module (\mref{mStore})} \label{mis-mStore}
+
+\subsection{Module}
+
+DataStore
+
+\subsection{Uses}
+
+Hardware-Hiding (\mref{mHH})
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+\item \textit{RETENTION\_YEARS} = 10, the retention period for outlines,
+  extracted data and findings, from the data requirements of the
+  SRS~\citep{TeamBVSH2026SRS}.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{3.9cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+init & -- & -- & -- \\
+save & e: Entity & ID & InvalidEntity \\
+load & k: EntityKind, id: ID & Entity & UnknownKind, NotFound \\
+query & k: EntityKind, p: Filter & seq of Entity & UnknownKind \\
+saveFile & f: File & ID & -- \\
+loadFile & id: ID & File & NotFound \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent \textit{save} adds a new entity or replaces a stored one with the
+same ID. There is no delete program: records are kept for
+\textit{RETENTION\_YEARS}.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+% \begin{itemize}
+% \item records: set of Entity
+% \item files: set of (ID, File)
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Environment Variables}
+
+% \begin{itemize}
+% \item db: the MongoDB database server.
+% \end{itemize}
+\todo{Rev 0}
+
+\subsubsection{Assumptions}
+
+% The access program \textit{init} is called before any other access program of this module.
+\todo{Rev 0}
+
+\subsubsection{Access Routine Semantics}
+\todo{Rev 0}
+
+\subsubsection{Local Functions}
+\todo{Rev 0}
+
+\newpage
+
+% Same IEEE style file as the SRS (IEEEtran.bst is not installed in CI).
+\bibliographystyle {../../SRS-IEEE/IEEEtran}
 \bibliography {../../../refs/References}
 
 \newpage
@@ -238,75 +1360,148 @@ The following table is taken directly from the Module Guide document for this pr
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
+% \wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
 
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
-
+The following AI tools were used:
+\begin{itemize}
+    \item Grok (version 4.7)
+    \item Claude (Anthropic), Claude Opus 5.5 model
+    \item ChatGPT (OpenAI), GPT-4-turbo model
+    \item GitHub Copilot (version 1.79.0)
+\end{itemize}
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+The tools were used in the following manner:
+\begin{itemize}
+    \item Grok was used to fix formatting issues and address pull request comments
+    in Sections \ref{mis-mExport}--\ref{mis-mControl}.
+    \item Claude was used to review and refine the document, suggesting
+    improvements to structure and clarity, and assisting with grammar and style. It
+    was used to primarily refine the Sections \ref{SecSymbols}, \ref{SecNotation}, \ref{SecMD} and \ref{mis-mCohort}--\ref{mis-mStore}.
+    \item ChatGPT and Copilot were used for formatting and grammar suggestions, and
+    to assist with the writing of the Sections \ref{SecRevHist}, \ref{SecSymbols}, \ref{SecIntro}, \ref{SecNotation}, \ref{SecMD}, \ref{mis-mIntake}--\ref{mis-mSuggest} and \ref{SecReflection}.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+% \wss{\begin{itemize}
+%     \item Describe how the team checked AI-generated or AI-assisted material
+%     before including it in the document.
+%     \item In particular, verify factual claims, technical assertions,
+%     requirements, calculations, references, and other information for which an
+%     AI system may produce incorrect or fabricated results.
+%     \item \textbf{The team is responsible for the accuracy, completeness,
+% consistency, and appropriateness of the submitted document, regardless of
+% whether material was generated by a human or an AI system.}
+% \end{itemize}}
+Any output by LLM models was reviewed thoroughly and modified before its suggestions were added to the document. Course materials and deliverable requirements were manually reviewed to ensure that all technical assertions, requirements, and references were accurate and complete.
 
 \newpage{}
 
-\section{Appendix --- Reflection}
-
-\wss{Not required for CAS 741 projects}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
+\section{Appendix --- Reflection} \label{SecReflection}
 
 \input{../../Reflection.text}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable? 
+  \item What went well while writing this deliverable?
+
+This deliverable helped us solidify the structure of the project and the interfaces 
+between modules. Earlier documents described what the system should do, and writing the
+MIS forced us to say, module by module,how someone else would talk to
+each part. This helped us with solidifying ownership of the modules and easier handoff.
+We also got better at noticing when we were about to invent a new name for something we had already defined in the
+SRS, and choosing instead to stay consistent. 
+
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
+
+Our biggest pain points was not knowing how far to go. There was alot of the system 
+that we have not built yet, so we were not sure how to write the MIS for it. Talking with the TA
+helped us and for Rev -1 we got the structure and the public interface
+right first, and mark deeper behaviour as Rev~0 where we will continue to build the system.
+Another pain point was coordination of the team to assign tasks. We resolved that drafting 
+the MIS together and assigning tasks based on the MIS.
+
   \item Which of your design decisions stemmed from speaking to your client(s)
   or a proxy (e.g. your peers, stakeholders, potential users)? For those that
   were not, why, and where did they come from?
+
+A lot of what ended up in the interfaces came straight from conversations with
+supervisors and stakeholders. The priorities from the supervisors were about uploading outlines as PDFs, checking
+extracted data before it is trusted, seeing assessments across courses on one
+calendar, and checking compliance against McMaster and CEAB expectations. The priorities from the stakeholders 
+helped shape our services and the interfaces between them early on.
+Peer feedback helped us with a design decision about session timeout, and explicity stating it.
+
+Other choices did not come from a client asking for them. Design decisions like seperating storage,
+document reading, and the language-model client, and putting a request controller
+between the interface and the rest of the system, came from our own design
+discussions and from risks we had already written down in the Hazard Analysis.
+
   \item While creating the design doc, what parts of your other documents (e.g.
   requirements, hazard analysis, etc), it any, needed to be changed, and why?
+
+When we named a module or an exported constant in the MIS, we sometimes found that the Module
+Guide hierarchy or an SRS wording no longer matched. We updated those places so
+we were not maintaining two conflicting stories. Values such as
+the session timeout had to stay aligned with what we already said in the SRS
+and Hazard Analysis. Examples of values that needed to stay aligned were the session timeout,
+and the retention period for outlines, extracted data and findings.
+
   \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+    unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+
+Our solution is constrained by what we can finish in one capstone
+year. We are starting with PDF intake, one extraction path, and a
+dashboard-centred way of notifying people. That is enough to prove the idea,
+but it is not the fullest version of the product we can imagine. With unlimited
+resources we would support more outline formats to ease the intake process, spend much more time measuring
+and improving extraction quality, model cohorts and electives more realistically,
+and sit longer with chairs and administrators to see where the workflow still
+frustrates them. The current project focuses on the undergrad chairs as main stakeholders, but we would like to expand to 
+include more faculty members and administrators to get a better understanding of the workflow. 
+Lastly, we would like to support more elective types and course types to make the system more flexible and robust.
+
   \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)
+    are the benefits and tradeoffs of those other designs compared with the chosen
+    design?  From all the potential options, why did you select the documented design?
+    (LO\_Explores)
+
+We did consider a simpler design with fewer modules: fold extraction, calendar,
+and compliance into larger pieces so there would be less documentation.
+That would have been faster to write and easier to demo early. The
+tradeoff is that every future change would involve more modules it should not need to touch, and it would
+be harder for us to explain what each part is responsible for. We also talked
+about putting more of the rules into the user interface itself. That would feel
+productive in the short term, but it would bury important decisions where only
+the front end can see them.
+
+We chose the design because it matches how we expect the project
+to change: the AI model we use, the rules we check, and the way we store data are
+all things we may need to replace or refine. Keeping those concerns separate
+costs us more writing now, but it gives us clearer ownership and less fear of
+breaking everything when one piece moves. Additionally, for a team of 4, these were tradeoffs that made sense for us.
+
   \item (After you have implemented another team's module, which means this
-  isn't filled in until after the original deadline). What did you learn by
-  implementing another team's module? Were all the details you needed in the
-  documentation, or did you need to make assumptions, or ask the other team
-  questions?  If your team also had another team implement one of your modules,
-  what was this experience like?  Are there things in your documentation you
-  could have changed to make the process go more smoothly for when an
-  ``outsider'' completes some of the implementation?
+    isn't filled in until after the original deadline). What did you learn by
+    implementing another team's module? Were all the details you needed in the
+    documentation, or did you need to make assumptions, or ask the other team
+    questions?  If your team also had another team implement one of your modules,
+    what was this experience like?  Are there things in your documentation you
+    could have changed to make the process go more smoothly for when an
+    ``outsider'' completes some of the implementation?
 
-  Your reflection should be about concepts learned in your SE education, such as modular decomposition, cohesion, coupling, information hiding, etc.  You should critique the quality and utility of the specification you received.
+To be completed after Rev -1.
 
-  You should create a PR for your implemented module.  A link to the PR should be part of your reflection.
+Pull requests for Rev -1:
+\begin{itemize}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/146}{PR\#146}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/160}{PR\#160}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/161}{PR\#161}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/170}{PR\#170}
+\end{itemize}
 
 \end{enumerate}
 

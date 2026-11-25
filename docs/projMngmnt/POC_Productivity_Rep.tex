@@ -17,60 +17,68 @@
 \begin{document}
 
 \maketitle
+\sloppy
 
 This document summarizes the contributions of each team member up to the POC
 Demo.  The time period of interest is the time between the beginning of the term
 and the POC demo.
 
-\wss{Please do not delete sections or modify the table formats.  Standardization
-helps the instructors and TAs to review these documents. You may add sections to
-the report.}
-
-\wss{Remove the instructor guidelines/comments in the final version.}
-
-\wss{Fill in the requested information, like project url, TA name, supervisor name, etc.}
+\noindent \textbf{Project repository:}
+\url{https://github.com/shivyam/cas-course-optimization}
 
 \section{Demo Plans}
 
-\wss{What is your feasibility risk?}
+The main feasibility risk for this project is extracting reliable information
+from CAS course outlines. Outlines do not follow a single format, and some
+information may be missing or incomplete (for example, ``Midterm Date: TBD'').
+Every other feature (the shared calendar, conflict detection, scheduling
+suggestions and compliance checking) depends on this information, so if
+assessment dates or weights are extracted incorrectly, the rest of the system
+will also be unreliable.
 
-\wss{What will you be demonstrating}
+\bigskip
+\noindent The PoC demonstration shows one course outline going through the
+whole extraction pipeline:
+
+\begin{enumerate}
+  \item A PDF course outline is uploaded through the web application.
+  \item The backend extracts the text from the PDF with PyMuPDF.
+  \item A locally hosted open-weight model, run through Ollama, returns JSON in
+  a fixed schema: the name, type, date (or TBD) and weight of each assessment,
+  the source passage for each assessment, the learning outcomes, and a list of
+  missing fields.
+  \item The backend checks that the JSON matches the schema and that each
+  source passage appears in the extracted text.
+  \item The frontend displays the assessments in a table, with the source
+  passage beside each value and missing or TBD values clearly flagged.
+\end{enumerate}
+
+\noindent We will also report the pipeline's accuracy on a small set of real
+outlines scored against our answer key, and show how the pipeline behaves when
+an instruction is inserted into an outline (prompt injection).
 
 \section{Team Meeting Attendance}
 
-\wss{For each team member how many team meetings have they attended over the
-time period of interest.  This number should be determined from the meeting
-issues in the team's repo.  The first entry in the table should be the total
-number of team meetings held by the team.}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{ll}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 12\\
+Harmanpreet Sagar & 12\\
+Shivya Mehta & 12\\
+Anindita Bornomala & 12\\
+Vanessa Lai & 12\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The team meets once before and once after each of the six supervisor and stakeholder meetings, to prepare and then to follow up on the action items. All four team members attended every team meeting.
 
 \section{Supervisor/Stakeholder Meeting Attendance}
 
-\wss{For each team member how many supervisor/stakeholder team meetings have
-they attended over the time period of interest.  This number should be determined
-from the supervisor meeting issues in the team's repo.  The first entry in the
-table should be the total number of supervisor and team meetings held by the
-team.  If there is no supervisor, there will usually be meetings with
-stakeholders (potential users) that can serve a similar purpose.}
-
-\noindent \textbf{Supervisor's Name: } [fill in this information]
+\noindent \textbf{Supervisor's Name: } Matt Vonk and Connie Carrabs
 
 \begin{table}[H]
 \centering
@@ -78,30 +86,22 @@ stakeholders (potential users) that can serve a similar purpose.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 6\\
+Harmanpreet Sagar & 6\\
+Shivya Mehta & 6\\
+Anindita Bornomala & 6\\
+Vanessa Lai & 6\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The six meetings were four supervisor meetings with Matt Vonk and Connie Carrabs
+(October 2 \href{https://github.com/shivyam/cas-course-optimization/issues/25}{\#25}, October 20 \href{https://github.com/shivyam/cas-course-optimization/issues/179}{\#179}, November 3 \href{https://github.com/shivyam/cas-course-optimization/issues/181}{\#181} and
+November 17 \href{https://github.com/shivyam/cas-course-optimization/issues/182}{\#182}) and two stakeholder meetings with the CAS Associate
+Chairs for Undergraduate Studies (Dr.~Smith on October 6 \href{https://github.com/shivyam/cas-course-optimization/issues/26}{\#26} and
+Dr.~Mosser on October 26 \href{https://github.com/shivyam/cas-course-optimization/issues/180}{\#180}). All four members attended every meeting.
 
 \section{Lecture Attendance}
-
-\wss{For each team member how many lectures have they attended over the time
-period of interest.  This number should be determined from the lecture issues in
-the team's repo. You can find the number of lectures in the time period of
-interest by looking at the
-\href{https://calendar.google.com/calendar/u/0/embed?src=rnboqiaki1k2la7rpu3bn0um58@group.calendar.google.com&ctz=America/Toronto}
-{Google calendar} for the capstone course. The first entry in the
-table should be the total number of lectures held for the class during the period of interest.}
-
-\wss{NOTE: There will be approximately 13 lectures between the start of class
-and the POC demos}
 
 \begin{table}[H]
 \centering
@@ -109,25 +109,18 @@ and the POC demos}
 \toprule
 \textbf{Student} & \textbf{Lectures}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 13\\
+Harmanpreet Sagar & 6\\
+Shivya Mehta & 6\\
+Anindita Bornomala & 6\\
+Vanessa Lai & 6\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the lecture attendance can be provided here.}
-
 \section{TA Document Discussion Attendance}
 
-\wss{For each team member how many of the informal document discussion meetings
-with the TA were attended over the time period of interest. The first row is the
-total number of discussion meetings scheduled by the TA with the team.}
-
-\noindent \textbf{TA's Name: } [fill in this information]
+\noindent \textbf{TA's Name: } Lucas Dutton
 
 \begin{table}[H]
 \centering
@@ -135,63 +128,46 @@ total number of discussion meetings scheduled by the TA with the team.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 3\\
+Harmanpreet Sagar & 3\\
+Shivya Mehta & 3\\
+Anindita Bornomala & 3\\
+Vanessa Lai & 3\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the attendance can be provided here.}
+The three TA meetings were held on October 7 \href{https://github.com/shivyam/cas-course-optimization/issues/176}{\#176}, October 28 \href{https://github.com/shivyam/cas-course-optimization/issues/177}{\#177} and November 11 \href{https://github.com/shivyam/cas-course-optimization/issues/178}{\#178}.
 
 \section{Commits, Lines Added and Lines Deleted, Pull Requests}
 
-\wss{For each team member how many commits to the main branch have been made
-over the time period of interest.  The total is the total number of commits for
-the entire team since the beginning of the term.  The percentage is the
-percentage of the total commits made by each team member.}
-
-\wss{There are also columns for lines added and lines deleted to give a sense of
-the magnitude of each team member's contributions.  Note that these numbers can
-be somewhat misleading, as a team member who does refactoring may have high
-numbers in both columns, while a team member who implements a large new feature
-may have a high number of lines added, but few lines deleted.  As for all commit
-information, these numbers will be interpreted with care.}
-
-\wss{The pull requests column counts the number of pull requests created by each
-team member.  This is a measure of how many contributions were made in branches,
-which may not be reflected in the commit counts for the main branch.}
-
 \begin{table}[H]
 \centering
+\small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lllllll}
 \toprule
-\textbf{Student} & \textbf{Commits} & \textbf{Percent} & \textbf{Lines Added} &
-\textbf{Lines Deleted} & \textbf{Pull Requests}\\
+\textbf{Student} & \textbf{Commits} & \textbf{Percent} & \textbf{Added} &
+\textbf{Deleted} & \textbf{PRs}\\
 \midrule
-Total & Num & 100\% & total added & total deleted & total PRs\\
-Name 1 & Num & \% & num & num & num\\
-Name 2 & Num & \% & num & num & num\\
-Name 3 & Num & \% & num & num & num\\
-Name 4 & Num & \% & num & num & num\\
-Name 5 & Num & \% & num & num & num\\
+Total & 246 & 100\% & 36410 & 11443 & 98\\
+Harmanpreet Sagar & 50 & 20.3\% & 16459 & 1552 & 15\\
+Shivya Mehta & 74 & 30.1\% & 15152 & 2710 & 31\\
+Anindita Bornomala & 65 & 26.4\% & 2671 & 6053 & 32\\
+Vanessa Lai & 57 & 23.2\% & 2128 & 1128 & 20\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.  For
-instance, if a team member has more commits to unmerged branches, these numbers
-can be provided here.  If multiple people contribute to a commit, git allows for
-multi-author commits.}
+Commit counts are non-merge commits on \texttt{main}, combining each member's
+McMaster and GitHub email addresses. They exclude 76 commits by
+\texttt{github-actions[bot]} (automatically regenerated PDFs) and one commit and
+one pull request opened by the GitHub Copilot agent. Line counts include some
+generated or vendored files, such as \texttt{package-lock.json} (about 4,200
+lines) and LaTeX bibliography style files, so they overstate the hand-written
+contribution of whoever added those files.
 
 \section{Issue Tracker}
-
-\wss{For each team member how many issues have they authored (including open and
-closed issues (O+C)) and how many have they been assigned (only counting closed
-issues (C only)) over the time period of interest.}
 
 \begin{table}[H]
 \centering
@@ -199,53 +175,88 @@ issues (C only)) over the time period of interest.}
 \toprule
 \textbf{Student} & \textbf{Authored (O+C)} & \textbf{Assigned (C only)}\\
 \midrule
-Name 1 & Num & Num \\
-Name 2 & Num & Num \\
-Name 3 & Num & Num \\
-Name 4 & Num & Num \\
-Name 5 & Num & Num \\
+Harmanpreet Sagar & 8 & 6 \\
+Shivya Mehta & 16 & 7 \\
+Anindita Bornomala & 8 & 13 \\
+Vanessa Lai & 24 & 8 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+A further 24 issues containing peer-review feedback on our documents were
+opened by Manav Patel (\texttt{manavpatel3012}). These are assigned to team
+members and are counted in the Assigned column once closed.
 
 \section{CICD via GitHub Actions}
 
-\wss{Say how CICD technology is used and will be used in your project.}
+The repository uses two GitHub Actions workflows:
 
-\wss{Provide links to your CICD yaml files}
+\begin{itemize}
+  \item \href{https://github.com/shivyam/cas-course-optimization/blob/main/.github/workflows/ci.yml}{\texttt{ci.yml}}
+  lints and tests the Python backend and the frontend on every pull request
+  and every push to \texttt{main}. The two jobs run in parallel and must both
+  pass before a change is merged, which supports our charter rule that
+  automated checks pass before code reaches \texttt{main}.
+  \item \href{https://github.com/shivyam/cas-course-optimization/blob/main/.github/workflows/latex-pages.yml}{\texttt{latex-pages.yml}}
+  compiles the LaTeX documentation and commits the generated PDFs, so the
+  reviewed PDFs always match the source.
+\end{itemize}
+
+\noindent Going forward, we plan to extend the CI to run the extraction pipeline
+against our answer-key outlines, so that changes to prompts or models that
+reduce extraction accuracy are caught automatically.
 
 \section{Custom Documents (CDs)}
 
-\wss{What is the plan (as documented in TeamComposition.csv) for the team's
-CDs?  Should the CDs be modified now that the team knows more about the
-project?}
+%\wss{What is the plan (as documented in TeamComposition.csv) for the team's
+%CDs?  Should the CDs be modified now that the team knows more about the
+%project?}
+
+Our team has one custom document per term: a \textbf{Wireframe} CD in the Fall
+term and a \textbf{Usability Testing} report in the Winter term. The Wireframe CD
+contains mockups of the administrator dashboard, outline upload, extraction
+review, policy compliance, shared calendar and scheduling recommendations. As
+agreed with our TA, the Wireframe CD will be updated after our stakeholder
+feedback meeting. We do not currently plan to change the choice of CDs.
 
 \section{Team Charter Trigger Items}
 
-\wss{Provide a summary of the quantified triggers identified in the team's
-charter.}
+The team charter defines the following quantified triggers:
 
-\wss{Provide a list of any violations of the triggers.  If the team wishes, the
-violations can be summarized on aggregate, instead of naming specific team
-members.}
+\begin{itemize}
+    \item Each member should attend scheduled team, supervisor, and TA meetings
+    whenever possible and notify the team as early as possible when they will be
+    late or absent.
+    \item A commitment is considered missed when an agreed task, review, meeting,
+    or deliverable is not completed by its due date without prior notice. Two
+    missed commitments within a rolling four-week period trigger a team check-in
+    and recovery plan.
+    \item Each member should plan approximately 10 hours of project work per
+    week. A planned workload between 8 and 12 hours is considered balanced,
+    subject to adjustment for course deadlines, emergencies, and task complexity.
+    \item Written deliverable sections should be completed at least two days
+    before the final deadline, and code changes should receive at least one
+    review from another team member before merging.
+\end{itemize}
 
-\wss{Provide a plan to address the violations.  This could include revising the
-triggers, if they are found to be too weak, strong or ambiguous.}
+No violations of these triggers were recorded during the reporting period. All
+four members attended the 12 internal meetings, six supervisor/stakeholder
+meetings, and three TA document discussions listed in this report. No member
+was recorded as having two missed commitments within a four-week period.
+
+The team will continue reviewing these triggers during weekly meetings. If a
+trigger is reached, the team will first check in privately with the affected
+member, then redistribute work or revise the deadline where appropriate. If the
+problem continues, the team will involve the TA and record the recovery plan in
+the relevant meeting notes. The thresholds will be revisited if they do not
+reflect the workload of later milestones.
 
 \section{Additional Productivity Metrics}
 
-\wss{If your team has additional metrics of productivity, please feel free to
-add them to this report.  If not, please explicitly state that there are no additional
-metrics.}
-
-\wss{Additional metrics can include things like code reviews done, pull requests
-created, count of joining meetings late, count of number of times contributions
-had to be corrected, number of internal deadlines missed, test cases written, etc.}
-
-\wss{We are looking for data on these metrics, not just a list of additional
-metrics the team is planning on tracking.  However, if all you have is a plan,
-please share it here.}
+The report already captures the team's main additional productivity measures:
+246 non-merge commits, 98 pull requests, and 36 recorded team, supervisor or
+TA meetings. All four members attended the 12 internal meetings, six
+supervisor/stakeholder meetings, and three TA document discussions recorded
+above. There are no other additional productivity metrics that the team is tracking at this time.
 
 \end{document}
