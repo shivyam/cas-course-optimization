@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
 import PageHeader from '../components/layout/PageHeader.tsx'
+import UploadedOutlinesList from '../components/outline/UploadedOutlinesList.tsx'
 import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 type OutlinePreviewItem = {
@@ -61,34 +62,21 @@ function OutlinePreviewPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
-        <aside className="rounded-lg border border-cas-border bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="text-sm font-semibold text-cas-ink">Uploaded outlines</h2>
-          <p className="mt-1 text-xs leading-5 text-cas-muted">
-            Select an outline to review its extracted text.
-          </p>
-          <div className="mt-4 space-y-2">
-            {outlines.map((outline, index) => (
-              <button
-                key={`${outline.filename}-${index}`}
-                type="button"
-                onClick={() => setActiveIndex(index)}
-                className={`w-full rounded-lg border px-3 py-2.5 text-left text-sm transition ${
-                  index === activeIndex
-                    ? 'border-mcmaster-maroon bg-cas-tint font-semibold text-mcmaster-maroon'
-                    : 'border-cas-border bg-white text-cas-ink hover:border-mcmaster-maroon'
-                }`}
-              >
-                <span className="block truncate">{outline.filename}</span>
-                <span className="mt-1 block text-xs text-cas-muted">
-                  {(outline.sizeBytes / 1024 / 1024).toFixed(2)} MB
-                </span>
-              </button>
-            ))}
-            {!outlines.length && (
-              <p className="text-sm text-cas-muted">No outlines uploaded yet.</p>
-            )}
-          </div>
-        </aside>
+        <UploadedOutlinesList
+          files={outlines.map((outline, index) => ({
+            id: `${outline.filename}-${index}`,
+            filename: outline.filename,
+            sizeBytes: outline.sizeBytes,
+          }))}
+          description="Select an outline to review its extracted text."
+          activeId={`${active?.filename}-${activeIndex}`}
+          onSelect={(id) => {
+            const index = outlines.findIndex(
+              (outline, outlineIndex) => `${outline.filename}-${outlineIndex}` === id,
+            )
+            if (index >= 0) setActiveIndex(index)
+          }}
+        />
 
         <div className="min-w-0 rounded-lg border border-cas-border bg-white p-4 shadow-sm sm:p-6">
           <div className="mb-4 flex items-center justify-between border-b border-cas-border pb-4">

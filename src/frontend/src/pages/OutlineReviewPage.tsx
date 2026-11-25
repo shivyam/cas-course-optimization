@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router'
+import UploadedOutlinesList from '../components/outline/UploadedOutlinesList.tsx'
 import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
@@ -34,10 +35,6 @@ type BatchResult = {
 type SelectedOutline = {
   id: string
   file: File
-}
-
-function formatFileSize(bytes: number) {
-  return `${(bytes / 1024 / 1024).toFixed(2)} MB`
 }
 
 function isSupportedFile(file: File) {
@@ -306,48 +303,16 @@ function OutlineReviewPage() {
           </form>
 
           {selectedFiles.length > 0 && (
-            <section className="rounded-2xl border border-cas-border bg-white p-5 shadow-sm sm:p-6">
-              <h2 className="text-lg font-semibold text-cas-ink">
-                Uploaded course outlines
-              </h2>
-              <p className="mt-1 text-sm text-cas-muted">
-                Review or remove files before uploading them for extraction.
-              </p>
-              <ul className="mt-4 space-y-2">
-                {selectedFiles.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center justify-between gap-4 rounded-lg border border-cas-border bg-cas-surface p-4"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
-                        {item.file.name.toLowerCase().endsWith('.docx')
-                          ? 'DOCX'
-                          : item.file.name.toLowerCase().endsWith('.tex')
-                            ? 'TEX'
-                            : 'PDF'}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-cas-ink">
-                          {item.file.name}
-                        </p>
-                        <p className="text-xs text-cas-muted">
-                          {formatFileSize(item.file.size)}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(item.id)}
-                      disabled={uploadState === 'uploading'}
-                      className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <UploadedOutlinesList
+              files={selectedFiles.map((item) => ({
+                id: item.id,
+                filename: item.file.name,
+                sizeBytes: item.file.size,
+              }))}
+              description="Review or remove files before uploading them for extraction."
+              showRemove
+              onRemove={removeFile}
+            />
           )}
         </div>
 
