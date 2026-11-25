@@ -22,16 +22,27 @@ if ! (cd "$repo_root/src/backend" && "$backend_python" -m pytest); then
   exit 1
 fi
 
+printf '%s\n' 'Checking backend lint...'
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m ruff check .); then
+  printf '%s\n' "Backend lint failed. Run: cd src/backend && $backend_python -m ruff check ."
+  exit 1
+fi
+
 printf '%s\n' 'Checking backend formatting...'
 if ! (cd "$repo_root/src/backend" && "$backend_python" -m ruff format --check .); then
   printf '%s\n' "Backend formatting failed. Run: cd src/backend && $backend_python -m ruff format ."
   exit 1
 fi
 
+printf '%s\n' 'Checking frontend lint...'
+if ! (cd "$repo_root/src/frontend" && npm run lint:eslint); then
+  printf '%s\n' 'Frontend lint failed. Run: cd src/frontend && npm run lint:eslint'
+  exit 1
+fi
+
 printf '%s\n' 'Checking frontend formatting...'
-if ! (cd "$repo_root/src/frontend" && npm run lint); then
-  printf '%s\n' 'Frontend formatting or linting failed. Run: cd src/frontend && npm run lint'
-  printf '%s\n' 'To fix formatting, run: cd src/frontend && npm run format'
+if ! (cd "$repo_root/src/frontend" && npm run format:check); then
+  printf '%s\n' 'Frontend formatting failed. Run: cd src/frontend && npm run format'
   exit 1
 fi
 
