@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
 import PageHeader from '../components/layout/PageHeader.tsx'
+import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 type OutlinePreviewItem = {
   filename: string
@@ -54,6 +55,10 @@ function OutlinePreviewPage() {
               : 'Upload an outline to view its extracted text.'
         }
       />
+
+      <div className="mb-6">
+        <OutlineWorkflowStepper currentStep={1} />
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
         <aside className="rounded-lg border border-cas-border bg-white p-4 shadow-sm sm:p-5">

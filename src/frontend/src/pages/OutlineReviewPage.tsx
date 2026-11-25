@@ -1,17 +1,14 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router'
+import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
 const maxBatchFiles = 50
 const maxFileSizeBytes = 10 * 1024 * 1024
-const workflowSteps = [
-  ['01', 'Upload & validate', 'Add your current outline as a PDF (up to 10 MB).'],
-  [
-    '02',
-    'Extract & organize',
-    'Assessments, dates, weights and outcomes are organized automatically.',
-  ],
+const workflowDetails = [
+  ['01', 'Course outline upload', 'Add a PDF, LaTeX, or Word course outline.'],
+  ['02', 'Text extraction', 'Convert the uploaded outline into readable text.'],
   [
     '03',
     'Review & approve',
@@ -24,7 +21,6 @@ const workflowSteps = [
   ],
   ['05', 'Plan together', 'See cohort conflicts in the calendar, then review date'],
 ] as const
-
 type UploadState = 'idle' | 'uploading' | 'error' | 'partial'
 
 type BatchResult = {
@@ -68,7 +64,7 @@ function OutlineReviewPage() {
 
   function addFiles(fileList: FileList | File[]) {
     const incoming = Array.from(fileList)
-    const next: SelectedPdf[] = []
+    const next: SelectedOutline[] = []
     const errors: string[] = []
 
     for (const file of incoming) {
@@ -227,6 +223,8 @@ function OutlineReviewPage() {
         </p>
       </header>
 
+      <OutlineWorkflowStepper currentStep={0} />
+
       <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
         <div className="min-w-0 space-y-4">
           <form
@@ -358,7 +356,7 @@ function OutlineReviewPage() {
             What happens next?
           </p>
           <ol className="mt-6 space-y-6">
-            {workflowSteps.map(([number, title, description]) => (
+            {workflowDetails.map(([number, title, description]) => (
               <li key={number} className="flex gap-3">
                 <span className="text-sm font-bold text-mcmaster-gold">{number}</span>
                 <div>
