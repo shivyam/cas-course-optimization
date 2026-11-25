@@ -10,9 +10,9 @@ type WorkspaceTab = {
 const workspaceTabs: WorkspaceTab[] = [
   { to: '/admin', label: 'Overview', end: true },
   { to: '/admin/outline-review', label: 'Course outline upload' },
+  { to: '/admin/policy', label: 'Policy & CEAB' },
   { to: '/admin/calendar', label: 'Calendar' },
   { to: '/instructor', label: 'Workload & scheduling', end: true },
-  { to: '/admin/policy', label: 'Policy & CEAB' },
 ]
 
 function mainNavClass({ isActive }: { isActive: boolean }) {

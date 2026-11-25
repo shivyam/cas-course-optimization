@@ -49,4 +49,15 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(heading)
   })
+
+  it('shows Policy & CEAB before Calendar in the Admin workspace navigation', () => {
+    renderAt('/admin')
+
+    const workspaceNav = screen.getByRole('navigation', { name: 'Workspace' })
+    const links = Array.from(workspaceNav.querySelectorAll('a')).map(
+      (link) => link.textContent,
+    )
+
+    expect(links.indexOf('Policy & CEAB')).toBeLessThan(links.indexOf('Calendar'))
+  })
 })
