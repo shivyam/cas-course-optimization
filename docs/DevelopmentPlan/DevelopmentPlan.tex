@@ -37,6 +37,7 @@ Roles, Workflow plan - use of CI/CD, Use of AI/LLMs\\
 demonstration plan to the single-outline extraction pipeline (peer review
 \href{https://github.com/shivyam/cas-course-optimization/issues/36}{\#36}, TA feedback); justified the choices and limitations in Expected
 Technology (TA feedback)\\
+25 November 2026 & Shivya Mehta & Updated the PoC demonstration plan \\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -340,15 +341,26 @@ The GitHub Project is available at:
 % demonstrate during your proof of concept demonstration to convince yourself that
 % you will be able to overcome this risk?
 
-The main risk for this project is extracting reliable information from course
-outlines. CAS course outlines do not follow one standard format. Different
-instructors use different layouts, and some information may be missing or
-incomplete, such as ``Midterm Date: TBD''. Every other feature depends on this
-information, including the shared calendar, conflict detection, scheduling
-suggestions, and compliance checking. If assessment dates or weights are
-extracted incorrectly, the rest of the system will also produce unreliable
-results. For this reason, the proof of concept (PoC) is limited to the
-extraction pipeline for a single course outline.
+The main technical risk for this project is extracting reliable information
+from course outlines. CAS course outlines do not follow one standard format.
+Different instructors use different layouts, and some information may be
+missing or incomplete, such as ``Midterm Date: TBD''. Incorrectly extracted
+assessment dates, weights, or source passages could make later features such
+as the shared calendar, conflict detection, scheduling suggestions, and
+compliance checking unreliable.
+
+Additional risks arise from processing the extracted text with a locally
+hosted language model. The model may fail to produce valid structured output,
+invent values that are not present in the outline, misinterpret tables, or
+follow instructions embedded in the uploaded text. The PDF highlighting and
+frontend workflow also need to present extracted information in a way that
+allows users to verify it.
+
+For this reason, the proof of concept (PoC) evaluates the major components
+separately: course-outline upload and text extraction, structured LLM
+processing, traceability and source highlighting, and frontend presentation.
+The PoC establishes whether each component produces sufficiently reliable
+outputs for later integration.
 
 \bigskip
 \noindent The PoC is designed to test the following risks:
@@ -370,29 +382,39 @@ extraction pipeline for a single course outline.
 \end{enumerate}
 
 \bigskip
-\noindent The PoC demonstration will show one course outline going through the
-whole pipeline:
+\noindent The PoC demonstration will present the project's main components
+individually and show the data exchanged between them:
 
 \begin{enumerate}
-  \item A PDF course outline is uploaded through the web application.
-  \item The backend extracts the text from the PDF with PyMuPDF.
-  \item A locally hosted open-weight model, run through Ollama, receives the
-  extracted text and returns JSON in a fixed schema: the name, type, date (or
-  TBD), and weight of each assessment, the source passage for each assessment,
-  the learning outcomes, and a list of missing fields.
-  \item The backend checks that the JSON matches the schema and that each
-  source passage appears in the extracted text.
-  \item The frontend displays the assessments in a table, with the source
-  passage shown beside each value and missing or TBD values clearly flagged.
+  \item \textbf{Course-outline upload and text extraction.} A user uploads a
+  PDF, LaTeX, or Word course outline through the web application. The backend
+  validates the file and extracts its text using PyMuPDF or the corresponding
+  LaTeX or Word extraction routine.
+
+  \item \textbf{Structured LLM extraction.} The extracted outline text is
+  provided to a locally hosted open-weight model through Ollama in a separate
+  processing harness. The model returns JSON containing assessment names,
+  types, dates or TBD values, weights, source passages, learning outcomes,
+  and missing fields.
+
+  \item \textbf{PDF review and highlighting.} The frontend includes a PDF
+  viewer that can display an uploaded outline and highlight selected regions.
+  This component is demonstrated independently using structured highlight
+  data.
+
+  \item \textbf{Frontend workflow.} The React frontend presents the upload,
+  extracted-text review, outline review, calendar, and policy screens. These
+  screens demonstrate the intended user workflow and component interfaces,
+  although they are not yet fully connected to the live LLM-processing
+  service.
 \end{enumerate}
 
 \bigskip
-Before the demonstration, the pipeline will also be run on a small set of
-real course outlines and scored against the team's answer key, so that the
-extraction accuracy can be reported alongside the live example. One outline
-will also be run with an instruction inserted into its text, and the output
-will be compared with the normal run of the same outline to show how the
-pipeline behaves under prompt injection.
+\noindent The components are therefore validated separately rather than as a
+single fully automated pipeline. The PoC verifies the main technical risks
+of file extraction, structured model output, traceability, PDF highlighting,
+and frontend presentation. Connecting these components into one persistent
+end-to-end workflow is reserved for subsequent integration work.
 
 \bigskip
 \noindent The following features are part of the project but are
