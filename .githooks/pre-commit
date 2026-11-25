@@ -17,15 +17,28 @@ else
 fi
 
 printf '%s\n' 'Running backend tests...'
-(cd "$repo_root/src/backend" && "$backend_python" -m pytest)
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m pytest); then
+  printf '%s\n' "Backend tests failed. Run: cd src/backend && $backend_python -m pytest"
+  exit 1
+fi
 
 printf '%s\n' 'Checking backend formatting...'
-(cd "$repo_root/src/backend" && "$backend_python" -m ruff format --check .)
+if ! (cd "$repo_root/src/backend" && "$backend_python" -m ruff format --check .); then
+  printf '%s\n' "Backend formatting failed. Run: cd src/backend && $backend_python -m ruff format ."
+  exit 1
+fi
 
 printf '%s\n' 'Checking frontend formatting...'
-(cd "$repo_root/src/frontend" && npm run lint)
+if ! (cd "$repo_root/src/frontend" && npm run lint); then
+  printf '%s\n' 'Frontend formatting or linting failed. Run: cd src/frontend && npm run lint'
+  printf '%s\n' 'To fix formatting, run: cd src/frontend && npm run format'
+  exit 1
+fi
 
 printf '%s\n' 'Running frontend tests...'
-(cd "$repo_root/src/frontend" && npm test)
+if ! (cd "$repo_root/src/frontend" && npm test); then
+  printf '%s\n' 'Frontend tests failed. Run: cd src/frontend && npm test'
+  exit 1
+fi
 
 printf '%s\n' 'Backend and frontend formatting checks and tests passed.'
