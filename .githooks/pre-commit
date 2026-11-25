@@ -8,6 +8,10 @@ if [ -x "$repo_root/src/backend/.venv/bin/python" ]; then
   backend_python="$repo_root/src/backend/.venv/bin/python"
 elif [ -x "$repo_root/src/backend/.venv/Scripts/python.exe" ]; then
   backend_python="$repo_root/src/backend/.venv/Scripts/python.exe"
+elif [ -x "$repo_root/.venv/bin/python" ]; then
+  backend_python="$repo_root/.venv/bin/python"
+elif [ -x "$repo_root/.venv/Scripts/python.exe" ]; then
+  backend_python="$repo_root/.venv/Scripts/python.exe"
 else
   backend_python="${PYTHON:-python3}"
 fi
@@ -15,7 +19,13 @@ fi
 printf '%s\n' 'Running backend tests...'
 (cd "$repo_root/src/backend" && "$backend_python" -m pytest)
 
+printf '%s\n' 'Checking backend formatting...'
+(cd "$repo_root/src/backend" && "$backend_python" -m ruff format --check .)
+
+printf '%s\n' 'Checking frontend formatting...'
+(cd "$repo_root/src/frontend" && npm run lint)
+
 printf '%s\n' 'Running frontend tests...'
 (cd "$repo_root/src/frontend" && npm test)
 
-printf '%s\n' 'Backend and frontend tests passed.'
+printf '%s\n' 'Backend and frontend formatting checks and tests passed.'
