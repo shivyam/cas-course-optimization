@@ -4,9 +4,9 @@ type OutlineWorkflowStepperProps = {
 
 const workflowSteps = [
   'Course outline upload',
-  'Text extraction',
   'Extracted content and associated fields',
-  'Review against policy and CEAB requirements',
+  'Review & approve',
+  'Check policy & CEAB',
 ] as const
 
 function OutlineWorkflowStepper({ currentStep }: OutlineWorkflowStepperProps) {

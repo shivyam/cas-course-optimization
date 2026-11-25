@@ -7,13 +7,13 @@ import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper
 type OutlinePreviewItem = {
   filename: string
   sizeBytes: number
-  text: string
+  extractedJson?: Record<string, unknown>
 }
 
 type OutlinePreviewState = {
   filename?: string
   sizeBytes?: number
-  text?: string
+  extractedJson?: Record<string, unknown>
   outlines?: OutlinePreviewItem[]
 }
 
@@ -30,14 +30,14 @@ function OutlinePreviewPage() {
           {
             filename: state.filename,
             sizeBytes: state.sizeBytes ?? 0,
-            text: state.text ?? '',
+            extractedJson: state.extractedJson,
           },
         ]
       : [])
 
   const [activeIndex, setActiveIndex] = useState(0)
   const active = outlines[activeIndex] ?? null
-  const text = active?.text ?? ''
+  const extractedJson = active?.extractedJson
 
   return (
     <section>
@@ -50,10 +50,10 @@ function OutlinePreviewPage() {
         }
         description={
           outlines.length > 1
-            ? 'Select an outline below to review its extracted text.'
+            ? 'Select an outline below to review its extracted content and associated fields.'
             : active?.sizeBytes
-              ? `${(active.sizeBytes / 1024 / 1024).toFixed(2)} MB extracted from the uploaded PDF.`
-              : 'Upload an outline to view its extracted text.'
+              ? `${(active.sizeBytes / 1024 / 1024).toFixed(2)} MB processed by Gemma.`
+              : 'Upload an outline to view its extracted content.'
         }
       />
 
@@ -68,7 +68,7 @@ function OutlinePreviewPage() {
             filename: outline.filename,
             sizeBytes: outline.sizeBytes,
           }))}
-          description="Select an outline to review its extracted text."
+          description="Select an outline to review its extracted content and associated fields."
           activeId={`${active?.filename}-${activeIndex}`}
           onSelect={(id) => {
             const index = outlines.findIndex(
@@ -82,19 +82,25 @@ function OutlinePreviewPage() {
           <div className="mb-4 flex items-center justify-between border-b border-cas-border pb-4">
             <div>
               <h2 className="font-semibold text-cas-ink">
-                {active?.filename ?? 'Full extracted text'}
+                {active?.filename ?? 'Extracted content and associated fields'}
               </h2>
               <p className="mt-1 text-sm text-cas-muted">
-                Review the content before using it for course planning.
+                Review the structured JSON before using it for course planning.
               </p>
             </div>
             <span className="hidden rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 sm:inline-flex">
               Extraction complete
             </span>
           </div>
-          <pre className="h-[min(65vh,680px)] overflow-y-auto whitespace-pre-wrap rounded-xl bg-cas-surface p-5 text-sm leading-7 text-cas-ink">
-            {text || 'No text was found in this PDF.'}
-          </pre>
+          {extractedJson ? (
+            <pre className="h-[min(65vh,680px)] overflow-y-auto whitespace-pre-wrap rounded-xl bg-cas-surface p-5 text-sm leading-7 text-cas-ink">
+              {JSON.stringify(extractedJson, null, 2)}
+            </pre>
+          ) : (
+            <p className="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+              No structured extraction was returned for this outline.
+            </p>
+          )}
         </div>
       </div>
     </section>
