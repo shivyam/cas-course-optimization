@@ -3,12 +3,19 @@
 from __future__ import annotations
 
 import json
-import sys
 import time
 import urllib.error
 import urllib.request
 
 from config import OLLAMA_URL
+
+# How often one call is tried when Ollama answers with a server error, and the wait between
+SERVER_ERROR_TRIES = 4        # the first try plus 3 retries
+RETRY_WAIT_SECONDS = 30
+
+
+class OllamaError(Exception):
+    """Ollama could not answer one call. spike_llm.py skips that outline run and goes on."""
 
 
 def chat(model: str, messages: list[dict], num_ctx: int, schema: dict | None = None,
@@ -32,15 +39,34 @@ def chat(model: str, messages: list[dict], num_ctx: int, schema: dict | None = N
         data=json.dumps(body).encode("utf-8"),
         headers={"Content-Type": "application/json"},
     )
-    start = time.perf_counter()
-    try:
-        # One hour per call: Qwen3 4B's think step took up to 27 min, and one call passed 30 min
-        with urllib.request.urlopen(req, timeout=3600) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.URLError as e:
-        sys.exit(f"Could not reach Ollama at {OLLAMA_URL}. Is it running? ({e})")
-    data["_wall_seconds"] = round(time.perf_counter() - start, 2)
-    return data
+    # A server error (HTTP 5xx) is retried a few times. On the shared CAS GPU server,
+    # Ollama answered "500 Internal Server Error" now and then (#39 GPU findings), and one
+    # error used to stop the whole run. At temperature 0 a retry gives the same answer
+    # the first try would have, so retrying does not change the results.
+    for attempt in range(1, SERVER_ERROR_TRIES + 1):
+        start = time.perf_counter()
+        try:
+            # One hour per call: Qwen3 4B's think step took up to 27 min, and one call passed 30 min
+            with urllib.request.urlopen(req, timeout=3600) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            # Ollama puts the reason in the body, e.g. {"error": "... out of memory"}
+            reason = e.read().decode("utf-8", errors="replace")[:300]
+            if e.code < 500:
+                raise OllamaError(f"Ollama refused the request (HTTP {e.code}): {reason}") from e
+            if attempt == SERVER_ERROR_TRIES:
+                raise OllamaError(f"Ollama server error (HTTP {e.code}) {attempt} times in a row; "
+                                  f"last reason: {reason}") from e
+            print(f"  Ollama server error (HTTP {e.code}): {reason}")
+            print(f"  RETRY {attempt}/{SERVER_ERROR_TRIES - 1} in {RETRY_WAIT_SECONDS} s ...", flush=True)
+            time.sleep(RETRY_WAIT_SECONDS)
+            continue
+        except urllib.error.URLError as e:
+            # Not reachable at all (Ollama stopped, tunnel closed): retrying will not help
+            raise OllamaError(f"Could not reach Ollama at {OLLAMA_URL}. Is it running? ({e})") from e
+        data["_wall_seconds"] = round(time.perf_counter() - start, 2)
+        data["_retries"] = attempt - 1   # how many server errors came before this answer
+        return data
 
 
 def call_ollama(model: str, system: str, user: str, schema: dict, num_ctx: int,
@@ -73,6 +99,7 @@ def step_meta(name: str, resp: dict) -> dict:
         "seconds": resp.get("_wall_seconds"),
         "eval_seconds": round((resp.get("eval_duration") or 0) / 1e9, 2),
         "raw": content,
+        "retries": resp.get("_retries", 0),   # server errors before this answer (0 = none)
         "thinking_chars": len(thinking),
         "thinking": thinking,
     }

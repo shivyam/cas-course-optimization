@@ -29,6 +29,11 @@
 # Work from this script's folder so keys/, results/ and spike_llm.py are found
 cd "$(dirname "$0")" || exit 1
 
+# Where Ollama is listening: OLLAMA_HOST if set (localhost:11435 for the tunnel to the CAS GPU
+# server), else localhost:11434 as on a laptop. Same rule as OLLAMA_BASE in config.py.
+OLLAMA_ADDRESS="${OLLAMA_HOST:-localhost:11434}"
+OLLAMA_BASE="http://${OLLAMA_ADDRESS#http://}"
+
 # ---------------------------------------------------------------------------
 # Options and their defaults
 # ---------------------------------------------------------------------------
@@ -158,10 +163,10 @@ PY
   then exit 1; fi
 
   # Ollama must be running, and the model must already be pulled
-  if ! curl -s --max-time 5 http://localhost:11434/api/tags > /dev/null; then
-    echo "ERROR: Ollama is not reachable at http://localhost:11434. Start Ollama and run this again."; exit 1
+  if ! curl -s --max-time 5 $OLLAMA_BASE/api/tags > /dev/null; then
+    echo "ERROR: Ollama is not reachable at $OLLAMA_BASE. Start Ollama and run this again."; exit 1
   fi
-  if ! curl -s http://localhost:11434/api/tags | grep -q "\"name\":\"$MODEL\""; then
+  if ! curl -s $OLLAMA_BASE/api/tags | grep -q "\"name\":\"$MODEL\""; then
     echo "ERROR: $MODEL is not pulled. Run: ollama pull $MODEL"; exit 1
   fi
 
@@ -171,15 +176,16 @@ PY
   ENV_FILE="$OUT_DIR/env_${LABEL}_${STAMP}.json"
   "$PY" - "$MODEL" "$ENV_FILE" <<'PY'
 import json, platform, sys, urllib.request
+from config import OLLAMA_BASE
 model, path = sys.argv[1], sys.argv[2]
 def get(url, body=None):
     req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None,
                                  headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read())
-version = get("http://localhost:11434/api/version").get("version")
-tags = {m["name"]: m for m in get("http://localhost:11434/api/tags")["models"]}
-show = get("http://localhost:11434/api/show", {"model": model})
+version = get(OLLAMA_BASE + "/api/version").get("version")
+tags = {m["name"]: m for m in get(OLLAMA_BASE + "/api/tags")["models"]}
+show = get(OLLAMA_BASE + "/api/show", {"model": model})
 info = {
     "ollama_version": version,
     "model": model,
@@ -190,6 +196,9 @@ info = {
                             if k.endswith(".context_length")), None),
     "machine": platform.platform(),
     "processor": platform.processor(),
+    # Where Ollama ran. machine/processor above are always the computer running this
+    # harness; with the grace tunnel (localhost:11435) the model itself ran on grace's GPU.
+    "ollama_address": OLLAMA_BASE,
 }
 open(path, "w", encoding="utf-8").write(json.dumps(info, indent=2))
 d = info["details"] or {}

@@ -63,6 +63,7 @@ from pathlib import Path
 
 from config import OUTLINES_ENV, model_slug, outlines_dir, resolve_pdf
 from extraction import extract_pdf_text
+from ollama_client import OllamaError
 from prompts import ASSESSMENT_SYSTEM, INJECTIONS, inject
 from rules import postprocess, weight_warnings
 from scoring import check_schema, print_report, score_assessments
@@ -267,7 +268,13 @@ def main() -> None:
         for run_no in range(1, args.runs + 1):
             print(f"[{pdf.name}] {args.model} strategy={args.strategy}"
                   f"{' +postprocess' if args.postprocess else ''} ctx={args.num_ctx} run {run_no}/{args.runs} ...")
-            r = run_one(pdf, args, run_no, out_dir)
+            try:
+                r = run_one(pdf, args, run_no, out_dir)
+            except OllamaError as e:
+                # Skip only this outline run; nothing is saved for it, so it is simply
+                # missing from summary.csv. run_queue.sh reports SKIPPED lines.
+                print(f"  SKIPPED: {e}")
+                continue
             append_summary(r, out_dir)
             line = (
                 f"  {r['wall_seconds']}s, {r['tokens_per_second']} tok/s, "
