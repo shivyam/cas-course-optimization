@@ -2,10 +2,19 @@
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
+# Where Ollama is listening. Same OLLAMA_HOST variable Ollama itself uses, so a run on
+# the CAS GPU server can go through the gpu_ollama.sh tunnel (OLLAMA_HOST=localhost:11435).
+# Not set: localhost:11434, as in every laptop run.
+OLLAMA_ADDRESS = os.environ.get("OLLAMA_HOST", "localhost:11434")
+# Accept the address with or without "http://" (Ollama allows both)
+if OLLAMA_ADDRESS.startswith("http://"):
+    OLLAMA_ADDRESS = OLLAMA_ADDRESS[len("http://"):]
+OLLAMA_BASE = "http://" + OLLAMA_ADDRESS
+OLLAMA_URL = OLLAMA_BASE + "/api/chat"
 
 # ---------------------------------------------------------------------------
 # Where the outline PDFs live

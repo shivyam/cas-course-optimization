@@ -12,6 +12,14 @@ from prompts import ASSESSMENT_SCHEMA, ASSESSMENT_SYSTEM, THINK_SYSTEM, THINK_TA
 STRATEGIES = ["baseline", "think"]
 
 
+def native_think(args) -> bool | None:
+    """--native-think on/off as True/False; None (not given) leaves Ollama's think field out.
+    This is the model's built-in reasoning mode, separate from the "think" strategy below.
+    """
+    value = getattr(args, "native_think", None)
+    return None if value is None else value == "on"
+
+
 def strategy_think(text: str, args) -> tuple[dict | None, list[dict]]:
     """think strategy, two calls.
 
@@ -23,7 +31,7 @@ def strategy_think(text: str, args) -> tuple[dict | None, list[dict]]:
     r1 = chat(args.model, [
         {"role": "system", "content": THINK_SYSTEM},
         {"role": "user", "content": f"Course outline text:\n<<<\n{text}\n>>>\n\n{THINK_TASK}"},
-    ], args.num_ctx, None, num_predict=2500)
+    ], args.num_ctx, None, num_predict=2500, think=native_think(args))
     steps.append(step_meta("think: reason over outline", r1))
     notes = steps[-1]["raw"]
     header = text[:1500]
@@ -34,7 +42,7 @@ def strategy_think(text: str, args) -> tuple[dict | None, list[dict]]:
             f"Notes already made about this outline's assessments:\n<<<\n{notes}\n>>>\n\n"
             "Convert the final list in the notes into JSON. One row per individual item."
         )},
-    ], args.num_ctx, ASSESSMENT_SCHEMA)
+    ], args.num_ctx, ASSESSMENT_SCHEMA, think=native_think(args))
     steps.append(step_meta("think: notes to JSON", r2))
     parsed, _ = parse_json(steps[-1]["raw"])
     return parsed, steps
@@ -48,7 +56,7 @@ def run_strategy(text: str, args) -> tuple[dict | None, list[dict]]:
         return strategy_think(text, args)
     # baseline
     r = call_ollama(args.model, ASSESSMENT_SYSTEM, f"Course outline text:\n<<<\n{text}\n>>>",
-                    ASSESSMENT_SCHEMA, args.num_ctx)
+                    ASSESSMENT_SCHEMA, args.num_ctx, think=native_think(args))
     steps = [step_meta("baseline", r)]
     parsed, _ = parse_json(steps[-1]["raw"])
     return parsed, steps

@@ -85,6 +85,50 @@ def test_upload_outline_without_file_is_rejected():
     assert response.status_code == 422
 
 
+def test_upload_outlines_batch_extracts_multiple_pdfs(tmp_path, monkeypatch):
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    files = [
+        ("files", ("one.pdf", make_pdf("First outline"), "application/pdf")),
+        ("files", ("two.pdf", make_pdf("Second outline"), "application/pdf")),
+    ]
+
+    response = client.post("/api/outlines/batch", files=files)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 2
+    assert body["succeeded"] == 2
+    assert body["failed"] == 0
+    assert [item["filename"] for item in body["results"]] == ["one.pdf", "two.pdf"]
+    assert body["results"][0]["text"] == "First outline"
+    assert body["results"][1]["text"] == "Second outline"
+    assert {path.name for path in tmp_path.glob("*.txt")} == {"one.txt", "two.txt"}
+
+
+def test_upload_outlines_batch_reports_partial_failures(tmp_path, monkeypatch):
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    files = [
+        ("files", ("good.pdf", make_pdf("Valid outline"), "application/pdf")),
+        ("files", ("bad.txt", b"not a pdf", "text/plain")),
+    ]
+
+    response = client.post("/api/outlines/batch", files=files)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["succeeded"] == 1
+    assert body["failed"] == 1
+    assert body["results"][0]["ok"] is True
+    assert body["results"][1]["ok"] is False
+    assert body["results"][1]["detail"] == "Only PDF files are supported."
+
+
+def test_upload_outlines_batch_rejects_empty_request():
+    response = client.post("/api/outlines/batch")
+
+    assert response.status_code == 422
+
+
 def test_cli_extracts_local_outline(tmp_path, monkeypatch, capsys):
     pdf_path = tmp_path / "course outline.pdf"
     pdf_path.write_bytes(make_pdf("CLI outline text"))

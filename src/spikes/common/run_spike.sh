@@ -10,6 +10,7 @@
 #        [--inject "ignore alter disguised"]  runs each variant instead of a normal run
 #        [--outlines-dir PATH]
 #        [--label NAME]                       used in the log file name
+#        [--native-think on|off]              model's built-in reasoning (Qwen3); default: not sent
 #
 # Fixed for every run so models compare fairly: PyMuPDF text (Shivya's extraction),
 # --postprocess --num-ctx 16384 --key-dir keys
@@ -28,6 +29,11 @@
 # Work from this script's folder so keys/, results/ and spike_llm.py are found
 cd "$(dirname "$0")" || exit 1
 
+# Where Ollama is listening: OLLAMA_HOST if set (localhost:11435 for the tunnel to the CAS GPU
+# server), else localhost:11434 as on a laptop. Same rule as OLLAMA_BASE in config.py.
+OLLAMA_ADDRESS="${OLLAMA_HOST:-localhost:11434}"
+OLLAMA_BASE="http://${OLLAMA_ADDRESS#http://}"
+
 # ---------------------------------------------------------------------------
 # Options and their defaults
 # ---------------------------------------------------------------------------
@@ -37,6 +43,7 @@ OUTLINE_SET="all"
 RUNS=1
 INJECT=""
 LABEL="run"
+NATIVE_THINK=""
 OUTLINES_DIR_ARG=()   # empty unless --outlines-dir is given
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -46,6 +53,7 @@ while [ $# -gt 0 ]; do
     --runs)         RUNS="$2"; shift 2 ;;
     --inject)       INJECT="$2"; shift 2 ;;
     --label)        LABEL="$2"; shift 2 ;;
+    --native-think) NATIVE_THINK="$2"; shift 2 ;;
     --outlines-dir) OUTLINES_DIR_ARG=(--outlines-dir "$2"); shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -54,6 +62,10 @@ done
 if [ -z "$MODEL" ]; then
   echo "ERROR: --model is required, for example --model llama3.2:3b"; exit 1
 fi
+case "$NATIVE_THINK" in
+  ""|on|off) ;;
+  *) echo "ERROR: --native-think must be on or off"; exit 1 ;;
+esac
 
 # ---------------------------------------------------------------------------
 # Which outlines to run
@@ -85,6 +97,8 @@ done
 # ---------------------------------------------------------------------------
 # Folder-safe model name, same rule as model_slug() in spike_llm.py (llama3.2:3b -> llama3.2-3b)
 SLUG=$(echo "$MODEL" | sed 's/[^A-Za-z0-9._-]/-/g')
+# With --native-think the results get their own folder (same rule as spike_llm.py)
+[ -n "$NATIVE_THINK" ] && SLUG="${SLUG}_think-${NATIVE_THINK}"
 OUT_DIR="results/$SLUG"
 mkdir -p "$OUT_DIR/logs"
 STAMP=$(date +%Y%m%d-%H%M%S)
@@ -93,6 +107,7 @@ LOG="$OUT_DIR/logs/${LABEL}_${STAMP}.log"
 # for one model only, or the comparison with the other spikes is no longer fair.
 COMMON_ARGS=(--model "$MODEL" --postprocess --num-ctx 16384
              --key-dir keys --runs "$RUNS" "${OUTLINES_DIR_ARG[@]}")
+[ -n "$NATIVE_THINK" ] && COMMON_ARGS+=(--native-think "$NATIVE_THINK")
 
 # Show Python output straight away (no buffering) and keep the log in UTF-8
 export PYTHONUNBUFFERED=1
@@ -103,6 +118,7 @@ export PYTHONIOENCODING=utf-8
   echo "Model-selection spike run '$LABEL', started $(date)"
   echo "Model: $MODEL   Extractor: pymupdf   Strategies: $STRATEGIES   Runs: $RUNS"
   echo "Injection variants: ${INJECT:-none (normal runs)}"
+  echo "Built-in reasoning (--native-think): ${NATIVE_THINK:-not sent}"
   echo "Outlines: ${OUTLINES[*]}"
   echo
 
@@ -147,10 +163,10 @@ PY
   then exit 1; fi
 
   # Ollama must be running, and the model must already be pulled
-  if ! curl -s --max-time 5 http://localhost:11434/api/tags > /dev/null; then
-    echo "ERROR: Ollama is not reachable at http://localhost:11434. Start Ollama and run this again."; exit 1
+  if ! curl -s --max-time 5 $OLLAMA_BASE/api/tags > /dev/null; then
+    echo "ERROR: Ollama is not reachable at $OLLAMA_BASE. Start Ollama and run this again."; exit 1
   fi
-  if ! curl -s http://localhost:11434/api/tags | grep -q "\"name\":\"$MODEL\""; then
+  if ! curl -s $OLLAMA_BASE/api/tags | grep -q "\"name\":\"$MODEL\""; then
     echo "ERROR: $MODEL is not pulled. Run: ollama pull $MODEL"; exit 1
   fi
 
@@ -160,15 +176,16 @@ PY
   ENV_FILE="$OUT_DIR/env_${LABEL}_${STAMP}.json"
   "$PY" - "$MODEL" "$ENV_FILE" <<'PY'
 import json, platform, sys, urllib.request
+from config import OLLAMA_BASE
 model, path = sys.argv[1], sys.argv[2]
 def get(url, body=None):
     req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None,
                                  headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read())
-version = get("http://localhost:11434/api/version").get("version")
-tags = {m["name"]: m for m in get("http://localhost:11434/api/tags")["models"]}
-show = get("http://localhost:11434/api/show", {"model": model})
+version = get(OLLAMA_BASE + "/api/version").get("version")
+tags = {m["name"]: m for m in get(OLLAMA_BASE + "/api/tags")["models"]}
+show = get(OLLAMA_BASE + "/api/show", {"model": model})
 info = {
     "ollama_version": version,
     "model": model,
@@ -179,6 +196,9 @@ info = {
                             if k.endswith(".context_length")), None),
     "machine": platform.platform(),
     "processor": platform.processor(),
+    # Where Ollama ran. machine/processor above are always the computer running this
+    # harness; with the grace tunnel (localhost:11435) the model itself ran on grace's GPU.
+    "ollama_address": OLLAMA_BASE,
 }
 open(path, "w", encoding="utf-8").write(json.dumps(info, indent=2))
 d = info["details"] or {}

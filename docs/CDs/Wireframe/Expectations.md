@@ -1,1 +1,0 @@
-The wireframe mockups are attached and can be found in the "Wireframe" folder. Insight discussions with the stakeholders will take place after the deliverable deadline on Tuesday, as a result this segment will be updated right after (consideration provided by the TA).

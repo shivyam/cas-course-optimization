@@ -39,9 +39,12 @@ describe('App', () => {
   })
 
   it.each([
-    ['/admin', 'Admin'],
-    ['/instructor', 'Instructor'],
-  ])('renders the placeholder page at %s', (path, heading) => {
+    ['/admin', 'Administrator dashboard'],
+    ['/admin/outline-review', 'Course outlines'],
+    ['/admin/calendar', 'Shared academic calendar'],
+    ['/admin/policy', 'Policy compliance & CEAB'],
+    ['/instructor', 'Workload conflicts & recommendations'],
+  ])('renders the wireframe page at %s', (path, heading) => {
     renderAt(path)
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(heading)

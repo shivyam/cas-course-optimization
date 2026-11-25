@@ -1402,40 +1402,106 @@ Any output by LLM models was reviewed thoroughly and modified before its suggest
 
 \section{Appendix --- Reflection} \label{SecReflection}
 
-\wss{Not required for CAS 741 projects}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
-
 \input{../../Reflection.text}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable? 
+  \item What went well while writing this deliverable?
+
+This deliverable helped us solidify the structure of the project and the interfaces 
+between modules. Earlier documents described what the system should do, and writing the
+MIS forced us to say, module by module,how someone else would talk to
+each part. This helped us with solidifying ownership of the modules and easier handoff.
+We also got better at noticing when we were about to invent a new name for something we had already defined in the
+SRS, and choosing instead to stay consistent. 
+
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
+
+Our biggest pain points was not knowing how far to go. There was alot of the system 
+that we have not built yet, so we were not sure how to write the MIS for it. Talking with the TA
+helped us and for Rev -1 we got the structure and the public interface
+right first, and mark deeper behaviour as Rev~0 where we will continue to build the system.
+Another pain point was coordination of the team to assign tasks. We resolved that drafting 
+the MIS together and assigning tasks based on the MIS.
+
   \item Which of your design decisions stemmed from speaking to your client(s)
   or a proxy (e.g. your peers, stakeholders, potential users)? For those that
   were not, why, and where did they come from?
+
+A lot of what ended up in the interfaces came straight from conversations with
+supervisors and stakeholders. The priorities from the supervisors were about uploading outlines as PDFs, checking
+extracted data before it is trusted, seeing assessments across courses on one
+calendar, and checking compliance against McMaster and CEAB expectations. The priorities from the stakeholders 
+helped shape our services and the interfaces between them early on.
+Peer feedback helped us with a design decision about session timeout, and explicity stating it.
+
+Other choices did not come from a client asking for them. Design decisions like seperating storage,
+document reading, and the language-model client, and putting a request controller
+between the interface and the rest of the system, came from our own design
+discussions and from risks we had already written down in the Hazard Analysis.
+
   \item While creating the design doc, what parts of your other documents (e.g.
   requirements, hazard analysis, etc), it any, needed to be changed, and why?
+
+When we named a module or an exported constant in the MIS, we sometimes found that the Module
+Guide hierarchy or an SRS wording no longer matched. We updated those places so
+we were not maintaining two conflicting stories. Values such as
+the session timeout had to stay aligned with what we already said in the SRS
+and Hazard Analysis. Examples of values that needed to stay aligned were the session timeout,
+and the retention period for outlines, extracted data and findings.
+
   \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+    unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+
+Our solution is constrained by what we can finish in one capstone
+year. We are starting with PDF intake, one extraction path, and a
+dashboard-centred way of notifying people. That is enough to prove the idea,
+but it is not the fullest version of the product we can imagine. With unlimited
+resources we would support more outline formats to ease the intake process, spend much more time measuring
+and improving extraction quality, model cohorts and electives more realistically,
+and sit longer with chairs and administrators to see where the workflow still
+frustrates them. The current project focuses on the undergrad chairs as main stakeholders, but we would like to expand to 
+include more faculty members and administrators to get a better understanding of the workflow. 
+Lastly, we would like to support more elective types and course types to make the system more flexible and robust.
+
   \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)
+    are the benefits and tradeoffs of those other designs compared with the chosen
+    design?  From all the potential options, why did you select the documented design?
+    (LO\_Explores)
+
+We did consider a simpler design with fewer modules: fold extraction, calendar,
+and compliance into larger pieces so there would be less documentation.
+That would have been faster to write and easier to demo early. The
+tradeoff is that every future change would involve more modules it should not need to touch, and it would
+be harder for us to explain what each part is responsible for. We also talked
+about putting more of the rules into the user interface itself. That would feel
+productive in the short term, but it would bury important decisions where only
+the front end can see them.
+
+We chose the design because it matches how we expect the project
+to change: the AI model we use, the rules we check, and the way we store data are
+all things we may need to replace or refine. Keeping those concerns separate
+costs us more writing now, but it gives us clearer ownership and less fear of
+breaking everything when one piece moves. Additionally, for a team of 4, these were tradeoffs that made sense for us.
+
   \item (After you have implemented another team's module, which means this
-  isn't filled in until after the original deadline). What did you learn by
-  implementing another team's module? Were all the details you needed in the
-  documentation, or did you need to make assumptions, or ask the other team
-  questions?  If your team also had another team implement one of your modules,
-  what was this experience like?  Are there things in your documentation you
-  could have changed to make the process go more smoothly for when an
-  ``outsider'' completes some of the implementation?
+    isn't filled in until after the original deadline). What did you learn by
+    implementing another team's module? Were all the details you needed in the
+    documentation, or did you need to make assumptions, or ask the other team
+    questions?  If your team also had another team implement one of your modules,
+    what was this experience like?  Are there things in your documentation you
+    could have changed to make the process go more smoothly for when an
+    ``outsider'' completes some of the implementation?
 
-  Your reflection should be about concepts learned in your SE education, such as modular decomposition, cohesion, coupling, information hiding, etc.  You should critique the quality and utility of the specification you received.
+To be completed after Rev -1.
 
-  You should create a PR for your implemented module.  A link to the PR should be part of your reflection.
+Pull requests for Rev -1:
+\begin{itemize}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/146}{PR\#146}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/160}{PR\#160}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/161}{PR\#161}
+  \item \href{https://github.com/shivyam/cas-course-optimization/pull/170}{PR\#170}
+\end{itemize}
 
 \end{enumerate}
 
