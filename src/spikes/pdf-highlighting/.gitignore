@@ -1,0 +1,7 @@
+# Generated working/output PDFs from the highlight PoC (keep source outline only)
+*_flags.pdf
+*_flags_*.pdf
+*_highlighted.pdf
+*_highlighted_*.pdf
+*.tmp.pdf
+*.exporting.pdf
