@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import OutlinePdfViewer from '../components/OutlinePdfViewer.tsx'
 import type { PdfHighlight } from '../components/OutlinePdfViewer.tsx'
 import PageHeader from '../components/layout/PageHeader.tsx'
+import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 const demoCourse = {
   code: 'COMPSCI 2C03',
@@ -199,6 +200,10 @@ function PolicyPage() {
         title="Policy compliance & CEAB"
         description="Review course policy checks and learning-outcome mappings against the Master Course Sheet."
       />
+
+      <div className="mb-6">
+        <OutlineWorkflowStepper currentStep={3} />
+      </div>
 
       <div className="mb-5 flex flex-col gap-3 rounded-lg border border-cas-border bg-cas-surface px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
