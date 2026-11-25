@@ -9,8 +9,6 @@ const frontendDir = join(srcDir, 'frontend')
 const backendPython = process.platform === 'win32'
   ? join(backendDir, '.venv', 'Scripts', 'python.exe')
   : join(backendDir, '.venv', 'bin', 'python')
-const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-
 if (!existsSync(backendPython)) {
   const venvCommand = process.platform === 'win32'
     ? 'py -m venv .venv && .venv\\Scripts\\python.exe -m pip install -e ".[dev]"'
@@ -25,10 +23,16 @@ const backend = spawn(backendPython, ['-m', 'uvicorn', 'app.main:app', '--reload
   cwd: backendDir,
   stdio: 'inherit',
 })
-const frontend = spawn(npmCommand, ['run', 'dev'], {
-  cwd: frontendDir,
-  stdio: 'inherit',
-})
+// Node 20+ on Windows rejects spawning .cmd without shell; use cmd.exe instead.
+const frontend = process.platform === 'win32'
+  ? spawn('cmd.exe', ['/d', '/s', '/c', 'npm run dev'], {
+    cwd: frontendDir,
+    stdio: 'inherit',
+  })
+  : spawn('npm', ['run', 'dev'], {
+    cwd: frontendDir,
+    stdio: 'inherit',
+  })
 
 let shuttingDown = false
 
