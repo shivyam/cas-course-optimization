@@ -1,8 +1,11 @@
 """Course outline upload endpoint."""
 
+import json
 import os
 import re
 import zipfile
+from asyncio import to_thread
+from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from typing import Annotated
@@ -10,6 +13,10 @@ from xml.etree import ElementTree
 
 import pymupdf
 from fastapi import APIRouter, File, HTTPException, UploadFile
+
+from app.extraction import llm_client
+from app.extraction.extractor import extract as extract_with_llm
+from app.extraction.model_steps import InvalidModelOutputError
 
 router = APIRouter(tags=["outlines"])
 
@@ -22,6 +29,13 @@ EXTRACTED_TEXT_DIR = Path(
     os.getenv("EXTRACTED_TEXT_DIR", str(DEFAULT_EXTRACTED_TEXT_DIR))
 )
 EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
+DEFAULT_EXTRACTED_JSON_DIR = (
+    Path(__file__).resolve().parents[4] / "data" / "extracted_json"
+)
+EXTRACTED_JSON_DIR = Path(
+    os.getenv("EXTRACTED_JSON_DIR", str(DEFAULT_EXTRACTED_JSON_DIR))
+)
+EXTRACTED_JSON_REPO_PATH = Path("data") / "extracted_json"
 ALLOWED_CONTENT_TYPES = {
     "application/pdf",
     "application/x-pdf",
@@ -125,8 +139,58 @@ def save_extracted_text(filename: str, text: str) -> str:
     return (EXTRACTED_TEXT_REPO_PATH / output_path.name).as_posix()
 
 
-async def process_outline_upload(file: UploadFile) -> dict:
-    """Validate one course outline and return extracted text metadata."""
+def save_extracted_json(filename: str, output: dict) -> str:
+    """Save one structured extraction and return its repo-relative path."""
+    safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", Path(filename).stem).strip("._")
+    safe_stem = safe_stem or "outline"
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    output_path = EXTRACTED_JSON_DIR / f"{safe_stem}_{timestamp}.json"
+
+    EXTRACTED_JSON_DIR.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+
+    return (EXTRACTED_JSON_REPO_PATH / output_path.name).as_posix()
+
+
+async def extract_outline_json(
+    filename: str, extension: str, contents: bytes, text: str
+) -> dict:
+    """Run the local or tunneled Ollama extractor for an uploaded outline."""
+    model_name = llm_client.settings().model_name
+    if not llm_client.is_available():
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"Ollama is unavailable or {model_name} is not pulled. "
+                "Start the GPU tunnel and ensure the backend has OLLAMA_URL set."
+            ),
+        )
+
+    # PDFs retain their real page boundaries for source-page traceability.
+    # LaTeX and DOCX uploads have already been flattened into text, so expose
+    # that text as one logical page rather than skipping structured extraction.
+    pages = read_pdf_pages(contents) if extension == ".pdf" else [(1, text)]
+    try:
+        # Model calls can take several minutes; keep the async API responsive
+        # while the synchronous extraction pipeline talks to Ollama.
+        return await to_thread(extract_with_llm, filename, pages)
+    except InvalidModelOutputError as error:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Gemma returned invalid JSON during the {error.step_name} step.",
+        ) from error
+    except (
+        ValueError,
+        llm_client.ModelUnavailableError,
+        llm_client.ModelTimeoutError,
+    ) as error:
+        raise HTTPException(status_code=502, detail=str(error)) from error
+
+
+async def process_outline_upload(file: UploadFile, *, run_llm: bool = False) -> dict:
+    """Validate one course outline and optionally return Gemma JSON."""
     # Check both the browser-provided type and the filename before reading the
     # upload so unsupported files fail with a clear client-facing response.
     filename = file.filename or ""
@@ -169,21 +233,35 @@ async def process_outline_upload(file: UploadFile) -> dict:
             status_code=500, detail="Unable to save extracted outline text."
         ) from error
 
-    return {
+    result = {
         "filename": filename,
         "status": "received",
         "size_bytes": len(contents),
         "text_extraction": text_extraction,
-        "text": text,
         "text_file": str(text_file),
     }
 
+    if run_llm:
+        extracted_json = await extract_outline_json(filename, extension, contents, text)
+        try:
+            extracted_json_file = save_extracted_json(filename, extracted_json)
+        except OSError as error:
+            raise HTTPException(
+                status_code=500, detail="Unable to save extracted outline JSON."
+            ) from error
+        result["extracted_json"] = extracted_json
+        result["extracted_json_file"] = extracted_json_file
 
-async def process_outline_upload_result(file: UploadFile) -> dict:
+    return result
+
+
+async def process_outline_upload_result(
+    file: UploadFile, *, run_llm: bool = False
+) -> dict:
     """Process one upload and return a success or failure result object."""
     filename = file.filename or "unknown.pdf"
     try:
-        result = await process_outline_upload(file)
+        result = await process_outline_upload(file, run_llm=run_llm)
         return {**result, "ok": True}
     except HTTPException as error:
         detail = error.detail
@@ -220,7 +298,9 @@ async def upload_outlines(
             detail=f"Upload at most {MAX_BATCH_FILES} outline files at once.",
         )
 
-    results = [await process_outline_upload_result(file) for file in files]
+    results = [
+        await process_outline_upload_result(file, run_llm=True) for file in files
+    ]
     succeeded = sum(1 for result in results if result.get("ok"))
     failed = len(results) - succeeded
 

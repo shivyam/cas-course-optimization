@@ -1,5 +1,6 @@
 """Tests for the POST /api/outlines endpoint."""
 
+import json
 from io import BytesIO
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -40,6 +41,20 @@ def make_docx(*paragraphs: str) -> bytes:
     return output.getvalue()
 
 
+def test_save_extracted_json_writes_timestamped_file(tmp_path, monkeypatch):
+    monkeypatch.setattr(outlines, "EXTRACTED_JSON_DIR", tmp_path)
+
+    repo_path = outlines.save_extracted_json(
+        "COMPSCI2C03 outline.pdf", {"assessments": []}
+    )
+
+    saved_files = list(tmp_path.glob("*.json"))
+    assert len(saved_files) == 1
+    assert saved_files[0].name.startswith("COMPSCI2C03_outline_")
+    assert repo_path == f"data/extracted_json/{saved_files[0].name}"
+    assert json.loads(saved_files[0].read_text(encoding="utf-8")) == {"assessments": []}
+
+
 def test_upload_outline_extracts_text(tmp_path, monkeypatch):
     # The endpoint should return the text that was embedded in the PDF page.
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
@@ -54,7 +69,6 @@ def test_upload_outline_extracts_text(tmp_path, monkeypatch):
     assert body["filename"] == "outline.pdf"
     assert body["status"] == "received"
     assert body["text_extraction"] == "pymupdf"
-    assert body["text"] == "Course outline text"
 
     # Save text to local files for testing purposes
     saved_files = list(tmp_path.glob("*.txt"))
@@ -77,7 +91,6 @@ def test_upload_outline_accepts_alternate_pdf_content_types(
     response = client.post("/api/outlines", files=files)
 
     assert response.status_code == 200
-    assert response.json()["text"] == "Course outline text"
 
 
 def test_upload_outline_rejects_non_pdf():
@@ -104,7 +117,12 @@ def test_upload_outline_without_file_is_rejected():
 
 
 def test_upload_outlines_batch_extracts_multiple_pdfs(tmp_path, monkeypatch):
+    async def fake_extract_outline_json(filename, extension, contents, text):
+        return {"course_outline_filename": filename, "assessments": []}
+
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    monkeypatch.setattr(outlines, "EXTRACTED_JSON_DIR", tmp_path / "json")
+    monkeypatch.setattr(outlines, "extract_outline_json", fake_extract_outline_json)
     files = [
         ("files", ("one.pdf", make_pdf("First outline"), "application/pdf")),
         ("files", ("two.pdf", make_pdf("Second outline"), "application/pdf")),
@@ -118,13 +136,19 @@ def test_upload_outlines_batch_extracts_multiple_pdfs(tmp_path, monkeypatch):
     assert body["succeeded"] == 2
     assert body["failed"] == 0
     assert [item["filename"] for item in body["results"]] == ["one.pdf", "two.pdf"]
-    assert body["results"][0]["text"] == "First outline"
-    assert body["results"][1]["text"] == "Second outline"
+    assert body["results"][0]["extracted_json"]["assessments"] == []
     assert {path.name for path in tmp_path.glob("*.txt")} == {"one.txt", "two.txt"}
 
 
 def test_upload_outlines_batch_reports_partial_failures(tmp_path, monkeypatch):
+    async def fake_extract_outline_json(filename, extension, contents, text):
+        if filename == "bad.txt":
+            pytest.fail("The invalid file should fail before LLM extraction.")
+        return {"course_outline_filename": filename, "assessments": []}
+
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    monkeypatch.setattr(outlines, "EXTRACTED_JSON_DIR", tmp_path / "json")
+    monkeypatch.setattr(outlines, "extract_outline_json", fake_extract_outline_json)
     files = [
         ("files", ("good.pdf", make_pdf("Valid outline"), "application/pdf")),
         ("files", ("bad.txt", b"not a pdf", "text/plain")),
@@ -152,7 +176,6 @@ def test_upload_outline_extracts_latex(tmp_path, monkeypatch):
     assert response.status_code == 200
     body = response.json()
     assert body["text_extraction"] == "latex"
-    assert body["text"] == "Course outline\nAssessment: 30%"
 
 
 def test_upload_outline_extracts_docx(tmp_path, monkeypatch):
@@ -172,7 +195,6 @@ def test_upload_outline_extracts_docx(tmp_path, monkeypatch):
     assert response.status_code == 200
     body = response.json()
     assert body["text_extraction"] == "docx"
-    assert body["text"] == "Course outline\n\nAssessment details"
 
 
 def test_upload_outlines_batch_rejects_empty_request():

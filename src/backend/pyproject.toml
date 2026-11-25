@@ -12,6 +12,7 @@ dependencies = [
     # Needed by FastAPI to accept file uploads (multipart/form-data).
     "python-multipart>=0.0.9",
     "pymupdf==1.27.2.2",
+    "python-dotenv>=1.0",
 ]
 
 [project.scripts]

@@ -5,7 +5,7 @@ outline text leaves CAS infrastructure. Swapping the model means changing the
 LLM_MODEL environment variable, not any other module.
 
 Settings (environment variables, with defaults):
-    OLLAMA_URL      http://localhost:11434
+    OLLAMA_URL      http://127.0.0.1:11435 (GPU tunnel; 11434 is local Ollama)
     LLM_MODEL       gemma4:e2b
     LLM_NUM_CTX     16384   context window in tokens (outline + instructions + reply)
     LLM_TIMEOUT_S   600     seconds to wait for one reply
@@ -22,6 +22,14 @@ import socket
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load the environment file once when the backend imports
+# this client.
+REPO_ROOT = Path(__file__).resolve().parents[4]
+load_dotenv(REPO_ROOT / ".env")
 
 # We call Ollama's HTTP API with the standard library (urllib) on purpose, so
 # the backend needs no extra package just to talk to the model.

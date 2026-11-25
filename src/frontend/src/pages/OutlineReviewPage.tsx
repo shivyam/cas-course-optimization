@@ -9,7 +9,11 @@ const maxBatchFiles = 50
 const maxFileSizeBytes = 10 * 1024 * 1024
 const workflowDetails = [
   ['01', 'Course outline upload', 'Add a PDF, LaTeX, or Word course outline.'],
-  ['02', 'Text extraction', 'Convert the uploaded outline into readable text.'],
+  [
+    '02',
+    'Extracted content and associated fields',
+    'View the LLM built structured JSON fields.',
+  ],
   [
     '03',
     'Review & approve',
@@ -28,7 +32,7 @@ type BatchResult = {
   ok?: boolean
   filename?: string
   size_bytes?: number
-  text?: string
+  extracted_json?: Record<string, unknown>
   detail?: string
 }
 
@@ -184,11 +188,11 @@ function OutlineReviewPage() {
           outlines: successes.map((result) => ({
             filename: result.filename ?? 'outline.pdf',
             sizeBytes: result.size_bytes ?? 0,
-            text: result.text ?? '',
+            extractedJson: result.extracted_json,
           })),
           filename: successes[0]?.filename,
           sizeBytes: successes[0]?.size_bytes,
-          text: successes[0]?.text ?? '',
+          extractedJson: successes[0]?.extracted_json,
         },
       })
     } catch (error) {
@@ -221,6 +225,27 @@ function OutlineReviewPage() {
       </header>
 
       <OutlineWorkflowStepper currentStep={0} />
+
+      {uploadState === 'uploading' && (
+        <section
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+          className="flex items-center gap-4 rounded-2xl border border-mcmaster-maroon/20 bg-mcmaster-maroon/5 p-6 shadow-sm"
+        >
+          <span
+            aria-hidden="true"
+            className="h-9 w-9 shrink-0 animate-spin rounded-full border-4 border-mcmaster-maroon/20 border-t-mcmaster-maroon"
+          />
+          <div>
+            <h2 className="font-semibold text-cas-ink">Extracting course outline</h2>
+            <p className="mt-1 text-sm text-cas-muted">
+              Gemma is reading the outline and building its associated fields. This can
+              take a few minutes; please keep this page open.
+            </p>
+          </div>
+        </section>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
         <div className="min-w-0 space-y-4">
@@ -284,7 +309,7 @@ function OutlineReviewPage() {
                 disabled={uploadState === 'uploading'}
                 className="rounded-lg bg-mcmaster-maroon px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-mcmaster-maroon/90 focus:outline-none focus:ring-2 focus:ring-mcmaster-gold focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {uploadState === 'uploading' ? 'Uploading…' : 'Next →'}
+                {uploadState === 'uploading' ? 'Extracting fields' : 'Next →'}
               </button>
             </div>
 
