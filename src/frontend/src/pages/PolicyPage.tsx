@@ -3,7 +3,7 @@ import OutlinePdfViewer from '../components/OutlinePdfViewer.tsx'
 import type { PdfHighlight } from '../components/OutlinePdfViewer.tsx'
 import PageHeader from '../components/layout/PageHeader.tsx'
 
-const DEMO_COURSE = {
+const demoCourse = {
   code: 'COMPSCI 2C03',
   title: 'Data Structures and Algorithms',
   instructor: 'Vincent Maccio',
@@ -12,7 +12,7 @@ const DEMO_COURSE = {
 }
 
 /** Visible rows before the check list scrolls. */
-const VISIBLE_CHECKS = 3
+const visibleChecks = 3
 
 type PolicyGap = {
   id: string
@@ -31,7 +31,7 @@ type CeabGap = {
   highlights?: PdfHighlight[]
 }
 
-const POLICY_GAPS: PolicyGap[] = [
+const policyGaps: PolicyGap[] = [
   {
     id: 'ta-c01',
     page: 1,
@@ -80,7 +80,7 @@ const POLICY_GAPS: PolicyGap[] = [
   },
 ]
 
-const CEAB_GAPS: CeabGap[] = [
+const ceabGaps: CeabGap[] = [
   {
     id: 'missing-ga',
     label: 'Graduate Attributes section missing',
@@ -120,12 +120,9 @@ type SelectedCheck = {
   highlights: PdfHighlight[]
 }
 
-function buildSelection(
-  id: string,
-  source: 'policy' | 'ceab',
-): SelectedCheck | null {
+function buildSelection(id: string, source: 'policy' | 'ceab'): SelectedCheck | null {
   if (source === 'policy') {
-    const gap = POLICY_GAPS.find((item) => item.id === id)
+    const gap = policyGaps.find((item) => item.id === id)
     if (!gap) return null
     return {
       id: gap.id,
@@ -137,7 +134,7 @@ function buildSelection(
     }
   }
 
-  const gap = CEAB_GAPS.find((item) => item.id === id)
+  const gap = ceabGaps.find((item) => item.id === id)
   if (!gap) return null
   return {
     id: gap.id,
@@ -149,10 +146,7 @@ function buildSelection(
 }
 
 /** Mark a flagged check as a false positive (dismissed for this review). */
-function markFalsePositive(
-  overrides: ReadonlySet<string>,
-  checkId: string,
-): Set<string> {
+function markFalsePositive(overrides: ReadonlySet<string>, checkId: string): Set<string> {
   const next = new Set(overrides)
   next.add(checkId)
   return next
@@ -169,17 +163,17 @@ function clearFalsePositive(
 }
 
 function PolicyPage() {
-  const [selected, setSelected] = useState<SelectedCheck>(
-    () => buildSelection(POLICY_GAPS[0].id, 'policy')!,
+  const [selected, setSelected] = useState<SelectedCheck>(() =>
+    buildSelection(policyGaps[0].id, 'policy')!,
   )
   const [falsePositives, setFalsePositives] = useState<Set<string>>(() => new Set())
 
   const activePolicyGaps = useMemo(
-    () => POLICY_GAPS.filter((gap) => !falsePositives.has(gap.id)),
+    () => policyGaps.filter((gap) => !falsePositives.has(gap.id)),
     [falsePositives],
   )
   const activeCeabGaps = useMemo(
-    () => CEAB_GAPS.filter((gap) => !falsePositives.has(gap.id)),
+    () => ceabGaps.filter((gap) => !falsePositives.has(gap.id)),
     [falsePositives],
   )
   const gapCount = activePolicyGaps.length + activeCeabGaps.length
@@ -214,15 +208,15 @@ function PolicyPage() {
           <select
             id="policy-course"
             className="h-10 rounded-md border border-cas-border bg-white px-3 text-base text-cas-ink"
-            defaultValue={DEMO_COURSE.code}
+            defaultValue={demoCourse.code}
           >
-            <option value={DEMO_COURSE.code}>
-              {DEMO_COURSE.code} — {DEMO_COURSE.instructor} ({DEMO_COURSE.term})
+            <option value={demoCourse.code}>
+              {demoCourse.code} — {demoCourse.instructor} ({demoCourse.term})
             </option>
           </select>
           <p className="text-sm text-cas-muted">
-            Click a check to highlight it in the outline. Override false positives
-            when a flag is incorrect.
+            Click a check to highlight it in the outline. Override false positives when a
+            flag is incorrect.
           </p>
         </div>
         <p className="text-sm font-semibold text-mcmaster-maroon">
@@ -239,12 +233,12 @@ function PolicyPage() {
         <div className="space-y-6">
           <CheckListCard
             title="McMaster policy checks"
-            description={`Incomplete fields flagged in the ${DEMO_COURSE.code} outline PDF.`}
-            visibleCount={VISIBLE_CHECKS}
-            totalCount={POLICY_GAPS.length}
+            description={`Incomplete fields flagged in the ${demoCourse.code} outline PDF.`}
+            visibleCount={visibleChecks}
+            totalCount={policyGaps.length}
             activeCount={activePolicyGaps.length}
           >
-            {POLICY_GAPS.map((gap) => (
+            {policyGaps.map((gap) => (
               <CheckRow
                 key={gap.id}
                 selected={selected.id === gap.id}
@@ -262,11 +256,11 @@ function PolicyPage() {
           <CheckListCard
             title="CEAB Graduate Attribute mapping"
             description="Compare outline outcomes with the Master Course Sheet before confirming."
-            visibleCount={VISIBLE_CHECKS}
-            totalCount={CEAB_GAPS.length}
+            visibleCount={visibleChecks}
+            totalCount={ceabGaps.length}
             activeCount={activeCeabGaps.length}
           >
-            {CEAB_GAPS.map((gap) => (
+            {ceabGaps.map((gap) => (
               <CheckRow
                 key={gap.id}
                 selected={selected.id === gap.id}
@@ -288,13 +282,13 @@ function PolicyPage() {
                 Highlighted outline
               </h2>
               <p className="mt-1 text-xs text-cas-muted">
-                {DEMO_COURSE.code} · {selected.label}
+                {demoCourse.code} · {selected.label}
                 {selected.marker ? ` · “${selected.marker}”` : ''}
                 {selectedIsFalsePositive ? ' · overridden as false positive' : ''}
               </p>
             </div>
             <a
-              href={`${DEMO_COURSE.outlineUrl}#page=${selected.page}`}
+              href={`${demoCourse.outlineUrl}#page=${selected.page}`}
               target="_blank"
               rel="noreferrer"
               className="text-sm font-semibold text-mcmaster-maroon hover:underline"
@@ -305,7 +299,7 @@ function PolicyPage() {
 
           <div className="h-[min(75vh,52rem)]">
             <OutlinePdfViewer
-              url={DEMO_COURSE.outlineUrl}
+              url={demoCourse.outlineUrl}
               page={selected.page}
               highlights={selectedIsFalsePositive ? [] : selected.highlights}
               focusLabel={selected.label}
@@ -452,4 +446,3 @@ function CheckRow({
 }
 
 export default PolicyPage
-export { markFalsePositive, clearFalsePositive }

@@ -33,16 +33,14 @@ function OutlinePdfViewer({
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const focusRef = useRef<HTMLDivElement | null>(null)
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null)
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null)
   const [renderWidth, setRenderWidth] = useState(0)
   const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const loading = loadedUrl !== url
 
   useEffect(() => {
     let cancelled = false
     let loaded: PDFDocumentProxy | null = null
-    setLoading(true)
-    setError(null)
-    setPdf(null)
 
     getDocument(url)
       .promise.then((document) => {
@@ -52,12 +50,14 @@ function OutlinePdfViewer({
         }
         loaded = document
         setPdf(document)
+        setLoadedUrl(url)
+        setError(null)
       })
       .catch(() => {
-        if (!cancelled) setError('Could not load the course outline PDF.')
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
+        if (cancelled) return
+        setPdf(null)
+        setLoadedUrl(url)
+        setError('Could not load the course outline PDF.')
       })
 
     return () => {
@@ -73,9 +73,11 @@ function OutlinePdfViewer({
     const updateWidth = () => {
       setRenderWidth(Math.max(280, container.clientWidth - 24 || 480))
     }
-    updateWidth()
 
-    if (typeof ResizeObserver === 'undefined') return
+    if (typeof ResizeObserver === 'undefined') {
+      queueMicrotask(updateWidth)
+      return
+    }
 
     const observer = new ResizeObserver(updateWidth)
     observer.observe(container)
@@ -125,10 +127,12 @@ function OutlinePdfViewer({
       container.clientHeight / 2 +
       targetRect.height / 2
 
-    container.scrollTo({
-      top: Math.max(0, container.scrollTop + delta),
-      behavior: 'smooth',
-    })
+    const nextTop = Math.max(0, container.scrollTop + delta)
+    if (typeof container.scrollTo === 'function') {
+      container.scrollTo({ top: nextTop, behavior: 'smooth' })
+    } else {
+      container.scrollTop = nextTop
+    }
   }, [page, highlights, renderWidth])
 
   const scale = renderWidth > 0 ? renderWidth / pageWidth : 1
