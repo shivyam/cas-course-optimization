@@ -1,9 +1,10 @@
 """Tests for the POST /api/outlines endpoint."""
 
-import pymupdf
-import pytest
 from io import BytesIO
 from zipfile import ZIP_DEFLATED, ZipFile
+
+import pymupdf
+import pytest
 from fastapi.testclient import TestClient
 
 from app.api import outlines
@@ -137,7 +138,7 @@ def test_upload_outlines_batch_reports_partial_failures(tmp_path, monkeypatch):
     assert body["failed"] == 1
     assert body["results"][0]["ok"] is True
     assert body["results"][1]["ok"] is False
-    
+
 
 def test_upload_outline_extracts_latex(tmp_path, monkeypatch):
     monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)

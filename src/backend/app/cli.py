@@ -5,8 +5,8 @@ import sys
 from pathlib import Path
 
 from app.api.outlines import (
-    MAX_FILE_SIZE_BYTES,
     ALLOWED_EXTENSIONS,
+    MAX_FILE_SIZE_BYTES,
     extract_docx_text,
     extract_latex_text,
     extract_pdf_text,

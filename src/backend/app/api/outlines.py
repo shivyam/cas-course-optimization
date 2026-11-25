@@ -128,7 +128,9 @@ async def process_outline_upload(file: UploadFile) -> dict:
             detail="Only PDF, LaTeX (.tex), and Word (.docx) files are supported.",
         )
     if file.content_type not in ALLOWED_CONTENT_TYPES:
-        raise HTTPException(status_code=415, detail="The uploaded file type is not supported.")
+        raise HTTPException(
+            status_code=415, detail="The uploaded file type is not supported."
+        )
 
     # Read one byte beyond the limit so an oversized upload can be detected
     # without loading an unbounded request body into memory.
