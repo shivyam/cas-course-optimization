@@ -1,0 +1,6 @@
+# Qwen3 4B on grace: smoke test (one outline, baseline), reasoning off then on.
+# Each line is a set of run_spike.sh options. Run with:
+#   OLLAMA_HOST=localhost:11435 bash src/spikes/common/run_queue.sh src/spikes/qwen3/grace_smoke.txt
+# (with the gpu_ollama.sh tunnel to grace open)
+--model qwen3:4b --native-think off --strategies baseline --outlines 2DA4 --label smoke-gpu
+--model qwen3:4b --native-think on  --strategies baseline --outlines 2DA4 --label smoke-gpu

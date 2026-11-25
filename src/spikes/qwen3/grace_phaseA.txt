@@ -1,0 +1,13 @@
+# Qwen3 4B on grace, Phase A: both strategies, all five outlines, one run,
+# with Qwen's built-in reasoning off and on.
+# Run with the gpu_ollama.sh tunnel to grace open:
+#   OLLAMA_HOST=localhost:11435 bash src/spikes/common/run_queue.sh src/spikes/qwen3/grace_phaseA.txt
+#
+# off = asked the same way as Gemma and Llama (the fair comparison).
+# on  = Qwen's own reasoning mode (to find Qwen's best setting).
+# Note: with reasoning on, the think strategy's first call is capped at 2500 output
+# tokens and the reasoning counts toward that cap (README.md).
+# Phases B and C then use the better strategy from this phase for each setting
+# (grace_phaseBC.txt).
+--model qwen3:4b --native-think off --label phaseA-gpu
+--model qwen3:4b --native-think on  --label phaseA-gpu
