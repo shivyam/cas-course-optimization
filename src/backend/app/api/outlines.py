@@ -2,8 +2,11 @@
 
 import os
 import re
+import zipfile
+from io import BytesIO
 from pathlib import Path
 from typing import Annotated
+from xml.etree import ElementTree
 
 import pymupdf
 from fastapi import APIRouter, File, HTTPException, UploadFile
@@ -22,8 +25,69 @@ EXTRACTED_TEXT_REPO_PATH = Path("data") / "extracted_text"
 ALLOWED_CONTENT_TYPES = {
     "application/pdf",
     "application/x-pdf",
+    "text/x-tex",
+    "application/x-tex",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/octet-stream",
 }
+ALLOWED_EXTENSIONS = {".pdf", ".tex", ".docx"}
+
+
+def extract_latex_text(contents: bytes) -> str:
+    """Extract readable text from a UTF-8 LaTeX source file."""
+    try:
+        source = contents.decode("utf-8-sig")
+    except UnicodeDecodeError as error:
+        raise ValueError("The uploaded LaTeX file is not valid UTF-8 text.") from error
+
+    # Remove comments while preserving line structure, then turn common
+    # formatting commands into their braced content before removing the rest.
+    source = re.sub(r"(?<!\\)%[^\n]*", "", source)
+    source = re.sub(
+        r"\\(?:section|subsection|subsubsection|paragraph|textbf|textit|emph|underline|texttt|text|title|author|date)\*?\{([^{}]*)\}",
+        r"\1",
+        source,
+    )
+    source = re.sub(r"\\href\{[^{}]*\}\{([^{}]*)\}", r"\1", source)
+    source = re.sub(r"\\(?:begin|end)\{[^{}]*\}", "", source)
+    source = re.sub(r"\\[a-zA-Z]+\*?(?:\[[^]]*\])?", "", source)
+    source = re.sub(r"(?<!\\)[{}]", "", source)
+    source = source.replace("\\\\", "\n")
+    source = re.sub(r"\\([%{}_$#&])", r"\1", source)
+    source = source.replace("~", " ")
+    return re.sub(r"\n{3,}", "\n\n", source).strip()
+
+
+def extract_docx_text(contents: bytes) -> str:
+    """Extract paragraphs and table rows from a modern Word document."""
+    namespace = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    try:
+        with zipfile.ZipFile(BytesIO(contents)) as archive:
+            xml = archive.read("word/document.xml")
+        root = ElementTree.fromstring(xml)
+    except (KeyError, ElementTree.ParseError, zipfile.BadZipFile) as error:
+        raise ValueError("The uploaded file is not a valid Word document.") from error
+
+    blocks: list[str] = []
+    body = root.find(f"{namespace}body")
+    if body is None:
+        return ""
+    for block in body:
+        if block.tag == f"{namespace}p":
+            text = "".join(node.text or "" for node in block.iter(f"{namespace}t"))
+            if text.strip():
+                blocks.append(text.strip())
+        elif block.tag == f"{namespace}tbl":
+            for row in block.findall(f"{namespace}tr"):
+                cells = []
+                for cell in row.findall(f"{namespace}tc"):
+                    cell_text = "".join(
+                        node.text or "" for node in cell.iter(f"{namespace}t")
+                    ).strip()
+                    cells.append(cell_text)
+                if any(cells):
+                    blocks.append("\t".join(cells))
+    return "\n\n".join(blocks)
 
 
 def read_pdf_pages(contents: bytes) -> list[tuple[int, str]]:
@@ -62,35 +126,41 @@ def save_extracted_text(filename: str, text: str) -> str:
 
 
 async def process_outline_upload(file: UploadFile) -> dict:
-    """Validate one PDF course outline and return upload metadata."""
+    """Validate one course outline and return extracted text metadata."""
     # Check both the browser-provided type and the filename before reading the
     # upload so unsupported files fail with a clear client-facing response.
     filename = file.filename or ""
-    if file.content_type not in ALLOWED_CONTENT_TYPES or not filename.lower().endswith(
-        ".pdf"
-    ):
-        raise HTTPException(status_code=415, detail="Only PDF files are supported.")
+    extension = Path(filename).suffix.lower()
+    if extension not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=415,
+            detail="Only PDF, LaTeX (.tex), and Word (.docx) files are supported.",
+        )
+    if file.content_type not in ALLOWED_CONTENT_TYPES:
+        raise HTTPException(
+            status_code=415, detail="The uploaded file type is not supported."
+        )
 
     # Read one byte beyond the limit so an oversized upload can be detected
     # without loading an unbounded request body into memory.
     contents = await file.read(MAX_FILE_SIZE_BYTES + 1)
     if len(contents) > MAX_FILE_SIZE_BYTES:
-        raise HTTPException(
-            status_code=413, detail="PDF files must be 10 MB or smaller."
-        )
-    if not contents.startswith(b"%PDF-"):
-        raise HTTPException(
-            status_code=400, detail="The uploaded file is not a valid PDF."
-        )
+        raise HTTPException(status_code=413, detail="Files must be 10 MB or smaller.")
 
     try:
-        # PyMuPDF extracts text page by page and preserves page boundaries in
-        # the response, which makes the preview easier to read.
-        text = extract_pdf_text(contents)
+        if extension == ".pdf":
+            if not contents.startswith(b"%PDF-"):
+                raise ValueError("The uploaded file is not a valid PDF.")
+            text = extract_pdf_text(contents)
+            text_extraction = "pymupdf"
+        elif extension == ".tex":
+            text = extract_latex_text(contents)
+            text_extraction = "latex"
+        else:
+            text = extract_docx_text(contents)
+            text_extraction = "docx"
     except ValueError as error:
-        raise HTTPException(
-            status_code=400, detail="The uploaded file is not a valid PDF."
-        ) from error
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
     try:
         text_file = save_extracted_text(filename, text)
@@ -103,7 +173,7 @@ async def process_outline_upload(file: UploadFile) -> dict:
         "filename": filename,
         "status": "received",
         "size_bytes": len(contents),
-        "text_extraction": "pymupdf",
+        "text_extraction": text_extraction,
         "text": text,
         "text_file": str(text_file),
     }
@@ -130,21 +200,24 @@ async def process_outline_upload_result(file: UploadFile) -> dict:
 
 @router.post("/outlines")
 async def upload_outline(file: Annotated[UploadFile, File()]) -> dict:
-    """Validate a PDF course outline and return upload metadata."""
+    """Validate a course outline and return upload metadata."""
     return await process_outline_upload(file)
 
 
 @router.post("/outlines/batch")
 async def upload_outlines(
-    files: Annotated[list[UploadFile], File(description="One or more PDF outlines")],
+    files: Annotated[
+        list[UploadFile],
+        File(description="One or more PDF, LaTeX, or Word outlines"),
+    ],
 ) -> dict:
-    """Validate and extract text from many PDF course outlines at once."""
+    """Validate and extract text from many course outlines at once."""
     if not files:
-        raise HTTPException(status_code=400, detail="Select at least one PDF file.")
+        raise HTTPException(status_code=400, detail="Select at least one outline file.")
     if len(files) > MAX_BATCH_FILES:
         raise HTTPException(
             status_code=400,
-            detail=f"Upload at most {MAX_BATCH_FILES} PDF files at once.",
+            detail=f"Upload at most {MAX_BATCH_FILES} outline files at once.",
         )
 
     results = [await process_outline_upload_result(file) for file in files]

@@ -27,6 +27,9 @@
 ## Exception: committed, CI-generated PDFs kept here for TA review
 !/pdfs/**/*.pdf
 
+## Exception: frontend demo assets served from Vite public/
+!/src/frontend/public/**/*.pdf
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf

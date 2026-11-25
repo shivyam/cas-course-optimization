@@ -1,17 +1,15 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router'
+import UploadedOutlinesList from '../components/outline/UploadedOutlinesList.tsx'
+import OutlineWorkflowStepper from '../components/outline/OutlineWorkflowStepper.tsx'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api'
 const maxBatchFiles = 50
 const maxFileSizeBytes = 10 * 1024 * 1024
-const workflowSteps = [
-  ['01', 'Upload & validate', 'Add your current outline as a PDF (up to 10 MB).'],
-  [
-    '02',
-    'Extract & organize',
-    'Assessments, dates, weights and outcomes are organized automatically.',
-  ],
+const workflowDetails = [
+  ['01', 'Course outline upload', 'Add a PDF, LaTeX, or Word course outline.'],
+  ['02', 'Text extraction', 'Convert the uploaded outline into readable text.'],
   [
     '03',
     'Review & approve',
@@ -24,7 +22,6 @@ const workflowSteps = [
   ],
   ['05', 'Plan together', 'See cohort conflicts in the calendar, then review date'],
 ] as const
-
 type UploadState = 'idle' | 'uploading' | 'error' | 'partial'
 
 type BatchResult = {
@@ -35,39 +32,41 @@ type BatchResult = {
   detail?: string
 }
 
-type SelectedPdf = {
+type SelectedOutline = {
   id: string
   file: File
 }
 
-function formatFileSize(bytes: number) {
-  return `${(bytes / 1024 / 1024).toFixed(2)} MB`
-}
-
-function isPdfFile(file: File) {
+function isSupportedFile(file: File) {
   return (
     file.type === 'application/pdf' ||
     file.type === 'application/x-pdf' ||
-    file.name.toLowerCase().endsWith('.pdf')
+    file.type === 'text/x-tex' ||
+    file.type === 'application/x-tex' ||
+    file.type ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    ['.pdf', '.tex', '.docx'].some((extension) =>
+      file.name.toLowerCase().endsWith(extension),
+    )
   )
 }
 
 function OutlineReviewPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [selectedFiles, setSelectedFiles] = useState<SelectedPdf[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<SelectedOutline[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [uploadState, setUploadState] = useState<UploadState>('idle')
   const [uploadMessage, setUploadMessage] = useState('')
 
   function addFiles(fileList: FileList | File[]) {
     const incoming = Array.from(fileList)
-    const next: SelectedPdf[] = []
+    const next: SelectedOutline[] = []
     const errors: string[] = []
 
     for (const file of incoming) {
-      if (!isPdfFile(file)) {
-        errors.push(`${file.name}: only PDF files are supported.`)
+      if (!isSupportedFile(file)) {
+        errors.push(`${file.name}: only PDF, LaTeX, or Word files are supported.`)
         continue
       }
       if (file.size > maxFileSizeBytes) {
@@ -93,7 +92,7 @@ function OutlineReviewPage() {
       )
 
       if (deduped.length > maxBatchFiles) {
-        errors.push(`Upload at most ${maxBatchFiles} PDF files at once.`)
+        errors.push(`Upload at most ${maxBatchFiles} outline files at once.`)
         return deduped.slice(0, maxBatchFiles)
       }
       return deduped
@@ -127,7 +126,7 @@ function OutlineReviewPage() {
   async function handleUpload() {
     if (!selectedFiles.length) {
       setUploadState('error')
-      setUploadMessage('Select one or more PDF course outlines before uploading.')
+      setUploadMessage('Select one or more course outline files before uploading.')
       return
     }
 
@@ -166,7 +165,7 @@ function OutlineReviewPage() {
         setUploadMessage(
           failures
             .map((result) => `${result.filename}: ${result.detail ?? 'failed'}`)
-            .join(' ') || 'No PDFs were uploaded successfully.',
+            .join(' ') || 'No course outlines were uploaded successfully.',
         )
         return
       }
@@ -221,6 +220,8 @@ function OutlineReviewPage() {
         </p>
       </header>
 
+      <OutlineWorkflowStepper currentStep={0} />
+
       <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
         <div className="min-w-0 space-y-4">
           <form
@@ -229,27 +230,29 @@ function OutlineReviewPage() {
           >
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-cas-ink">Upload PDFs</h2>
+                <h2 className="text-lg font-semibold text-cas-ink">
+                  Upload course outlines
+                </h2>
                 <p className="mt-1 text-sm text-cas-muted">
                   Maximum {maxBatchFiles} files, 10 MB each
                 </p>
               </div>
               <span className="rounded-full bg-mcmaster-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mcmaster-maroon">
-                PDF only
+                PDF · LaTeX · Word
               </span>
             </div>
 
             <input
               ref={fileInputRef}
-              id="outline-pdfs"
+              id="outline-files"
               type="file"
-              accept="application/pdf,.pdf"
+              accept="application/pdf,.pdf,text/x-tex,.tex,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx"
               multiple
               className="sr-only"
               onChange={handleFileChange}
             />
             <label
-              htmlFor="outline-pdfs"
+              htmlFor="outline-files"
               onDragEnter={(event) => {
                 event.preventDefault()
                 setIsDragging(true)
@@ -266,7 +269,9 @@ function OutlineReviewPage() {
               <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-mcmaster-maroon text-2xl text-white">
                 +
               </span>
-              <span className="font-semibold text-cas-ink">Drop your PDFs here</span>
+              <span className="font-semibold text-cas-ink">
+                Drop your course outlines here
+              </span>
               <span className="mt-1 text-sm text-cas-muted">
                 or{' '}
                 <span className="font-semibold text-mcmaster-maroon">browse files</span>
@@ -298,44 +303,16 @@ function OutlineReviewPage() {
           </form>
 
           {selectedFiles.length > 0 && (
-            <section className="rounded-2xl border border-cas-border bg-white p-5 shadow-sm sm:p-6">
-              <h2 className="text-lg font-semibold text-cas-ink">
-                Uploaded course outlines
-              </h2>
-              <p className="mt-1 text-sm text-cas-muted">
-                Review or remove files before uploading them for extraction.
-              </p>
-              <ul className="mt-4 space-y-2">
-                {selectedFiles.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center justify-between gap-4 rounded-lg border border-cas-border bg-cas-surface p-4"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
-                        PDF
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-cas-ink">
-                          {item.file.name}
-                        </p>
-                        <p className="text-xs text-cas-muted">
-                          {formatFileSize(item.file.size)}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(item.id)}
-                      disabled={uploadState === 'uploading'}
-                      className="shrink-0 text-sm font-semibold text-mcmaster-maroon hover:underline disabled:opacity-60"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <UploadedOutlinesList
+              files={selectedFiles.map((item) => ({
+                id: item.id,
+                filename: item.file.name,
+                sizeBytes: item.file.size,
+              }))}
+              description="Review or remove files before uploading them for extraction."
+              showRemove
+              onRemove={removeFile}
+            />
           )}
         </div>
 
@@ -344,7 +321,7 @@ function OutlineReviewPage() {
             What happens next?
           </p>
           <ol className="mt-6 space-y-6">
-            {workflowSteps.map(([number, title, description]) => (
+            {workflowDetails.map(([number, title, description]) => (
               <li key={number} className="flex gap-3">
                 <span className="text-sm font-bold text-mcmaster-gold">{number}</span>
                 <div>
