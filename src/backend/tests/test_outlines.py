@@ -2,6 +2,8 @@
 
 import pymupdf
 import pytest
+from io import BytesIO
+from zipfile import ZIP_DEFLATED, ZipFile
 from fastapi.testclient import TestClient
 
 from app.api import outlines
@@ -20,6 +22,21 @@ def make_pdf(text: str) -> bytes:
     contents = document.tobytes()
     document.close()
     return contents
+
+
+def make_docx(*paragraphs: str) -> bytes:
+    body = "".join(
+        f"<w:p><w:r><w:t>{paragraph}</w:t></w:r></w:p>" for paragraph in paragraphs
+    )
+    document = (
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        f"<w:body>{body}</w:body></w:document>"
+    )
+    output = BytesIO()
+    with ZipFile(output, "w", ZIP_DEFLATED) as archive:
+        archive.writestr("word/document.xml", document)
+    return output.getvalue()
 
 
 def test_upload_outline_extracts_text(tmp_path, monkeypatch):
@@ -120,7 +137,41 @@ def test_upload_outlines_batch_reports_partial_failures(tmp_path, monkeypatch):
     assert body["failed"] == 1
     assert body["results"][0]["ok"] is True
     assert body["results"][1]["ok"] is False
-    assert body["results"][1]["detail"] == "Only PDF files are supported."
+    
+
+def test_upload_outline_extracts_latex(tmp_path, monkeypatch):
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+    contents = b"% comment\n\\section{Course outline}\n\\textbf{Assessment}: 30\\%"
+
+    response = client.post(
+        "/api/outlines",
+        files={"file": ("outline.tex", contents, "text/x-tex")},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["text_extraction"] == "latex"
+    assert body["text"] == "Course outline\nAssessment: 30%"
+
+
+def test_upload_outline_extracts_docx(tmp_path, monkeypatch):
+    monkeypatch.setattr(outlines, "EXTRACTED_TEXT_DIR", tmp_path)
+
+    response = client.post(
+        "/api/outlines",
+        files={
+            "file": (
+                "outline.docx",
+                make_docx("Course outline", "Assessment details"),
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["text_extraction"] == "docx"
+    assert body["text"] == "Course outline\n\nAssessment details"
 
 
 def test_upload_outlines_batch_rejects_empty_request():

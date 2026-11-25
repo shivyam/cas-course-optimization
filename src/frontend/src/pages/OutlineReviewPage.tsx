@@ -35,7 +35,7 @@ type BatchResult = {
   detail?: string
 }
 
-type SelectedPdf = {
+type SelectedOutline = {
   id: string
   file: File
 }
@@ -44,18 +44,24 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`
 }
 
-function isPdfFile(file: File) {
+function isSupportedFile(file: File) {
   return (
     file.type === 'application/pdf' ||
     file.type === 'application/x-pdf' ||
-    file.name.toLowerCase().endsWith('.pdf')
+    file.type === 'text/x-tex' ||
+    file.type === 'application/x-tex' ||
+    file.type ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    ['.pdf', '.tex', '.docx'].some((extension) =>
+      file.name.toLowerCase().endsWith(extension),
+    )
   )
 }
 
 function OutlineReviewPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [selectedFiles, setSelectedFiles] = useState<SelectedPdf[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<SelectedOutline[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [uploadState, setUploadState] = useState<UploadState>('idle')
   const [uploadMessage, setUploadMessage] = useState('')
@@ -66,8 +72,8 @@ function OutlineReviewPage() {
     const errors: string[] = []
 
     for (const file of incoming) {
-      if (!isPdfFile(file)) {
-        errors.push(`${file.name}: only PDF files are supported.`)
+      if (!isSupportedFile(file)) {
+        errors.push(`${file.name}: only PDF, LaTeX, or Word files are supported.`)
         continue
       }
       if (file.size > maxFileSizeBytes) {
@@ -93,7 +99,7 @@ function OutlineReviewPage() {
       )
 
       if (deduped.length > maxBatchFiles) {
-        errors.push(`Upload at most ${maxBatchFiles} PDF files at once.`)
+        errors.push(`Upload at most ${maxBatchFiles} outline files at once.`)
         return deduped.slice(0, maxBatchFiles)
       }
       return deduped
@@ -127,7 +133,7 @@ function OutlineReviewPage() {
   async function handleUpload() {
     if (!selectedFiles.length) {
       setUploadState('error')
-      setUploadMessage('Select one or more PDF course outlines before uploading.')
+      setUploadMessage('Select one or more course outline files before uploading.')
       return
     }
 
@@ -166,7 +172,7 @@ function OutlineReviewPage() {
         setUploadMessage(
           failures
             .map((result) => `${result.filename}: ${result.detail ?? 'failed'}`)
-            .join(' ') || 'No PDFs were uploaded successfully.',
+            .join(' ') || 'No course outlines were uploaded successfully.',
         )
         return
       }
@@ -229,27 +235,29 @@ function OutlineReviewPage() {
           >
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-cas-ink">Upload PDFs</h2>
+                <h2 className="text-lg font-semibold text-cas-ink">
+                  Upload course outlines
+                </h2>
                 <p className="mt-1 text-sm text-cas-muted">
                   Maximum {maxBatchFiles} files, 10 MB each
                 </p>
               </div>
               <span className="rounded-full bg-mcmaster-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mcmaster-maroon">
-                PDF only
+                PDF · LaTeX · Word
               </span>
             </div>
 
             <input
               ref={fileInputRef}
-              id="outline-pdfs"
+              id="outline-files"
               type="file"
-              accept="application/pdf,.pdf"
+              accept="application/pdf,.pdf,text/x-tex,.tex,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx"
               multiple
               className="sr-only"
               onChange={handleFileChange}
             />
             <label
-              htmlFor="outline-pdfs"
+              htmlFor="outline-files"
               onDragEnter={(event) => {
                 event.preventDefault()
                 setIsDragging(true)
@@ -266,7 +274,9 @@ function OutlineReviewPage() {
               <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-mcmaster-maroon text-2xl text-white">
                 +
               </span>
-              <span className="font-semibold text-cas-ink">Drop your PDFs here</span>
+              <span className="font-semibold text-cas-ink">
+                Drop your course outlines here
+              </span>
               <span className="mt-1 text-sm text-cas-muted">
                 or{' '}
                 <span className="font-semibold text-mcmaster-maroon">browse files</span>
@@ -313,7 +323,11 @@ function OutlineReviewPage() {
                   >
                     <div className="flex min-w-0 items-center gap-3">
                       <span className="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700">
-                        PDF
+                        {item.file.name.toLowerCase().endsWith('.docx')
+                          ? 'DOCX'
+                          : item.file.name.toLowerCase().endsWith('.tex')
+                            ? 'TEX'
+                            : 'PDF'}
                       </span>
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-cas-ink">
